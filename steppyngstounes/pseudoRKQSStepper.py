@@ -16,7 +16,7 @@ class PseudoRKQSStepper(Stepper):
 
     Parameters
     ----------
-    vardata : tuple of tuple
+    solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
     safety, pgrow, pshrink, errcon : float
@@ -24,8 +24,8 @@ class PseudoRKQSStepper(Stepper):
 
     """
 
-    def __init__(self, vardata=(), safety=0.9, pgrow=-0.2, pshrink=-0.25, errcon=1.89e-4):
-        Stepper.__init__(self, vardata=vardata)
+    def __init__(self, solvefor=(), safety=0.9, pgrow=-0.2, pshrink=-0.25, errcon=1.89e-4):
+        Stepper.__init__(self, solvefor=solvefor)
         self.safety = safety
         self.pgrow = pgrow
         self.pshrink = pshrink
@@ -55,14 +55,14 @@ class PseudoRKQSStepper(Stepper):
             The next time step to try.
         """
         while True:
-            error = sweepFn(vardata=self.vardata, dt=dt, *args, **kwargs)
+            error = sweepFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
 
             if error > 1.:
                 # step failed
-                failFn(vardata=self.vardata, dt=dt, *args, **kwargs)
+                failFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
 
                 # revert
-                for var, eqn, bcs in self.vardata:
+                for var, eqn, bcs in self.solvefor:
                     var.setValue(var.old)
 
                     dt = max(self.safety * dt * error**self.pgrow, 0.1 * dt)

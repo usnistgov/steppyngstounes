@@ -11,13 +11,13 @@ class Stepper(object):
 
     Parameters
     ----------
-    vardata : tuple of tuple
+    solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
     """
 
-    def __init__(self, vardata=()):
-        self.vardata = vardata
+    def __init__(self, solvefor=()):
+        self.solvefor = solvefor
 
     def sweepFn(vardata, dt, *args, **kwargs):
         """Function to apply at each adapted time step.
@@ -184,7 +184,7 @@ class Stepper(object):
             else:
                 dtSave = None
 
-            for var, eqn, bcs in self.vardata:
+            for var, eqn, bcs in self.solvefor:
                 var.updateOld()
 
             dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev,
@@ -193,7 +193,7 @@ class Stepper(object):
 
             self.elapsed += dtPrev
 
-            successFn(vardata=self.vardata,
+            successFn(vardata=self.solvefor,
                       dtPrev=dtPrev, elapsed=self.elapsed, dt=dt, *args, **kwargs)
 
             dtTry = max(dtTry, self.dtMin)

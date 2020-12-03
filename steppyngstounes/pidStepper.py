@@ -24,7 +24,7 @@ class PIDStepper(Stepper):
 
     Parameters
     ----------
-    vardata : tuple of tuple
+    solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
     proportional, integral, derivative : float
@@ -32,8 +32,8 @@ class PIDStepper(Stepper):
 
     """
 
-    def __init__(self, vardata=(), proportional=0.075, integral=0.175, derivative=0.01):
-        Stepper.__init__(self, vardata=vardata)
+    def __init__(self, solvefor=(), proportional=0.075, integral=0.175, derivative=0.01):
+        Stepper.__init__(self, solvefor=solvefor)
 
         self.proportional = proportional
         self.integral = integral
@@ -66,17 +66,17 @@ class PIDStepper(Stepper):
             The next time step to try.
         """
         while True:
-            self.error[2] = sweepFn(vardata=self.vardata, dt=dt, *args, **kwargs)
+            self.error[2] = sweepFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
 
             # omitting nsa > nsaMax check since it's unclear from
             # the paper what it's supposed to do
             if self.error[2] > 1. and dt > self.dtMin:
                 # reject the timestep
-                failFn(vardata=self.vardata, dt=dt, *args, **kwargs)
+                failFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
 
                 self.nrej += 1
 
-                for var, eqn, bcs in self.vardata:
+                for var, eqn, bcs in self.solvefor:
                     var.setValue(var.old)
 
                 factor = min(1. / self.error[2], 0.8)
