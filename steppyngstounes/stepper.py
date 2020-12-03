@@ -14,10 +14,22 @@ class Stepper(object):
     solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
+
+    Attributes
+    ----------
+    elapsed : float
+        The total time taken so far.
+    time_steps : list of float
+        The time steps successfully taken so far.
+    elapsed_times : list of float
+        The elapsed time at each successful time step.
     """
 
     def __init__(self, solvefor=()):
         self.solvefor = solvefor
+        self.elapsed = 0.
+        self.time_steps = []
+        self.elapsed_times = []
 
     def sweepFn(self, dt, *args, **kwargs):
         """Function to apply at each adapted time step.
@@ -40,7 +52,7 @@ class Stepper(object):
 
         return error
 
-    def successFn(self, dt, dtPrev, elapsed, *args, **kwargs):
+    def successFn(self, dt, dtPrev, *args, **kwargs):
         """Function to perform after a successful adaptive solution step.
 
         Parameters
@@ -49,8 +61,6 @@ class Stepper(object):
             The time step that was requested.
         dtPrev : float
             The time step that was actually taken.
-        elapsed : float
-            How much time is elapsed *for this time step*.
         *args, **kwargs
             Extra arguments passed to `self.step()`.  The same `*args` and
             `**kwargs` are passed to `sweepFn()` and `failFn()`.
@@ -58,13 +68,15 @@ class Stepper(object):
         """
         pass
 
-    def failFn(self, dt, *args, **kwargs):
+    def failFn(self, dt, dtPrev, *args, **kwargs):
         """Function to perform when `sweepFn()` returns an error greater than 1.
 
         Parameters
         ----------
         dt : float
             The time step that was requested.
+        dtPrev : float
+            The time step that was attempted.
         *args, **kwargs
             Extra arguments passed to `self.step()`.  The same `*args` and
             `**kwargs` are passed to `sweepFn()` and `successFn()`.
@@ -146,10 +158,10 @@ class Stepper(object):
         dtPrev = dtPrev or dtMin
         self.dtMin = dtMin or 0.
 
-        self.elapsed = 0.
+        this_step = 0.
 
-        while self.elapsed < dt:
-            dtMax = dt - self.elapsed
+        while this_step < dt:
+            dtMax = dt - this_step
             if dtTry > dtMax:
                 dtSave = dtTry
                 dtTry = dtMax
@@ -162,9 +174,13 @@ class Stepper(object):
             dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev,
                                        *args, **kwargs)
 
+            this_step += dtPrev
             self.elapsed += dtPrev
 
-            self.successFn(dtPrev=dtPrev, elapsed=self.elapsed, dt=dt,
+            self.time_steps.append(dtPrev)
+            self.elapsed_times.append(self.elapsed)
+
+            self.successFn(dt=dt, dtPrev=dtPrev,
                            *args, **kwargs)
 
             dtTry = max(dtTry, self.dtMin)
