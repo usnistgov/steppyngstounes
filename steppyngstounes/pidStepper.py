@@ -42,7 +42,7 @@ class PIDStepper(Stepper):
         self.error = [1., 1., 1.]
         self.nrej = 0
 
-    def _step(self, dt, dtPrev, sweepFn, failFn, *args, **kwargs):
+    def _step(self, dt, dtPrev, *args, **kwargs):
         """Sweep at given time step and then adapt.
 
         Parameters
@@ -51,10 +51,6 @@ class PIDStepper(Stepper):
             Adapted time step to attempt.
         dtPrev : float
             The last time step attempted.
-        sweepFn : callable
-            Function to apply at each adapted time step.
-        failFn : callable
-            Function to perform when `sweepFn()` returns an error greater than 1.
         *args, **kwargs
             Extra arguments to pass on to `sweepFn()` and `failFn()`.
 
@@ -66,13 +62,13 @@ class PIDStepper(Stepper):
             The next time step to try.
         """
         while True:
-            self.error[2] = sweepFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
+            self.error[2] = self.sweepFn(dt=dt, *args, **kwargs)
 
             # omitting nsa > nsaMax check since it's unclear from
             # the paper what it's supposed to do
             if self.error[2] > 1. and dt > self.dtMin:
                 # reject the timestep
-                failFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
+                self.failFn(dt=dt, *args, **kwargs)
 
                 self.nrej += 1
 

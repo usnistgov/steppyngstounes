@@ -31,7 +31,7 @@ class PseudoRKQSStepper(Stepper):
         self.pshrink = pshrink
         self.errcon = errcon
 
-    def _step(self, dt, dtPrev, sweepFn, failFn, *args, **kwargs):
+    def _step(self, dt, dtPrev, *args, **kwargs):
         """Sweep at given time step and then adapt.
 
         Parameters
@@ -40,10 +40,6 @@ class PseudoRKQSStepper(Stepper):
             Adapted time step to attempt.
         dtPrev : float
             The last time step attempted.
-        sweepFn : callable
-            Function to apply at each adapted time step.
-        failFn : callable
-            Function to perform when `sweepFn()` returns an error greater than 1.
         *args, **kwargs
             Extra arguments to pass on to `sweepFn()` and `failFn()`.
 
@@ -55,11 +51,11 @@ class PseudoRKQSStepper(Stepper):
             The next time step to try.
         """
         while True:
-            error = sweepFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
+            error = self.sweepFn(dt=dt, *args, **kwargs)
 
             if error > 1.:
                 # step failed
-                failFn(vardata=self.solvefor, dt=dt, *args, **kwargs)
+                self.failFn(dt=dt, *args, **kwargs)
 
                 # revert
                 for var, eqn, bcs in self.solvefor:

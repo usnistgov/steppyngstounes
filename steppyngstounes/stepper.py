@@ -19,14 +19,11 @@ class Stepper(object):
     def __init__(self, solvefor=()):
         self.solvefor = solvefor
 
-    def sweepFn(vardata, dt, *args, **kwargs):
+    def sweepFn(self, dt, *args, **kwargs):
         """Function to apply at each adapted time step.
 
         Parameters
         ----------
-        vardata : tuple of tuple
-            Each tuple holds a `CellVariable` to solve for, the equation to
-            solve, and the old-style boundary conditions to apply.
         dt : float
             Adapted time step to attempt.
         *args, **kwargs
@@ -37,21 +34,17 @@ class Stepper(object):
         -------
         Solution error, normalized to 1.
         """
-        residual = 0
-        for var, eqn, bcs in vardata:
-            residual = max(residual, eqn.sweep(var=var, dt=dt, boundaryConditions=bcs))
+        error = 0
+        for var, eqn, bcs in self.solvefor:
+            error = max(error, eqn.sweep(var=var, dt=dt, boundaryConditions=bcs))
 
-        return residual
-    sweepFn = staticmethod(sweepFn)
+        return error
 
-    def successFn(vardata, dt, dtPrev, elapsed, *args, **kwargs):
+    def successFn(self, dt, dtPrev, elapsed, *args, **kwargs):
         """Function to perform after a successful adaptive solution step.
 
         Parameters
         ----------
-        vardata : tuple of tuple
-            Each tuple holds a `CellVariable` to solve for, the equation to
-            solve, and the old-style boundary conditions to apply.
         dt : float
             The time step that was requested.
         dtPrev : float
@@ -64,16 +57,12 @@ class Stepper(object):
 
         """
         pass
-    successFn = staticmethod(successFn)
 
-    def failFn(vardata, dt, *args, **kwargs):
+    def failFn(self, dt, *args, **kwargs):
         """Function to perform when `sweepFn()` returns an error greater than 1.
 
         Parameters
         ----------
-        vardata : tuple of tuple
-            Each tuple holds a `CellVariable` to solve for, the equation to
-            solve, and the old-style boundary conditions to apply.
         dt : float
             The time step that was requested.
         *args, **kwargs
@@ -82,7 +71,6 @@ class Stepper(object):
 
         """
         pass
-    failFn = staticmethod(failFn)
 
     def _lowerBound(self, dt):
         """Determine minimum time step.
@@ -109,7 +97,7 @@ class Stepper(object):
 
         return dt
 
-    def _step(self, dt, dtPrev, sweepFn, failFn, *args, **kwargs):
+    def _step(self, dt, dtPrev, *args, **kwargs):
         """Sweep at given time step and then adapt.
 
         Parameters
@@ -118,10 +106,6 @@ class Stepper(object):
             Adapted time step to attempt.
         dtPrev : float
             The last time step attempted.
-        sweepFn : callable
-            Function to apply at each adapted time step.
-        failFn : callable
-            Function to perform when `sweepFn()` returns an error greater than 1.
         *args, **kwargs
             Extra arguments to pass on to `sweepFn()` and `failFn()`.
 
@@ -132,11 +116,9 @@ class Stepper(object):
         dtNext : float
             The next time step to try.
         """
-        sweepFn(vardata=self.vardata, dt=dt, *args, **kwargs)
-        return dt, dt
+        raise NotImplementedError
 
-    def step(self, dt, dtTry=None, dtMin=None, dtPrev=None,
-             sweepFn=None, successFn=None, failFn=None, *args, **kwargs):
+    def step(self, dt, dtTry=None, dtMin=None, dtPrev=None, *args, **kwargs):
         """Perform an adaptive solution step.
 
         Parameters
@@ -149,12 +131,6 @@ class Stepper(object):
             The smallest time step to allow.
         dtPrev : float
             The last time step attempted.
-        sweepFn : callable
-            Function to override `self.sweepFn` (default None).
-        successFn : callable
-            Function to override `self.successFn` (default None).
-        failFn : callable
-            Function to override `self.failFn` (default None).
         *args, **kwargs
             Extra arguments to pass on to `sweepFn()`, `successFn()`, and
             `failFn()`.
@@ -166,10 +142,6 @@ class Stepper(object):
         dtTry : float
             The next adapted time step to attempt.
         """
-        sweepFn = sweepFn or self.sweepFn
-        successFn = successFn or self.successFn
-        failFn = failFn or self.failFn
-
         dtTry = dtTry or dtMin or dt
         dtPrev = dtPrev or dtMin
         self.dtMin = dtMin or 0.
@@ -188,13 +160,12 @@ class Stepper(object):
                 var.updateOld()
 
             dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev,
-                                       sweepFn=sweepFn, failFn=failFn,
                                        *args, **kwargs)
 
             self.elapsed += dtPrev
 
-            successFn(vardata=self.solvefor,
-                      dtPrev=dtPrev, elapsed=self.elapsed, dt=dt, *args, **kwargs)
+            self.successFn(dtPrev=dtPrev, elapsed=self.elapsed, dt=dt,
+                           *args, **kwargs)
 
             dtTry = max(dtTry, self.dtMin)
 
