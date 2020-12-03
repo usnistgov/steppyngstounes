@@ -27,7 +27,7 @@ class SimpleStepper(Stepper):
         dtPrev : float
             The last time step attempted.
         *args, **kwargs
-            Extra arguments to pass on to `sweepFn()` and `failFn()`.
+            Extra arguments to pass on to `sweepFn()` and `failure()`.
 
         Returns
         -------
@@ -36,5 +36,5 @@ class SimpleStepper(Stepper):
         dtNext : float
             The next time step to try.
         """
-        self.sweepFn(dt=dt, *args, **kwargs)
+        self.sweep(dt=dt, *args, **kwargs)
         return dt, dt

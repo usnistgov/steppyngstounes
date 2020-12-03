@@ -41,7 +41,7 @@ class PseudoRKQSStepper(Stepper):
         dtPrev : float
             The last time step attempted.
         *args, **kwargs
-            Extra arguments to pass on to `sweepFn()` and `failFn()`.
+            Extra arguments to pass on to `solve()` and `failure()`.
 
         Returns
         -------
@@ -51,11 +51,11 @@ class PseudoRKQSStepper(Stepper):
             The next time step to try.
         """
         while True:
-            error = self.sweepFn(dt=dt, *args, **kwargs)
+            error = self.solve(dt=dt, *args, **kwargs)
 
             if error > 1.:
                 # step failed
-                self.failFn(dt=dt, *args, **kwargs)
+                self.failure(dt=dt, *args, **kwargs)
 
                 # revert
                 for var, eqn, bcs in self.solvefor:

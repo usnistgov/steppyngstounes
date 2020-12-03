@@ -31,8 +31,8 @@ class Stepper(object):
         self.time_steps = []
         self.elapsed_times = []
 
-    def sweepFn(self, dt, *args, **kwargs):
-        """Function to apply at each adapted time step.
+    def solve(self, dt, *args, **kwargs):
+        """Action to take at each adapted time step attempt.
 
         Parameters
         ----------
@@ -40,7 +40,7 @@ class Stepper(object):
             Adapted time step to attempt.
         *args, **kwargs
             Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `successFn()` and `failFn()`.
+            `**kwargs` are passed to `success()` and `failure()`.
 
         Returns
         -------
@@ -52,7 +52,7 @@ class Stepper(object):
 
         return error
 
-    def successFn(self, dt, dtPrev, *args, **kwargs):
+    def success(self, dt, dtPrev, *args, **kwargs):
         """Function to perform after a successful adaptive solution step.
 
         Parameters
@@ -63,13 +63,13 @@ class Stepper(object):
             The time step that was actually taken.
         *args, **kwargs
             Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `sweepFn()` and `failFn()`.
+            `**kwargs` are passed to `solve()` and `failure()`.
 
         """
         pass
 
-    def failFn(self, dt, dtPrev, *args, **kwargs):
-        """Function to perform when `sweepFn()` returns an error greater than 1.
+    def failure(self, dt, dtPrev, *args, **kwargs):
+        """Function to perform when `solve()` returns an error greater than 1.
 
         Parameters
         ----------
@@ -79,7 +79,7 @@ class Stepper(object):
             The time step that was attempted.
         *args, **kwargs
             Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `sweepFn()` and `successFn()`.
+            `**kwargs` are passed to `solve()` and `success()`.
 
         """
         pass
@@ -119,7 +119,7 @@ class Stepper(object):
         dtPrev : float
             The last time step attempted.
         *args, **kwargs
-            Extra arguments to pass on to `sweepFn()` and `failFn()`.
+            Extra arguments to pass on to `solve()` and `failure()`.
 
         Returns
         -------
@@ -144,8 +144,8 @@ class Stepper(object):
         dtPrev : float
             The last time step attempted.
         *args, **kwargs
-            Extra arguments to pass on to `sweepFn()`, `successFn()`, and
-            `failFn()`.
+            Extra arguments to pass on to `solve()`, `success()`, and
+            `failure()`.
 
         Returns
         -------
@@ -180,8 +180,8 @@ class Stepper(object):
             self.time_steps.append(dtPrev)
             self.elapsed_times.append(self.elapsed)
 
-            self.successFn(dt=dt, dtPrev=dtPrev,
-                           *args, **kwargs)
+            self.success(dt=dt, dtPrev=dtPrev,
+                         *args, **kwargs)
 
             dtTry = max(dtTry, self.dtMin)
 

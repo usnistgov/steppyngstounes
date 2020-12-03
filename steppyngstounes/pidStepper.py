@@ -52,7 +52,7 @@ class PIDStepper(Stepper):
         dtPrev : float
             The last time step attempted.
         *args, **kwargs
-            Extra arguments to pass on to `sweepFn()` and `failFn()`.
+            Extra arguments to pass on to `solve()` and `failure()`.
 
         Returns
         -------
@@ -62,13 +62,13 @@ class PIDStepper(Stepper):
             The next time step to try.
         """
         while True:
-            self.error[2] = self.sweepFn(dt=dt, *args, **kwargs)
+            self.error[2] = self.solve(dt=dt, *args, **kwargs)
 
             # omitting nsa > nsaMax check since it's unclear from
             # the paper what it's supposed to do
             if self.error[2] > 1. and dt > self.dtMin:
                 # reject the timestep
-                self.failFn(dt=dt, *args, **kwargs)
+                self.failure(dt=dt, *args, **kwargs)
 
                 self.nrej += 1
 
