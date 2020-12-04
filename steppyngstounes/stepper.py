@@ -31,6 +31,22 @@ class Stepper(object):
         self.time_steps = []
         self.elapsed_times = []
 
+    def calcError(self, var, equation, boundaryConditions, residual):
+        """Calculate error of current solution.
+
+        Parameters
+        ----------
+        var : ~fipy.variables.cellVariable.CellVariable
+            Solution variable.
+        equation : ~fipy.terms.term.Term
+            Equation that solved `var`.
+        boundaryConditions : tuple
+            Boundary conditions applied to solution of `var`.
+        residual : float
+            Residual from solution of `var`.
+        """
+        raise NotImplementedError
+
     def solve(self, dt, *args, **kwargs):
         """Action to take at each adapted time step attempt.
 
@@ -39,16 +55,23 @@ class Stepper(object):
         dt : float
             Adapted time step to attempt.
         *args, **kwargs
-            Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `success()` and `failure()`.
+            Extra arguments passed to `self.step()`.
 
         Returns
         -------
         Solution error, normalized to 1.
         """
-        error = 0
+        error = 0.
         for var, eqn, bcs in self.solvefor:
-            error = max(error, eqn.sweep(var=var, dt=dt, boundaryConditions=bcs))
+            res = eqn.sweep(var=var,
+                            dt=dt,
+                            boundaryConditions=bcs)
+
+            error = max(error,
+                        self.calcError(var=var,
+                                       equation=eqn,
+                                       boundaryConditions=bcs,
+                                       residual=res))
 
         return error
 
@@ -62,8 +85,7 @@ class Stepper(object):
         dtPrev : float
             The time step that was actually taken.
         *args, **kwargs
-            Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `solve()` and `failure()`.
+            Extra arguments passed to `self.step()`.
 
         """
         pass
@@ -78,8 +100,7 @@ class Stepper(object):
         dtPrev : float
             The time step that was attempted.
         *args, **kwargs
-            Extra arguments passed to `self.step()`.  The same `*args` and
-            `**kwargs` are passed to `solve()` and `success()`.
+            Extra arguments passed to `self.step()`.
 
         """
         pass
