@@ -109,8 +109,63 @@ class Stepper(object):
 
         return dt
 
+    def _shrinkStep(self, error, dt):
+        """Reduce time step after failure
+
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that failed.
+
+        Returns
+        -------
+        float
+            New time step
+        """
+        return dt
+
+    def _calcPrev(self, error, dt, dtPrev):
+        """Adjust previous time step
+
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that failed.
+        dtPrev : float
+            Previous time step.
+
+        Returns
+        -------
+        float
+            New previous time step
+        """
+        return dtPrev
+
+    def _calcNext(self, error, dt, dtPrev):
+        """Calculate next time step after success
+
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that succeeded.
+        dtPrev : float
+            Previous time step.
+
+        Returns
+        -------
+        float
+            New time step
+        """
+        return dt
+
     def _step(self, dt, dtPrev, *args, **kwargs):
-        """Sweep at given time step and then adapt.
+        """Solve at given time step and then adapt.
 
         Parameters
         ----------
@@ -128,7 +183,26 @@ class Stepper(object):
         dtNext : float
             The next time step to try.
         """
-        raise NotImplementedError
+        while True:
+            error = self.solve(dt=dt, *args, **kwargs)
+
+            if error > 1. and dt > self.dtMin:
+                # reject the timestep
+                self.failure(dt=dt, *args, **kwargs)
+
+                for var, eqn, bcs in self.solvefor:
+                    var.value = var.old
+
+                dt = self._shrinkStep(error=error, dt=dt)
+                dt = self._lowerBound(dt)
+                dtPrev = self._calcPrev(error=error, dt=dt, dtPrev=dtPrev)
+            else:
+                # step succeeded
+                break
+
+        dtNext = self._calcNext(error=error, dt=dt, dtPrev=dtPrev)
+
+        return dt, dtNext
 
     def step(self, dt, dtTry=None, dtMin=None, dtPrev=None, *args, **kwargs):
         """Perform an adaptive solution step.

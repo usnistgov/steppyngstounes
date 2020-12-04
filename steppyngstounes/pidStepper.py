@@ -40,49 +40,62 @@ class PIDStepper(Stepper):
         self.derivative = derivative
 
         self.error = [1., 1., 1.]
-        self.nrej = 0
 
-    def _step(self, dt, dtPrev, *args, **kwargs):
-        """Sweep at given time step and then adapt.
+    def _shrinkStep(self, error, dt):
+        """Reduce time step after failure
 
         Parameters
         ----------
+        error : float
+            Error (normalized to 1) from the last solve.
         dt : float
-            Adapted time step to attempt.
-        dtPrev : float
-            The last time step attempted.
-        *args, **kwargs
-            Extra arguments to pass on to `solve()` and `failure()`.
+            Time step that failed.
 
         Returns
         -------
-        dt : float
-            The time step attempted.
-        dtNext : float
-            The next time step to try.
+        float
+            New time step
         """
-        while True:
-            self.error[2] = self.solve(dt=dt, *args, **kwargs)
+        factor = min(1. / error, 0.8)
+        return factor * dt
 
-            # omitting nsa > nsaMax check since it's unclear from
-            # the paper what it's supposed to do
-            if self.error[2] > 1. and dt > self.dtMin:
-                # reject the timestep
-                self.failure(dt=dt, *args, **kwargs)
+    def _calcPrev(self, error, dt, dtPrev):
+        """Adjust previous time step
 
-                self.nrej += 1
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that failed.
+        dtPrev : float
+            Previous time step.
 
-                for var, eqn, bcs in self.solvefor:
-                    var.setValue(var.old)
+        Returns
+        -------
+        float
+            New previous time step
+        """
+        return dt**2 / dtPrev
 
-                factor = min(1. / self.error[2], 0.8)
+    def _calcNext(self, error, dt, dtPrev):
+        """Calculate next time step after success
 
-                dt = self._lowerBound(factor * dt)
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that succeeded.
+        dtPrev : float
+            Previous time step.
 
-                dtPrev = dt**2 / dtPrev
-            else:
-                # step succeeded
-                break
+        Returns
+        -------
+        float
+            New time step
+        """
+        self.error[2] = error
 
         dtNext = dtPrev * ((self.error[1] / self.error[2])**self.proportional
                            * (1. / self.error[2])**self.integral
@@ -91,4 +104,4 @@ class PIDStepper(Stepper):
         self.error[0] = self.error[1]
         self.error[1] = self.error[2]
 
-        return dt, dtNext
+        return dtNext

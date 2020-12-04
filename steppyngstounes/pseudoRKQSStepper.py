@@ -31,46 +31,43 @@ class PseudoRKQSStepper(Stepper):
         self.pshrink = pshrink
         self.errcon = errcon
 
-    def _step(self, dt, dtPrev, *args, **kwargs):
-        """Sweep at given time step and then adapt.
+    def _shrinkStep(self, error, dt):
+        """Reduce time step after failure
 
         Parameters
         ----------
+        error : float
+            Error (normalized to 1) from the last solve.
         dt : float
-            Adapted time step to attempt.
-        dtPrev : float
-            The last time step attempted.
-        *args, **kwargs
-            Extra arguments to pass on to `solve()` and `failure()`.
+            Time step that failed.
 
         Returns
         -------
-        dt : float
-            The time step attempted.
-        dtNext : float
-            The next time step to try.
+        float
+            New time step
         """
-        while True:
-            error = self.solve(dt=dt, *args, **kwargs)
+        return max(self.safety * dt * error**self.pgrow, 0.1 * dt)
 
-            if error > 1.:
-                # step failed
-                self.failure(dt=dt, *args, **kwargs)
+    def _calcNext(self, error, dt, dtPrev):
+        """Calculate next time step after success
 
-                # revert
-                for var, eqn, bcs in self.solvefor:
-                    var.setValue(var.old)
+        Parameters
+        ----------
+        error : float
+            Error (normalized to 1) from the last solve.
+        dt : float
+            Time step that succeeded.
+        dtPrev : float
+            Previous time step.
 
-                    dt = max(self.safety * dt * error**self.pgrow, 0.1 * dt)
-
-                dt = self._lowerBound(dt)
-            else:
-                # step succeeded
-                break
-
+        Returns
+        -------
+        float
+            New time step
+        """
         if error > self.errcon:
             dtNext = dt * self.safety * error**self.pshrink
         else:
             dtNext = 5 * dt
 
-        return dt, dtNext
+        return dtNext
