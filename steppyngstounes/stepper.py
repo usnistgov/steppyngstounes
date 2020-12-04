@@ -47,15 +47,13 @@ class Stepper(object):
         """
         raise NotImplementedError
 
-    def solve(self, dt, *args, **kwargs):
+    def solve(self, dt):
         """Action to take at each adapted time step attempt.
 
         Parameters
         ----------
         dt : float
             Adapted time step to attempt.
-        *args, **kwargs
-            Extra arguments passed to `self.step()`.
 
         Returns
         -------
@@ -75,7 +73,7 @@ class Stepper(object):
 
         return error
 
-    def success(self, dt, dtPrev, *args, **kwargs):
+    def success(self, dt, dtPrev):
         """Function to perform after a successful adaptive solution step.
 
         Parameters
@@ -84,13 +82,11 @@ class Stepper(object):
             The time step that was requested.
         dtPrev : float
             The time step that was actually taken.
-        *args, **kwargs
-            Extra arguments passed to `self.step()`.
 
         """
         pass
 
-    def failure(self, dt, dtPrev, *args, **kwargs):
+    def failure(self, dt, dtPrev):
         """Function to perform when `solve()` returns an error greater than 1.
 
         Parameters
@@ -99,8 +95,6 @@ class Stepper(object):
             The time step that was requested.
         dtPrev : float
             The time step that was attempted.
-        *args, **kwargs
-            Extra arguments passed to `self.step()`.
 
         """
         pass
@@ -185,7 +179,7 @@ class Stepper(object):
         """
         return dt
 
-    def _step(self, dt, dtPrev, *args, **kwargs):
+    def _step(self, dt, dtPrev):
         """Solve at given time step and then adapt.
 
         Parameters
@@ -194,8 +188,6 @@ class Stepper(object):
             Adapted time step to attempt.
         dtPrev : float
             The last time step attempted.
-        *args, **kwargs
-            Extra arguments to pass on to `solve()` and `failure()`.
 
         Returns
         -------
@@ -205,11 +197,11 @@ class Stepper(object):
             The next time step to try.
         """
         while True:
-            error = self.solve(dt=dt, *args, **kwargs)
+            error = self.solve(dt=dt)
 
             if error > 1. and dt > self.dtMin:
                 # reject the timestep
-                self.failure(dt=dt, *args, **kwargs)
+                self.failure(dt=dt)
 
                 for var, eqn, bcs in self.solvefor:
                     var.value = var.old
@@ -225,7 +217,7 @@ class Stepper(object):
 
         return dt, dtNext
 
-    def step(self, dt, dtTry=None, dtMin=None, dtPrev=None, *args, **kwargs):
+    def step(self, dt, dtTry=None, dtMin=None, dtPrev=None):
         """Perform an adaptive solution step.
 
         Parameters
@@ -238,9 +230,6 @@ class Stepper(object):
             The smallest time step to allow.
         dtPrev : float
             The last time step attempted.
-        *args, **kwargs
-            Extra arguments to pass on to `solve()`, `success()`, and
-            `failure()`.
 
         Returns
         -------
@@ -266,8 +255,7 @@ class Stepper(object):
             for var, eqn, bcs in self.solvefor:
                 var.updateOld()
 
-            dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev,
-                                       *args, **kwargs)
+            dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev)
 
             this_step += dtPrev
             self.elapsed += dtPrev
@@ -275,8 +263,7 @@ class Stepper(object):
             self.time_steps.append(dtPrev)
             self.elapsed_times.append(self.elapsed)
 
-            self.success(dt=dt, dtPrev=dtPrev,
-                         *args, **kwargs)
+            self.success(dt=dt, dtPrev=dtPrev)
 
             dtTry = max(dtTry, self.dtMin)
 
