@@ -73,27 +73,23 @@ class Stepper(object):
 
         return error
 
-    def success(self, dt, dtPrev):
+    def success(self, dt):
         """Function to perform after a successful adaptive solution step.
 
         Parameters
         ----------
         dt : float
-            The time step that was requested.
-        dtPrev : float
             The time step that was actually taken.
 
         """
         pass
 
-    def failure(self, dt, dtPrev):
+    def failure(self, dt):
         """Function to perform when `solve()` returns an error greater than 1.
 
         Parameters
         ----------
         dt : float
-            The time step that was requested.
-        dtPrev : float
             The time step that was attempted.
 
         """
@@ -217,13 +213,13 @@ class Stepper(object):
 
         return dt, dtNext
 
-    def step(self, dt, dtTry=None, dtMin=None, dtPrev=None):
+    def step(self, until, dtTry=None, dtMin=None, dtPrev=None):
         """Perform an adaptive solution step.
 
         Parameters
         ----------
-        dt : float
-            The desired time step.
+        until : float
+            The time to step to.
         dtTry : float
             The time step to try first.
         dtMin : float
@@ -238,14 +234,12 @@ class Stepper(object):
         dtTry : float
             The next adapted time step to attempt.
         """
-        dtTry = dtTry or dtMin or dt
+        dtTry = dtTry or dtMin or (until - self.elapsed)
         dtPrev = dtPrev or dtMin
         self.dtMin = dtMin or 0.
 
-        this_step = 0.
-
-        while this_step < dt:
-            dtMax = dt - this_step
+        while self.elapsed < until:
+            dtMax = until - self.elapsed
             if dtTry > dtMax:
                 dtSave = dtTry
                 dtTry = dtMax
@@ -257,13 +251,12 @@ class Stepper(object):
 
             dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev)
 
-            this_step += dtPrev
             self.elapsed += dtPrev
 
             self.time_steps.append(dtPrev)
             self.elapsed_times.append(self.elapsed)
 
-            self.success(dt=dt, dtPrev=dtPrev)
+            self.success(dt=dtPrev)
 
             dtTry = max(dtTry, self.dtMin)
 
