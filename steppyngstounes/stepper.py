@@ -9,11 +9,20 @@ __all__ = [text_to_native_str(n) for n in __all__]
 class Stepper(object):
     """Adaptive stepper base class.
 
+    .. note::
+
+        The user must override
+        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
+        :meth:`~fipy.steppers.stepper.Stepper.success` and
+        :meth:`~fipy.steppers.stepper.Stepper.failure`.
+
     Parameters
     ----------
     solvefor : tuple of tuple
-        Each tuple holds a `CellVariable` to solve for, the equation to
-        solve, and the old-style boundary conditions to apply.
+        Each tuple holds a
+        :class:`~fipy.variables.cellVariable.CellVariable` to solve for,
+        the equation to solve, and the old-style boundary conditions to
+        apply (if any).
 
     Attributes
     ----------
@@ -23,6 +32,7 @@ class Stepper(object):
         The time steps successfully taken so far.
     elapsed_times : list of float
         The elapsed time at each successful time step.
+
     """
 
     def __init__(self, solvefor=()):
@@ -34,6 +44,10 @@ class Stepper(object):
     def calcError(self, var, equation, boundaryConditions, residual):
         """Calculate error of current solution.
 
+        Users must subclass the desired class of
+        :class:`~fipy.steppers.stepper.Stepper` and override this method to
+        calculate a value normalized to 1.
+
         Parameters
         ----------
         var : ~fipy.variables.cellVariable.CellVariable
@@ -44,6 +58,13 @@ class Stepper(object):
             Boundary conditions applied to solution of `var`.
         residual : float
             Residual from solution of `var`.
+
+        Returns
+        -------
+        float
+            Solution error, normalized to 1.  Returning a value greater than 1
+            will cause the next time step to shrink, otherwise it will grow.
+
         """
         raise NotImplementedError
 
@@ -57,7 +78,9 @@ class Stepper(object):
 
         Returns
         -------
-        Solution error, normalized to 1.
+        float
+            Solution error, normalized to 1.
+
         """
         error = 0.
         for var, eqn, bcs in self.solvefor:
@@ -74,7 +97,10 @@ class Stepper(object):
         return error
 
     def success(self, dt):
-        """Function to perform after a successful adaptive solution step.
+        """Action to perform after a successful adaptive solution step.
+
+        Default does nothing.  Users can override this method to perform
+        any desired actions.
 
         Parameters
         ----------
@@ -85,7 +111,10 @@ class Stepper(object):
         pass
 
     def failure(self, dt):
-        """Function to perform when `solve()` returns an error greater than 1.
+        """Action to perform when `solve()` returns an error greater than 1.
+
+        Default does nothing.  Users can override this method to perform
+        any desired actions.
 
         Parameters
         ----------
@@ -123,6 +152,9 @@ class Stepper(object):
     def _shrinkStep(self, error, dt):
         """Reduce time step after failure
 
+        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
+        override this method (default returns `dt` unchanged).
+
         Parameters
         ----------
         error : float
@@ -133,12 +165,17 @@ class Stepper(object):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         return dt
 
     def _calcPrev(self, error, dt, dtPrev):
         """Adjust previous time step
+
+        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
+        not need to override this method (default returns `dtPrev`
+        unchanged).
 
         Parameters
         ----------
@@ -152,12 +189,16 @@ class Stepper(object):
         Returns
         -------
         float
-            New previous time step
+            New previous time step.
+
         """
         return dtPrev
 
     def _calcNext(self, error, dt, dtPrev):
         """Calculate next time step after success
+
+        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
+        override this method (default returns `dt` unchanged).
 
         Parameters
         ----------
@@ -171,7 +212,8 @@ class Stepper(object):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         return dt
 
@@ -191,6 +233,7 @@ class Stepper(object):
             The time step attempted.
         dtNext : float
             The next time step to try.
+
         """
         while True:
             error = self.solve(dt=dt)
@@ -233,6 +276,7 @@ class Stepper(object):
             The adapted time step actually taken.
         dtTry : float
             The next adapted time step to attempt.
+
         """
         dtTry = dtTry or dtMin or (until - self.elapsed)
         dtPrev = dtPrev or dtMin

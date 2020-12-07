@@ -22,6 +22,13 @@ class PIDStepper(Stepper):
            pages =   {201-231},
         }
 
+    .. note::
+
+        The user must override
+        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
+        :meth:`~fipy.steppers.stepper.Stepper.success` and
+        :meth:`~fipy.steppers.stepper.Stepper.failure`.
+
     Parameters
     ----------
     solvefor : tuple of tuple
@@ -54,7 +61,8 @@ class PIDStepper(Stepper):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         factor = min(1. / error, 0.8)
         return factor * dt
@@ -74,7 +82,8 @@ class PIDStepper(Stepper):
         Returns
         -------
         float
-            New previous time step
+            New previous time step.
+
         """
         return dt**2 / dtPrev
 
@@ -93,7 +102,8 @@ class PIDStepper(Stepper):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         self.error.append(error)
 

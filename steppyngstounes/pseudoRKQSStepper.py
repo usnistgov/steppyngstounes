@@ -14,6 +14,13 @@ class PseudoRKQSStepper(Stepper):
     Not really appropriate, since we're not doing Runge-Kutta steps
     in the first place, but works OK.
 
+    .. note::
+
+        The user must override
+        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
+        :meth:`~fipy.steppers.stepper.Stepper.success` and
+        :meth:`~fipy.steppers.stepper.Stepper.failure`.
+
     Parameters
     ----------
     solvefor : tuple of tuple
@@ -44,7 +51,8 @@ class PseudoRKQSStepper(Stepper):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         factor = max(self.safety * error**self.pgrow, 0.1)
         return factor * dt
@@ -64,7 +72,8 @@ class PseudoRKQSStepper(Stepper):
         Returns
         -------
         float
-            New time step
+            New time step.
+
         """
         if error > self.errcon:
             factor = self.safety * error**self.pshrink
