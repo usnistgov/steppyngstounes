@@ -95,13 +95,13 @@ class PIDStepper(Stepper):
         float
             New time step
         """
-        self.error[2] = error
+        self.error.append(error)
 
-        dtNext = dtPrev * ((self.error[1] / self.error[2])**self.proportional
-                           * (1. / self.error[2])**self.integral
-                           * (self.error[1]**2 / (self.error[2] * self.error[0]))**self.derivative)
+        dtNext = dtPrev * ((self.error[-2] / self.error[-1])**self.proportional
+                           * (1. / self.error[-1])**self.integral
+                           * (self.error[-2]**2 / (self.error[-1] * self.error[-3]))**self.derivative)
 
-        self.error[0] = self.error[1]
-        self.error[1] = self.error[2]
+        # optional, could alternatively keep whole error history
+        _ = self.error.pop(0)
 
         return dtNext
