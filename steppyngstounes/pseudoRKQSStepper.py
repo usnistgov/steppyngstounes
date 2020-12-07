@@ -46,7 +46,8 @@ class PseudoRKQSStepper(Stepper):
         float
             New time step
         """
-        return max(self.safety * dt * error**self.pgrow, 0.1 * dt)
+        factor = max(self.safety * error**self.pgrow, 0.1)
+        return factor * dt
 
     def _calcNext(self, error, dt, dtPrev):
         """Calculate next time step after success
@@ -66,8 +67,8 @@ class PseudoRKQSStepper(Stepper):
             New time step
         """
         if error > self.errcon:
-            dtNext = dt * self.safety * error**self.pshrink
+            factor = self.safety * error**self.pshrink
         else:
-            dtNext = 5 * dt
+            factor = 5
 
-        return dtNext
+        return factor * dt
