@@ -57,15 +57,13 @@ class PseudoRKQSStepper(Stepper):
         factor = max(self.safety * error**self.pgrow, 0.1)
         return factor * triedStep
 
-    def _calcNext(self, triedStep, prevStep, error):
+    def _calcNext(self, triedStep, error):
         """Calculate next step after success
 
         Parameters
         ----------
         triedStep : float
             Step that succeeded.
-        prevStep : float
-            Previous step.
         error : float
             Error (positive and normalized to 1) from the last solve.
 

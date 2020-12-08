@@ -49,6 +49,38 @@ class PIDStepper(Stepper):
 
         self.error = [1., 1., 1.]
 
+        self.prevStep = None
+
+    def failure(self, triedStep, error):
+        """Action to perform when `solve()` returns an error greater than 1.
+
+        Resets the variable values, shrinks the step, and adjusts the
+        "`prevStep`" used by the algorithm.
+
+        .. warning::
+
+           If the user overrides this method they should ensure to call the
+           inherited :meth:`~fipy.steppers.stepper.PIDStepper.failure` method.
+
+        Parameters
+        ----------
+        triedStep : float
+            The step that was attempted.
+        error : float
+            Error (positive and normalized to 1) from the last solve.
+
+        Return
+        ------
+        nextStep : float
+            The next step to attempt.
+
+        """
+        nextStep = super(PIDStepper, self).failure(triedStep=triedStep, error=error)
+
+        self.prevStep = triedStep**2 / (self.prevStep or self.minStep)
+
+        return nextStep
+
     def _shrinkStep(self, triedStep, error):
         """Reduce step after failure
 
@@ -68,35 +100,13 @@ class PIDStepper(Stepper):
         factor = min(1. / error, 0.8)
         return factor * triedStep
 
-    def _calcPrev(self, triedStep, prevStep, error):
-        """Adjust previous step
-
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        prevStep : float
-            Previous step.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
-        Returns
-        -------
-        float
-            New previous step.
-
-        """
-        return triedStep**2 / prevStep
-
-    def _calcNext(self, triedStep, prevStep, error):
+    def _calcNext(self, triedStep, error):
         """Calculate next step after success
 
         Parameters
         ----------
         triedStep : float
             Step that succeeded.
-        prevStep : float
-            Previous step.
         error : float
             Error (positive and normalized to 1) from the last solve.
 
@@ -116,4 +126,4 @@ class PIDStepper(Stepper):
         # could optionally omit and keep whole error history
         _ = self.error.pop(0)
 
-        return factor * prevStep
+        return factor * (self.prevStep or triedStep)

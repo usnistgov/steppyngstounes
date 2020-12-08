@@ -100,21 +100,35 @@ class Stepper(object):
 
         return error
 
-    def success(self, triedStep):
+    def success(self, triedStep, error):
         """Action to perform after a successful adaptive solution step.
 
-        Default does nothing.  Users can override this method to perform
-        any desired actions.
+        Default determines the next step to take.
+
+        .. warning::
+
+           If the user overrides this method they should ensure to call the
+           inherited :meth:`~fipy.steppers.stepper.Stepper.failure` method.
 
         Parameters
         ----------
         triedStep : float
             The step that was actually taken.
+        error : float
+            Error (positive and normalized to 1) from the last solve.
+
+        Returns
+        -------
+        nextStep : float
+            The next step to attempt.
 
         """
-        pass
+        nextStep = self._calcNext(triedStep=triedStep, error=error)
+        nextStep = self._lowerBound(tryStep=nextStep)
 
-    def failure(self, triedStep, prevStep, error):
+        return nextStep
+
+    def failure(self, triedStep, error):
         """Action to perform when `solve()` returns an error greater than 1.
 
         Default resets the variable values and shrinks the step.
@@ -128,18 +142,22 @@ class Stepper(object):
         ----------
         triedStep : float
             The step that was attempted.
-        prevStep : float
-            Previous step.
         error : float
             Error (positive and normalized to 1) from the last solve.
+
+        Returns
+        -------
+        nextStep : float
+            The next step to attempt.
 
         """
         for var, eqn, bcs in self.solvefor:
             var.value = var.old
 
-        tryStep = self._shrinkStep(triedStep=triedStep, error=error)
-        tryStep = self._lowerBound(tryStep=triedStep)
-        prevStep = self._calcPrev(triedStep=triedStep, prevStep=prevStep, error=error)
+        nextStep = self._shrinkStep(triedStep=triedStep, error=error)
+        nextStep = self._lowerBound(tryStep=nextStep)
+
+        return nextStep
 
     def _lowerBound(self, tryStep):
         """Determine minimum step.
@@ -187,31 +205,7 @@ class Stepper(object):
         """
         return triedStep
 
-    def _calcPrev(self, triedStep, prevStep, error):
-        """Adjust previous step
-
-        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
-        not need to override this method (default returns `prevStep`
-        unchanged).
-
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        prevStep : float
-            Previous step.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
-        Returns
-        -------
-        float
-            New previous step.
-
-        """
-        return prevStep
-
-    def _calcNext(self, triedStep, prevStep, error):
+    def _calcNext(self, triedStep, error):
         """Calculate next step after success
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
@@ -221,8 +215,6 @@ class Stepper(object):
         ----------
         triedStep : float
             Step that succeeded.
-        prevStep : float
-            Previous step.
         error : float
             Error (positive and normalized to 1) from the last solve.
 
@@ -234,20 +226,18 @@ class Stepper(object):
         """
         return triedStep
 
-    def _step(self, tryStep, prevStep):
+    def _step(self, tryStep):
         """Solve at given step and then adapt.
 
         Parameters
         ----------
         tryStep : float
             Adapted step to attempt.
-        prevStep : float
-            The last step attempted.
 
         Returns
         -------
-        tryStep : float
-            The step attempted.
+        triedStep : float
+            The step actually taken.
         nextStep : float
             The next step to try.
 
@@ -255,19 +245,18 @@ class Stepper(object):
         while True:
             error = self.solve(tryStep=tryStep)
 
-            if error > 1. and abs(tryStep) > abs(self.minStep):
-                # reject the step
-                self.failure(triedStep=tryStep, prevStep=prevStep, error=error)
-            else:
+            if error <= 1.:
                 # step succeeded
                 break
+            else:
+                # reject the step
+                tryStep = self.failure(triedStep=tryStep, error=error)
 
-        nextStep = self._calcNext(triedStep=tryStep, prevStep=prevStep, error=error)
-        nextStep = self._lowerBound(tryStep=nextStep)
+        nextStep = self.success(triedStep=tryStep, error=error)
 
         return tryStep, nextStep
 
-    def step(self, until, tryStep=None, minStep=None, prevStep=None):
+    def step(self, until, tryStep=None, minStep=None):
         """Perform an adaptive solution step.
 
         Parameters
@@ -278,26 +267,23 @@ class Stepper(object):
             The step to try first.
         minStep : float
             The smallest step to allow.
-        prevStep : float
-            The last step attempted.
 
         Returns
         -------
-        prevStep : float
-            The adapted step actually taken.
-        tryStep : float
-            The next adapted step to attempt.
+        triedStep : float
+            The step actually taken.
+        nextStep : float
+            The next step to try.
 
         """
         tryStep = tryStep or minStep or (until - self.current)
-        prevStep = prevStep or minStep
         self.minStep = minStep or 0.
 
         saveStep = None
         while True:
             maxStep = until - self.current
             if maxStep == 0:
-                # reached until
+                # reached `until`
                 break
 
             if abs(tryStep) > abs(maxStep):
@@ -309,13 +295,11 @@ class Stepper(object):
             for var, eqn, bcs in self.solvefor:
                 var.updateOld()
 
-            prevStep, tryStep = self._step(tryStep=tryStep, prevStep=prevStep)
+            triedStep, tryStep = self._step(tryStep=tryStep)
 
-            self.current += prevStep
+            self.current += triedStep
 
-            self.steps.append(prevStep)
+            self.steps.append(triedStep)
             self.values.append(self.current)
 
-            self.success(triedStep=prevStep)
-
-        return saveStep or prevStep, saveStep or tryStep
+        return saveStep or triedStep, saveStep or tryStep
