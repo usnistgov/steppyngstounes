@@ -20,6 +20,7 @@ class PIDStepper(Stepper):
            volume =  47,
            year =    2005,
            pages =   {201-231},
+           doi =     {10.1002/fld.805},
         }
 
     .. note::
