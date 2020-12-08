@@ -35,13 +35,16 @@ class PIDStepper(Stepper):
     solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
+    minStep : float
+        Smallest step to allow (default 0).
     proportional, integral, derivative : float
         PID control constants.
 
     """
 
-    def __init__(self, solvefor=(), proportional=0.075, integral=0.175, derivative=0.01):
-        Stepper.__init__(self, solvefor=solvefor)
+    def __init__(self, solvefor=(), minStep=0.,
+                 proportional=0.075, integral=0.175, derivative=0.01):
+        super(PIDStepper, self).__init__(solvefor=solvefor, minStep=minStep)
 
         self.proportional = proportional
         self.integral = integral

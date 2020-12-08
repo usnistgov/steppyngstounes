@@ -26,6 +26,8 @@ class Stepper(object):
         :class:`~fipy.variables.cellVariable.CellVariable` to solve for,
         the equation to solve, and the old-style boundary conditions to
         apply (if any).
+    minStep : float
+        Smallest step to allow (default 0).
 
     Attributes
     ----------
@@ -38,8 +40,9 @@ class Stepper(object):
 
     """
 
-    def __init__(self, solvefor=()):
+    def __init__(self, solvefor=(), minStep=0.):
         self.solvefor = solvefor
+        self.minStep = minStep
         self.current = 0.
         self.steps = []
         self.values = []
@@ -256,7 +259,7 @@ class Stepper(object):
 
         return tryStep, nextStep
 
-    def step(self, until, tryStep=None, minStep=None):
+    def step(self, until, tryStep=None):
         """Perform an adaptive solution step.
 
         Parameters
@@ -264,9 +267,7 @@ class Stepper(object):
         until : float
             The value of the control variable to step to.
         tryStep : float
-            The step to try first.
-        minStep : float
-            The smallest step to allow.
+            The step to try first (default None).
 
         Returns
         -------
@@ -276,8 +277,7 @@ class Stepper(object):
             The next step to try.
 
         """
-        tryStep = tryStep or minStep or (until - self.current)
-        self.minStep = minStep or 0.
+        tryStep = tryStep or self.minStep or (until - self.current)
 
         saveStep = None
         while True:

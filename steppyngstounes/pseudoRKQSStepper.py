@@ -26,13 +26,16 @@ class PseudoRKQSStepper(Stepper):
     solvefor : tuple of tuple
         Each tuple holds a `CellVariable` to solve for, the equation to
         solve, and the old-style boundary conditions to apply.
+    minStep : float
+        Smallest step to allow (default 0).
     safety, pgrow, pshrink, errcon : float
         RKQS control constants.
 
     """
 
-    def __init__(self, solvefor=(), safety=0.9, pgrow=-0.2, pshrink=-0.25, errcon=1.89e-4):
-        Stepper.__init__(self, solvefor=solvefor)
+    def __init__(self, solvefor=(), minStep=0.,
+                 safety=0.9, pgrow=-0.2, pshrink=-0.25, errcon=1.89e-4):
+        super(PseudoRKQSStepper, self).__init__(solvefor=solvefor, minStep=minStep)
         self.safety = safety
         self.pgrow = pgrow
         self.pshrink = pshrink
