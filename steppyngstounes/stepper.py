@@ -78,6 +78,11 @@ class Stepper(object):
     def solve(self, tryStep):
         """Action to take at each adapted step attempt.
 
+        The default performs one sweep of each
+        variable/equation/boundary-condition set and calculates the maximum
+        error from all of them.  Override this method in order to customize
+        the sweep loop.
+
         Parameters
         ----------
         tryStep : float
@@ -89,6 +94,9 @@ class Stepper(object):
             Solution error, positive and normalized to 1.
 
         """
+        for var, eqn, bcs in self.solvefor:
+            var.updateOld()
+
         error = 0.
         for var, eqn, bcs in self.solvefor:
             res = eqn.sweep(var=var,
@@ -291,9 +299,6 @@ class Stepper(object):
                 tryStep = maxStep
             else:
                 saveStep = None
-
-            for var, eqn, bcs in self.solvefor:
-                var.updateOld()
 
             triedStep, tryStep = self._step(tryStep=tryStep)
 
