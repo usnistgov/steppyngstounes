@@ -114,19 +114,32 @@ class Stepper(object):
         """
         pass
 
-    def failure(self, triedStep):
+    def failure(self, triedStep, prevStep, error):
         """Action to perform when `solve()` returns an error greater than 1.
 
-        Default does nothing.  Users can override this method to perform
-        any desired actions.
+        Default resets the variable values and shrinks the step.
+
+        .. warning::
+
+           If the user overrides this method they should ensure to call the
+           inherited :meth:`~fipy.steppers.stepper.Stepper.failure` method.
 
         Parameters
         ----------
         triedStep : float
             The step that was attempted.
+        prevStep : float
+            Previous step.
+        error : float
+            Error (positive and normalized to 1) from the last solve.
 
         """
-        pass
+        for var, eqn, bcs in self.solvefor:
+            var.value = var.old
+
+        tryStep = self._shrinkStep(triedStep=triedStep, error=error)
+        tryStep = self._lowerBound(tryStep=triedStep)
+        prevStep = self._calcPrev(triedStep=triedStep, prevStep=prevStep, error=error)
 
     def _lowerBound(self, tryStep):
         """Determine minimum step.
@@ -244,14 +257,7 @@ class Stepper(object):
 
             if error > 1. and abs(tryStep) > abs(self.minStep):
                 # reject the step
-                self.failure(triedStep=tryStep)
-
-                for var, eqn, bcs in self.solvefor:
-                    var.value = var.old
-
-                tryStep = self._shrinkStep(triedStep=tryStep, error=error)
-                tryStep = self._lowerBound(tryStep=tryStep)
-                prevStep = self._calcPrev(error=error, tryStep=tryStep, prevStep=prevStep)
+                self.failure(triedStep=tryStep, prevStep=prevStep, error=error)
             else:
                 # step succeeded
                 break
