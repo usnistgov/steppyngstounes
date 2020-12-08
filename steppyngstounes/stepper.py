@@ -1,5 +1,8 @@
 from __future__ import unicode_literals
 from builtins import object
+
+from fipy.tools import numerix
+
 __docformat__ = 'restructuredtext'
 
 __all__ = ["Stepper"]
@@ -26,20 +29,20 @@ class Stepper(object):
 
     Attributes
     ----------
-    elapsed : float
-        The total time taken so far.
-    time_steps : list of float
-        The time steps successfully taken so far.
-    elapsed_times : list of float
-        The elapsed time at each successful time step.
+    current : float
+        The present value of the control variable.
+    steps : list of float
+        The steps successfully taken so far.
+    values : list of float
+        The value of the control variable at each successful step.
 
     """
 
     def __init__(self, solvefor=()):
         self.solvefor = solvefor
-        self.elapsed = 0.
-        self.time_steps = []
-        self.elapsed_times = []
+        self.current = 0.
+        self.steps = []
+        self.values = []
 
     def calcError(self, var, equation, boundaryConditions, residual):
         """Calculate error of current solution.
@@ -62,30 +65,31 @@ class Stepper(object):
         Returns
         -------
         float
-            Solution error, normalized to 1.  Returning a value greater than 1
-            will cause the next time step to shrink, otherwise it will grow.
+            Solution error, positive and normalized to 1.  Returning a
+            value greater than 1 will cause the next step to shrink,
+            otherwise it will grow.
 
         """
         raise NotImplementedError
 
-    def solve(self, dt):
-        """Action to take at each adapted time step attempt.
+    def solve(self, tryStep):
+        """Action to take at each adapted step attempt.
 
         Parameters
         ----------
-        dt : float
-            Adapted time step to attempt.
+        tryStep : float
+            Adapted step to attempt.
 
         Returns
         -------
         float
-            Solution error, normalized to 1.
+            Solution error, positive and normalized to 1.
 
         """
         error = 0.
         for var, eqn, bcs in self.solvefor:
             res = eqn.sweep(var=var,
-                            dt=dt,
+                            dt=tryStep,
                             boundaryConditions=bcs)
 
             error = max(error,
@@ -96,7 +100,7 @@ class Stepper(object):
 
         return error
 
-    def success(self, dt):
+    def success(self, triedStep):
         """Action to perform after a successful adaptive solution step.
 
         Default does nothing.  Users can override this method to perform
@@ -104,13 +108,13 @@ class Stepper(object):
 
         Parameters
         ----------
-        dt : float
-            The time step that was actually taken.
+        triedStep : float
+            The step that was actually taken.
 
         """
         pass
 
-    def failure(self, dt):
+    def failure(self, triedStep):
         """Action to perform when `solve()` returns an error greater than 1.
 
         Default does nothing.  Users can override this method to perform
@@ -118,190 +122,194 @@ class Stepper(object):
 
         Parameters
         ----------
-        dt : float
-            The time step that was attempted.
+        triedStep : float
+            The step that was attempted.
 
         """
         pass
 
-    def _lowerBound(self, dt):
-        """Determine minimum time step.
+    def _lowerBound(self, tryStep):
+        """Determine minimum step.
 
         Parameters
         ----------
-        dt : float
-            Desired time step.
+        tryStep : float
+            Desired step.
 
         Returns
         -------
         float
-            Maximum of `dt` and `self.dtMin`.
+            Maximum magnitude of `tryStep` and `self.minStep`.
 
         Raises
         ------
         FloatingPointError
-            If the resulting time step would underflow.
+            If the resulting step would underflow.
 
         """
-        dt = max(dt, self.dtMin)
-        if self.elapsed + dt == self.elapsed:
-            raise FloatingPointError("step size underflow: %g + %g == %g" % (self.elapsed, dt, self.elapsed))
+        tryStep = numerix.sign(tryStep) * max(abs(tryStep), abs(self.minStep))
+        if self.current + tryStep == self.current:
+            raise FloatingPointError("step size underflow: %g + %g == %g" % (self.current, tryStep, self.current))
 
-        return dt
+        return tryStep
 
-    def _shrinkStep(self, error, dt):
-        """Reduce time step after failure
+    def _shrinkStep(self, triedStep, error):
+        """Reduce step after failure
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
-        override this method (default returns `dt` unchanged).
+        override this method (default returns `triedStep` unchanged).
 
         Parameters
         ----------
+        triedStep : float
+            Step that failed.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that failed.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
-        return dt
+        return triedStep
 
-    def _calcPrev(self, error, dt, dtPrev):
-        """Adjust previous time step
+    def _calcPrev(self, triedStep, prevStep, error):
+        """Adjust previous step
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
-        not need to override this method (default returns `dtPrev`
+        not need to override this method (default returns `prevStep`
         unchanged).
 
         Parameters
         ----------
+        triedStep : float
+            Step that failed.
+        prevStep : float
+            Previous step.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that failed.
-        dtPrev : float
-            Previous time step.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New previous time step.
+            New previous step.
 
         """
-        return dtPrev
+        return prevStep
 
-    def _calcNext(self, error, dt, dtPrev):
-        """Calculate next time step after success
+    def _calcNext(self, triedStep, prevStep, error):
+        """Calculate next step after success
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
-        override this method (default returns `dt` unchanged).
+        override this method (default returns `triedStep` unchanged).
 
         Parameters
         ----------
+        triedStep : float
+            Step that succeeded.
+        prevStep : float
+            Previous step.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that succeeded.
-        dtPrev : float
-            Previous time step.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
-        return dt
+        return triedStep
 
-    def _step(self, dt, dtPrev):
-        """Solve at given time step and then adapt.
+    def _step(self, tryStep, prevStep):
+        """Solve at given step and then adapt.
 
         Parameters
         ----------
-        dt : float
-            Adapted time step to attempt.
-        dtPrev : float
-            The last time step attempted.
+        tryStep : float
+            Adapted step to attempt.
+        prevStep : float
+            The last step attempted.
 
         Returns
         -------
-        dt : float
-            The time step attempted.
-        dtNext : float
-            The next time step to try.
+        tryStep : float
+            The step attempted.
+        nextStep : float
+            The next step to try.
 
         """
         while True:
-            error = self.solve(dt=dt)
+            error = self.solve(tryStep=tryStep)
 
-            if error > 1. and dt > self.dtMin:
-                # reject the timestep
-                self.failure(dt=dt)
+            if error > 1. and abs(tryStep) > abs(self.minStep):
+                # reject the step
+                self.failure(triedStep=tryStep)
 
                 for var, eqn, bcs in self.solvefor:
                     var.value = var.old
 
-                dt = self._shrinkStep(error=error, dt=dt)
-                dt = self._lowerBound(dt)
-                dtPrev = self._calcPrev(error=error, dt=dt, dtPrev=dtPrev)
+                tryStep = self._shrinkStep(triedStep=tryStep, error=error)
+                tryStep = self._lowerBound(tryStep=tryStep)
+                prevStep = self._calcPrev(error=error, tryStep=tryStep, prevStep=prevStep)
             else:
                 # step succeeded
                 break
 
-        dtNext = self._calcNext(error=error, dt=dt, dtPrev=dtPrev)
+        nextStep = self._calcNext(triedStep=tryStep, prevStep=prevStep, error=error)
+        nextStep = self._lowerBound(tryStep=nextStep)
 
-        return dt, dtNext
+        return tryStep, nextStep
 
-    def step(self, until, dtTry=None, dtMin=None, dtPrev=None):
+    def step(self, until, tryStep=None, minStep=None, prevStep=None):
         """Perform an adaptive solution step.
 
         Parameters
         ----------
         until : float
-            The time to step to.
-        dtTry : float
-            The time step to try first.
-        dtMin : float
-            The smallest time step to allow.
-        dtPrev : float
-            The last time step attempted.
+            The value of the control variable to step to.
+        tryStep : float
+            The step to try first.
+        minStep : float
+            The smallest step to allow.
+        prevStep : float
+            The last step attempted.
 
         Returns
         -------
-        dtPrev : float
-            The adapted time step actually taken.
-        dtTry : float
-            The next adapted time step to attempt.
+        prevStep : float
+            The adapted step actually taken.
+        tryStep : float
+            The next adapted step to attempt.
 
         """
-        dtTry = dtTry or dtMin or (until - self.elapsed)
-        dtPrev = dtPrev or dtMin
-        self.dtMin = dtMin or 0.
+        tryStep = tryStep or minStep or (until - self.current)
+        prevStep = prevStep or minStep
+        self.minStep = minStep or 0.
 
-        while self.elapsed < until:
-            dtMax = until - self.elapsed
-            if dtTry > dtMax:
-                dtSave = dtTry
-                dtTry = dtMax
+        saveStep = None
+        while True:
+            maxStep = until - self.current
+            if maxStep == 0:
+                # reached until
+                break
+
+            if abs(tryStep) > abs(maxStep):
+                saveStep = tryStep
+                tryStep = maxStep
             else:
-                dtSave = None
+                saveStep = None
 
             for var, eqn, bcs in self.solvefor:
                 var.updateOld()
 
-            dtPrev, dtTry = self._step(dt=dtTry, dtPrev=dtPrev)
+            prevStep, tryStep = self._step(tryStep=tryStep, prevStep=prevStep)
 
-            self.elapsed += dtPrev
+            self.current += prevStep
 
-            self.time_steps.append(dtPrev)
-            self.elapsed_times.append(self.elapsed)
+            self.steps.append(prevStep)
+            self.values.append(self.current)
 
-            self.success(dt=dtPrev)
+            self.success(triedStep=prevStep)
 
-            dtTry = max(dtTry, self.dtMin)
-
-        return dtSave or dtPrev, dtSave or dtTry
+        return saveStep or prevStep, saveStep or tryStep

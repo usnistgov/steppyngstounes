@@ -38,41 +38,41 @@ class PseudoRKQSStepper(Stepper):
         self.pshrink = pshrink
         self.errcon = errcon
 
-    def _shrinkStep(self, error, dt):
-        """Reduce time step after failure
+    def _shrinkStep(self, triedStep, error):
+        """Reduce step after failure
 
         Parameters
         ----------
+        triedStep : float
+            Step that failed.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that failed.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
         factor = max(self.safety * error**self.pgrow, 0.1)
-        return factor * dt
+        return factor * triedStep
 
-    def _calcNext(self, error, dt, dtPrev):
-        """Calculate next time step after success
+    def _calcNext(self, triedStep, prevStep, error):
+        """Calculate next step after success
 
         Parameters
         ----------
+        triedStep : float
+            Step that succeeded.
+        prevStep : float
+            Previous step.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that succeeded.
-        dtPrev : float
-            Previous time step.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
         if error > self.errcon:
@@ -80,4 +80,4 @@ class PseudoRKQSStepper(Stepper):
         else:
             factor = 5
 
-        return factor * dt
+        return factor * triedStep

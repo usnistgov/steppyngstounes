@@ -49,61 +49,61 @@ class PIDStepper(Stepper):
 
         self.error = [1., 1., 1.]
 
-    def _shrinkStep(self, error, dt):
-        """Reduce time step after failure
+    def _shrinkStep(self, triedStep, error):
+        """Reduce step after failure
 
         Parameters
         ----------
+        triedStep : float
+            Step that failed.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that failed.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
         factor = min(1. / error, 0.8)
-        return factor * dt
+        return factor * triedStep
 
-    def _calcPrev(self, error, dt, dtPrev):
-        """Adjust previous time step
+    def _calcPrev(self, triedStep, prevStep, error):
+        """Adjust previous step
 
         Parameters
         ----------
+        triedStep : float
+            Step that failed.
+        prevStep : float
+            Previous step.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that failed.
-        dtPrev : float
-            Previous time step.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New previous time step.
+            New previous step.
 
         """
-        return dt**2 / dtPrev
+        return triedStep**2 / prevStep
 
-    def _calcNext(self, error, dt, dtPrev):
-        """Calculate next time step after success
+    def _calcNext(self, triedStep, prevStep, error):
+        """Calculate next step after success
 
         Parameters
         ----------
+        triedStep : float
+            Step that succeeded.
+        prevStep : float
+            Previous step.
         error : float
-            Error (normalized to 1) from the last solve.
-        dt : float
-            Time step that succeeded.
-        dtPrev : float
-            Previous time step.
+            Error (positive and normalized to 1) from the last solve.
 
         Returns
         -------
         float
-            New time step.
+            New step.
 
         """
         self.error.append(error)
@@ -113,7 +113,7 @@ class PIDStepper(Stepper):
                   * (self.error[-2]**2
                      / (self.error[-1] * self.error[-3]))**self.derivative)
 
-        # optional, could alternatively keep whole error history
+        # could optionally omit and keep whole error history
         _ = self.error.pop(0)
 
-        return factor * dtPrev
+        return factor * prevStep
