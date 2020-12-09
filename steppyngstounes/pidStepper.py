@@ -7,7 +7,27 @@ from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
 class PIDStepper(Stepper):
-    """Adaptive stepper using a PID controller.
+    r"""Adaptive stepper using a PID controller.
+
+    Calculates a new step as
+
+    .. math::
+
+       \Delta_{n+1} = \left(\frac{e_{n-1}}{e_n}\right)^{k_P}
+                      \left(\frac{1}{e_n}\right)^{k_I}
+                      \left(\frac{e_{n-1}}{e_n e_{n-2}}\right)^{k_D}
+                      \Delta_n
+
+    where :math:`\Delta_n` is the step size for step :math:`n` and
+    :math:`e_n` is the error at step :math:`n`.  :math:`k_P` is the
+    proportional coefficient, :math:`k_I` is the integral coefficient, and
+    :math:`k_D` is the derivative coefficient.
+
+    On failure, retries with
+
+    .. math::
+
+       \Delta_n = \mathrm{min}\left(\frac{1}{e_n}, 0.8\right) \Delta_n
 
     Based on::
 
@@ -27,7 +47,8 @@ class PIDStepper(Stepper):
 
         The user must override
         :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.success` and
+        :meth:`~fipy.steppers.stepper.Stepper.solve`,
+        :meth:`~fipy.steppers.stepper.Stepper.success`, and
         :meth:`~fipy.steppers.stepper.Stepper.failure`.
 
     Parameters
@@ -37,8 +58,12 @@ class PIDStepper(Stepper):
         solve, and the old-style boundary conditions to apply.
     minStep : float
         Smallest step to allow (default 0).
-    proportional, integral, derivative : float
-        PID control constants.
+    proportional : float
+        PID control :math:`k_P` coefficient (default 0.075).
+    integral : float
+        PID control :math:`k_I` coefficient (default 0.175).
+    derivative : float
+        PID control :math:`k_D` coefficient (default 0.01).
 
     """
 

@@ -16,7 +16,8 @@ class Stepper(object):
 
         The user must override
         :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.success` and
+        :meth:`~fipy.steppers.stepper.Stepper.solve`,
+        :meth:`~fipy.steppers.stepper.Stepper.success`, and
         :meth:`~fipy.steppers.stepper.Stepper.failure`.
 
     Parameters
