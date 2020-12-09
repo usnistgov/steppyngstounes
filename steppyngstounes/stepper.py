@@ -38,6 +38,8 @@ class Stepper(object):
         The steps successfully taken so far.
     values : list of float
         The value of the control variable at each successful step.
+    error : list of float
+        The error at each successful step.
 
     """
 
@@ -47,6 +49,7 @@ class Stepper(object):
         self.current = 0.
         self.steps = []
         self.values = []
+        self.error = []
 
     def calcError(self, var, equation, boundaryConditions, residual):
         """Calculate error of current solution.
@@ -135,6 +138,8 @@ class Stepper(object):
             The next step to attempt.
 
         """
+        self.error.append(error)
+
         nextStep = self._calcNext(triedStep=triedStep, error=error)
         nextStep = self._lowerBound(tryStep=nextStep)
 

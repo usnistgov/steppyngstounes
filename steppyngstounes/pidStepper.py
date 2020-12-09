@@ -75,7 +75,8 @@ class PIDStepper(Stepper):
         self.integral = integral
         self.derivative = derivative
 
-        self.error = [1., 1., 1.]
+        # pre-seed the error list as this algorithm needs historical errors
+        self.error += [1., 1., 1.]
 
         self.prevStep = None
 
@@ -144,14 +145,12 @@ class PIDStepper(Stepper):
             New step.
 
         """
-        self.error.append(error)
-
         factor = ((self.error[-2] / self.error[-1])**self.proportional
                   * (1. / self.error[-1])**self.integral
                   * (self.error[-2]**2
                      / (self.error[-1] * self.error[-3]))**self.derivative)
 
-        # could optionally omit and keep whole error history
-        _ = self.error.pop(0)
+        # could optionally drop the oldest error
+        # _ = self.error.pop(0)
 
         return factor * (self.prevStep or triedStep)
