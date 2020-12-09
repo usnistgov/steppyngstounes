@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 from builtins import object
 
-from fipy.tools import numerix
-
 __docformat__ = 'restructuredtext'
 
 __all__ = ["Stepper"]
@@ -195,7 +193,11 @@ class Stepper(object):
             If the resulting step would underflow.
 
         """
-        tryStep = numerix.sign(tryStep) * max(abs(tryStep), abs(self.minStep))
+        if tryStep < 0:
+            sign = -1
+        else:
+            sign = 1
+        tryStep = sign * max(abs(tryStep), abs(self.minStep))
         if self.current + tryStep == self.current:
             raise FloatingPointError("step size underflow: %g + %g == %g" % (self.current, tryStep, self.current))
 
