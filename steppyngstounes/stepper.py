@@ -85,6 +85,10 @@ class Stepper(object):
        >>> from fipy.steppers import {stepperclass}
 
        >>> class My{stepperclass}({stepperclass}):
+       ...     def __init__(self, solvefor, *args, **kwargs):
+       ...         super(My{stepperclass}, self).__init__(solvefor, *args, **kwargs)
+       ...         self.var = solvefor[0][0]
+       ...         self.signal = [self.var.cellVolumeAverage.value] * len(self.steps)
        ...
        ...     def solve1(self, tryStep, var, eqn, bcs):
        ...         var.value = dummyfunc(t=self.current + tryStep, width=0.01)
@@ -93,6 +97,10 @@ class Stepper(object):
        ...     def calcError(self, var, equation, boundaryConditions, residual):
        ...         return (numerix.L1norm(var - var.old) / errorscale
        ...                 + numerix.finfo(float).eps)
+       ...
+       ...     def success(self, *args, **kwargs):
+       ...         self.signal.append(self.var.cellVolumeAverage.value)
+       ...         return super(My{stepperclass}, self).success(*args, **kwargs)
 
        Finally, instantiate a stepper with the variable to solve for and the
        smallest step to allow.
@@ -118,7 +126,7 @@ class Stepper(object):
        >>> plt.rcParams['lines.marker'] = "."
        >>> fix, axes = plt.subplots(2, 2, sharex=True)
 
-       >>> axes[0, 0].plot(stepper.values, dummyfunc(numerix.array(stepper.values), width=0.01))
+       >>> axes[0, 0].plot(stepper.values, stepper.signal)
        >>> axes[0, 0].set_ylabel(r"$\phi$")
 
        >>> axes[1, 0].semilogy(stepper.values, stepper.steps)
@@ -132,6 +140,7 @@ class Stepper(object):
        >>> axes[1, 1].semilogy(stepper.values, stepper.error)
        >>> axes[1, 1].set_ylabel("error")
        >>> axes[1, 1].set_xlabel(r"$t$")
+       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax=10)
 
        >>> plt.tight_layout()
        >>> plt.show()
