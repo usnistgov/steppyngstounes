@@ -1,6 +1,6 @@
 from __future__ import division
 from __future__ import unicode_literals
-from fipy.steppers.stepper import Stepper
+from fipy.steppers.stepper import Stepper, _stepper_test
 
 __all__ = ["PIDStepper"]
 from future.utils import text_to_native_str
@@ -65,93 +65,9 @@ class PIDStepper(Stepper):
     derivative : float
         PID control :math:`k_D` coefficient (default 0.01).
 
-    Examples
-    --------
-
-    .. plot::
-       :context: reset
-       :include-source:
-       :nofigs:
-
-       >>> import fipy as fp
-       >>> from fipy.tools import numerix
-
-       Declare a trivial 1D mesh
-
-       >>> mesh = fp.Grid1D(nx=1, dx=1.)
-
-       Instantiate a solution variable :math:`$\phi$` on that mesh.
-
-       >>> phi = fp.CellVariable(mesh=mesh, name=r"$\phi$", value=0., hasOld=True)
-
-       Determine a desired time step and total runtime, as well as the
-       intervals to capture results.
-
-       >>> dt = 50.
-       >>> totaltime = 1000.
-       >>> checkpoints = (fp.numerix.arange(int(totaltime / dt)) + 1) * dt
-
-       Rather than solve any actual PDEs, we'll demonstrate using an
-       artificial function that changes abruptly, but smoothly, with time.
-
-       >>> def dummyfunc(t, width):
-       ...     return numerix.tanh((t / totaltime - 0.5) / (2 * width))
-
-       Create a subclass of :class:`~fipy.steppers.pidStepper.PIDStepper`
-
-       >>> errorscale = 1e-3
-
-       >>> from fipy.steppers import PIDStepper
-
-       >>> class MyPIDStepper(PIDStepper):
-       ...
-       ...     def solve1(self, tryStep, var, eqn, bcs):
-       ...         var.value = dummyfunc(t=self.current + tryStep, width=0.01)
-       ...         return 0.
-       ...
-       ...     def calcError(self, var, equation, boundaryConditions, residual):
-       ...         return numerix.L1norm(var - var.old) / errorscale + 1e-16
-
-       Finally, instantiate a stepper with the variable to solve for and the
-       smallest step to allow.
-
-       >>> stepper = MyPIDStepper(solvefor=((phi, None, ()),), minStep=dt / 1e6)
-
-       Call :meth:`~fipy.steppers.pidStepper.PIDStepper.step` for each desired
-       time step.  Pass the time to step to `until` and the time step to try
-       first `tryStep`.
-
-       >>> tryStep = dt
-       >>> for until in checkpoints:
-       ...     prevStep, tryStep = stepper.step(until=until, tryStep=tryStep)
-
-       >>> print(len(stepper.steps))
-       12345
-
-    .. plot::
-       :context:
-
-       >>> fix, axes = plt.subplots(2, 2, sharex=True)
-
-       >>> axes[0, 0].plot(stepper.values, dummyfunc(numerix.array(stepper.values), width=0.01), linestyle="", marker=".")
-       >>> axes[0, 0].set_ylabel(r"$\phi$")
-
-       >>> axes[1, 0].semilogy(stepper.values, stepper.steps, linestyle="", marker=".")
-       >>> axes[1, 0].set_ylabel(r"$\Delta t$")
-       >>> axes[1, 0].set_xlabel(r"$t$")
-
-       >>> axes[0, 1].plot(stepper.values, stepper.error[2:], linestyle="", marker=".")
-       >>> axes[0, 1].set_ylabel(r"error")
-       >>> axes[0, 1].set_ylim(ymin=0, ymax=1.1)
-
-       >>> axes[1, 1].semilogy(stepper.values, stepper.error[2:], linestyle="", marker=".")
-       >>> axes[1, 1].set_ylabel("error")
-       >>> axes[1, 1].set_xlabel(r"$t$")
-
-       >>> plt.tight_layout()
-       >>> plt.show()
-
     """
+
+    __doc__ += _stepper_test.format(stepperclass="PIDStepper")
 
     def __init__(self, solvefor=(), minStep=0.,
                  proportional=0.075, integral=0.175, derivative=0.01):
@@ -164,12 +80,12 @@ class PIDStepper(Stepper):
         # pre-seed the error list as this algorithm needs historical errors
         self.error += [1., 1.]
         self.steps += [self.minStep, self.minStep]
-        if self.current:
-            current = self.current[-1]
+        if self.values:
+            current = self.values[-1]
         else:
             current = 0.
-        self.current += [current + self.steps[-2],
-                         current + self.steps[-2] + self.steps[-1]]
+        self.values += [current + self.steps[-2],
+                        current + self.steps[-2] + self.steps[-1]]
 
         self.prevStep = self.minStep
 
