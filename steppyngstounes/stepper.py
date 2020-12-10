@@ -77,13 +77,39 @@ class Stepper(object):
         """
         raise NotImplementedError
 
-    def solve(self, tryStep):
-        """Action to take at each adapted step attempt.
+    def solve1(self, tryStep, var, eqn, bcs):
+        """Solve one equation at each adapted step attempt.
 
-        The default performs one sweep of each
-        variable/equation/boundary-condition set and calculates the maximum
-        error from all of them.  Override this method in order to customize
-        the sweep loop.
+        The default performs one sweep and returns its residual.  Override
+        this method in order to customize the sweep loop.
+
+        Parameters
+        ----------
+        tryStep : float
+            Adapted step to attempt.
+        var : ~fipy.variables.cellVariable.CellVariable
+            Solution variable.
+        eqn : ~fipy.terms.term.Term
+            Equation to solve for `var`.
+        bcs : tuple of ~fipy.boundaryConditions.BoundaryCondition
+            Boundary conditions to apply in solution.
+
+        Returns
+        -------
+        float
+            Solution residual, as returned from
+            :meth:~fipy.terms.term.Term.sweep`.
+        """
+        return eqn.sweep(var=var,
+                         dt=tryStep,
+                         boundaryConditions=bcs)
+
+    def solve(self, tryStep):
+        """Solve equations at each adapted step attempt.
+
+        The default solves each variable/equation/boundary-condition set in
+        succession and calculates the maximum error from all of them.
+        Override this method in order to customize the sweep loop.
 
         Parameters
         ----------
@@ -101,9 +127,10 @@ class Stepper(object):
 
         error = 0.
         for var, eqn, bcs in self.solvefor:
-            res = eqn.sweep(var=var,
-                            dt=tryStep,
-                            boundaryConditions=bcs)
+            res = self.solve1(tryStep=tryStep,
+                              var=var,
+                              eqn=eqn,
+                              bcs=bcs)
 
             error = max(error,
                         self.calcError(var=var,
