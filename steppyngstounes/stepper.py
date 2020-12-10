@@ -75,10 +75,11 @@ class Stepper(object):
        >>> def dummyfunc(t, width):
        ...     return numerix.tanh((t / totaltime - 0.5) / (2 * width))
 
-       Create a stepper subclass that customizes how to update `phi` (using
-       `dummyfunc`) and how to determine the scaled "error" (here we
+       Create a stepper subclass that customizes how to update :math:`\phi`
+       (using `dummyfunc`), how to determine the scaled "error" (here we
        calculate :math:`\|\phi - \phi^\mathrm{{old}}\|_1 /
-       \mathtt{{errorscale}} + \varepsilon`)
+       \mathtt{{errorscale}}`), and records the values of :math:`\phi` at
+       successful steps.
 
        >>> errorscale = 1e-3
 
@@ -88,6 +89,7 @@ class Stepper(object):
        ...     def __init__(self, solvefor, *args, **kwargs):
        ...         super(My{stepperclass}, self).__init__(solvefor, *args, **kwargs)
        ...         self.var = solvefor[0][0]
+       ...         # `signal` must have same length as `steps` and `values`
        ...         self.signal = [self.var.cellVolumeAverage.value] * len(self.steps)
        ...
        ...     def solve1(self, tryStep, var, eqn, bcs):
@@ -95,8 +97,7 @@ class Stepper(object):
        ...         return 0.
        ...
        ...     def calcError(self, var, equation, boundaryConditions, residual):
-       ...         return (numerix.L1norm(var - var.old) / errorscale
-       ...                 + numerix.finfo(float).eps)
+       ...         return numerix.L1norm(var - var.old) / errorscale
        ...
        ...     def success(self, *args, **kwargs):
        ...         self.signal.append(self.var.cellVolumeAverage.value)
@@ -238,11 +239,13 @@ class Stepper(object):
                               eqn=eqn,
                               bcs=bcs)
 
+            # don't let error be zero
             error = max(error,
                         self.calcError(var=var,
                                        equation=eqn,
                                        boundaryConditions=bcs,
-                                       residual=res))
+                                       residual=res)
+                        + numerix.finfo(float).eps)
 
         return error
 
