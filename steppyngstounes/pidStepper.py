@@ -15,7 +15,7 @@ class PIDStepper(Stepper):
 
        \Delta_{n+1} = \left(\frac{e_{n-1}}{e_n}\right)^{k_P}
                       \left(\frac{1}{e_n}\right)^{k_I}
-                      \left(\frac{e_{n-1}}{e_n e_{n-2}}\right)^{k_D}
+                      \left(\frac{e_{n-1}^2}{e_n e_{n-2}}\right)^{k_D}
                       \Delta_n
 
     where :math:`\Delta_n` is the step size for step :math:`n` and
@@ -76,9 +76,9 @@ class PIDStepper(Stepper):
         self.derivative = derivative
 
         # pre-seed the error list as this algorithm needs historical errors
-        self.error += [1., 1., 1.]
+        self.error += [1., 1.]
 
-        self.prevStep = None
+        self.prevStep = self.minStep
 
     def failure(self, triedStep, error):
         """Action to perform when `solve()` returns an error greater than 1.
@@ -153,4 +153,8 @@ class PIDStepper(Stepper):
         # could optionally drop the oldest error
         # _ = self.error.pop(0)
 
-        return factor * (self.prevStep or triedStep)
+        tryStep = factor * (self.prevStep or triedStep)
+
+        self.prevStep = tryStep
+
+        return tryStep
