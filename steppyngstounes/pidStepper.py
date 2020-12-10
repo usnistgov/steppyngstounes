@@ -163,6 +163,13 @@ class PIDStepper(Stepper):
 
         # pre-seed the error list as this algorithm needs historical errors
         self.error += [1., 1.]
+        self.steps += [self.minStep, self.minStep]
+        if self.current:
+            current = self.current[-1]
+        else:
+            current = 0.
+        self.current += [current + self.steps[-2],
+                         current + self.steps[-2] + self.steps[-1]]
 
         self.prevStep = self.minStep
 
