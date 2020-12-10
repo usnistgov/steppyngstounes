@@ -291,7 +291,7 @@ class Stepper(object):
         while True:
             error = self.solve(tryStep=tryStep)
 
-            if error <= 1.:
+            if error <= 1. or tryStep <= self.minStep:
                 # step succeeded
                 break
             else:
