@@ -1,6 +1,6 @@
 from __future__ import division
 from __future__ import unicode_literals
-from fipy.steppers.stepper import Stepper, _stepper_test
+from fipy.steppers.stepper import Stepper
 
 __all__ = ["PIDStepper"]
 from future.utils import text_to_native_str
@@ -67,7 +67,7 @@ class PIDStepper(Stepper):
 
     """
 
-    __doc__ += _stepper_test.format(stepperclass="PIDStepper")
+    __doc__ += Stepper._stepper_test.format(stepperclass="PIDStepper")
 
     def __init__(self, solvefor=(), minStep=0.,
                  proportional=0.075, integral=0.175, derivative=0.01):

@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from fipy.steppers.stepper import Stepper, _stepper_test
+from fipy.steppers.stepper import Stepper
 
 __all__ = ["PseudoRKQSStepper"]
 from future.utils import text_to_native_str
@@ -62,7 +62,7 @@ class PseudoRKQSStepper(Stepper):
 
     """
 
-    __doc__ += _stepper_test.format(stepperclass="PseudoRKQSStepper")
+    __doc__ += Stepper._stepper_test.format(stepperclass="PseudoRKQSStepper")
 
     def __init__(self, solvefor=(), minStep=0.,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,

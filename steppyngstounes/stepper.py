@@ -7,7 +7,41 @@ __all__ = ["Stepper"]
 from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
-_stepper_test = r"""
+class Stepper(object):
+    """Adaptive stepper base class.
+
+    .. note::
+
+        The user must override
+        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
+        :meth:`~fipy.steppers.stepper.Stepper.solve`,
+        :meth:`~fipy.steppers.stepper.Stepper.success`, and
+        :meth:`~fipy.steppers.stepper.Stepper.failure`.
+
+    Parameters
+    ----------
+    solvefor : tuple of tuple
+        Each tuple holds a
+        :class:`~fipy.variables.cellVariable.CellVariable` to solve for,
+        the equation to solve, and the old-style boundary conditions to
+        apply (if any).
+    minStep : float
+        Smallest step to allow (default 0).
+
+    Attributes
+    ----------
+    current : float
+        The present value of the control variable.
+    steps : list of float
+        The steps successfully taken so far.
+    values : list of float
+        The value of the control variable at each successful step.
+    error : list of float
+        The error at each successful step.
+
+    """
+
+    _stepper_test = r"""
 
     Examples
     --------
@@ -101,40 +135,6 @@ _stepper_test = r"""
 
        >>> plt.tight_layout()
        >>> plt.show()
-
-"""
-
-class Stepper(object):
-    """Adaptive stepper base class.
-
-    .. note::
-
-        The user must override
-        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.solve`,
-        :meth:`~fipy.steppers.stepper.Stepper.success`, and
-        :meth:`~fipy.steppers.stepper.Stepper.failure`.
-
-    Parameters
-    ----------
-    solvefor : tuple of tuple
-        Each tuple holds a
-        :class:`~fipy.variables.cellVariable.CellVariable` to solve for,
-        the equation to solve, and the old-style boundary conditions to
-        apply (if any).
-    minStep : float
-        Smallest step to allow (default 0).
-
-    Attributes
-    ----------
-    current : float
-        The present value of the control variable.
-    steps : list of float
-        The steps successfully taken so far.
-    values : list of float
-        The value of the control variable at each successful step.
-    error : list of float
-        The error at each successful step.
 
     """
 
