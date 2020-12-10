@@ -67,7 +67,7 @@ class Stepper(object):
        Determine a desired time step and total runtime, as well as the
        intervals to capture results.
 
-       >>> dt = 50.
+       >>> dt = {dt}
        >>> totaltime = 1000.
        >>> checkpoints = (fp.numerix.arange(int(totaltime / dt)) + 1) * dt
 
@@ -83,7 +83,7 @@ class Stepper(object):
        \mathtt{{errorscale}}`), and records the values of :math:`\phi` at
        successful steps.
 
-       >>> errorscale = 1e-3
+       >>> errorscale = 1e-2
 
        >>> from fipy.steppers import {stepperclass}
 
@@ -138,12 +138,12 @@ class Stepper(object):
 
        >>> axes[0, 1].plot(stepper.values, stepper.error)
        >>> axes[0, 1].set_ylabel(r"error")
-       >>> axes[0, 1].set_ylim(ymin=0, ymax={maxerror})
+       >>> axes[0, 1].set_ylim(ymin=0, ymax=1.1)
 
        >>> axes[1, 1].semilogy(stepper.values, stepper.error)
        >>> axes[1, 1].set_ylabel("error")
        >>> axes[1, 1].set_xlabel(r"$t$")
-       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax={maxerror})
+       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
 
        >>> plt.tight_layout()
        >>> plt.show()

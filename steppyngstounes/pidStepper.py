@@ -67,7 +67,7 @@ class PIDStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(stepperclass="PIDStepper", maxerror=1.1)
+    __doc__ += Stepper._stepper_test.format(stepperclass="PIDStepper", dt=50.)
 
     def __init__(self, solvefor=(), minStep=0.,
                  proportional=0.075, integral=0.175, derivative=0.01):
