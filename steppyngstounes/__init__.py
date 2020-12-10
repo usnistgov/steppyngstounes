@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 __docformat__ = 'restructuredtext'
 
 from fipy.steppers.stepper import Stepper
-from fipy.steppers.pseudoRKQSStepper import PseudoRKQSStepper
+from fipy.steppers.fixedStepper import FixedStepper
 from fipy.steppers.pidStepper import PIDStepper
+from fipy.steppers.pseudoRKQSStepper import PseudoRKQSStepper
 
 __all__ = ["L1error", "L2error", "LINFerror", "sweepMonotonic"]
 from future.utils import text_to_native_str
