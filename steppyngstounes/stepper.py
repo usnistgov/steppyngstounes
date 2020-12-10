@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from builtins import object
 
+from fipy.tools import numerix
+
 __docformat__ = 'restructuredtext'
 
 __all__ = ["Stepper"]
@@ -136,12 +138,12 @@ class Stepper(object):
 
        >>> axes[0, 1].plot(stepper.values, stepper.error)
        >>> axes[0, 1].set_ylabel(r"error")
-       >>> axes[0, 1].set_ylim(ymin=0, ymax=1.1)
+       >>> axes[0, 1].set_ylim(ymin=0, ymax={maxerror})
 
        >>> axes[1, 1].semilogy(stepper.values, stepper.error)
        >>> axes[1, 1].set_ylabel("error")
        >>> axes[1, 1].set_xlabel(r"$t$")
-       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax=10)
+       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax={maxerror})
 
        >>> plt.tight_layout()
        >>> plt.show()
