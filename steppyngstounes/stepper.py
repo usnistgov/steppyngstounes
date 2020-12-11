@@ -257,15 +257,14 @@ class Stepper(object):
                               eqn=eqn,
                               bcs=bcs)
 
-            # don't let error be zero
             error = max(error,
                         self.calcError(var=var,
                                        equation=eqn,
                                        boundaryConditions=bcs,
-                                       residual=res)
-                        + numerix.finfo(float).eps)
+                                       residual=res))
 
-        return error
+        # don't let error be zero
+        return error + numerix.finfo(float).eps
 
     def success(self, triedStep, error):
         """Action to perform after a successful adaptive solution step.
