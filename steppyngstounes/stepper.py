@@ -135,28 +135,33 @@ class Stepper(object):
        :context:
        :include-source:
 
-       >>> plt.rcParams['lines.linestyle'] = ""
-       >>> plt.rcParams['lines.marker'] = "."
-       >>> fix, axes = plt.subplots(2, 2, sharex=True)
+       >>> def plotSteps():
+       ...     from matplotlib import pyplot as plt
+       ...
+       ...     plt.rcParams['lines.linestyle'] = ""
+       ...     plt.rcParams['lines.marker'] = "."
+       ...     fix, axes = plt.subplots(2, 2, sharex=True)
+       ...
+       ...     axes[0, 0].plot(stepper.values, stepper.signal)
+       ...     axes[0, 0].set_ylabel(r"$\phi$")
+       ...
+       ...     axes[1, 0].semilogy(stepper.values, stepper.steps)
+       ...     axes[1, 0].set_ylabel(r"$\Delta t$")
+       ...     axes[1, 0].set_xlabel(r"$t$")
+       ...
+       ...     axes[0, 1].plot(stepper.values, stepper.error)
+       ...     axes[0, 1].set_ylabel(r"error")
+       ...     axes[0, 1].set_ylim(ymin=0, ymax=1.1)
+       ...
+       ...     axes[1, 1].semilogy(stepper.values, stepper.error)
+       ...     axes[1, 1].set_ylabel("error")
+       ...     axes[1, 1].set_xlabel(r"$t$")
+       ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
+       ...
+       ...     plt.tight_layout()
+       ...     plt.show()
 
-       >>> axes[0, 0].plot(stepper.values, stepper.signal)
-       >>> axes[0, 0].set_ylabel(r"$\phi$")
-
-       >>> axes[1, 0].semilogy(stepper.values, stepper.steps)
-       >>> axes[1, 0].set_ylabel(r"$\Delta t$")
-       >>> axes[1, 0].set_xlabel(r"$t$")
-
-       >>> axes[0, 1].plot(stepper.values, stepper.error)
-       >>> axes[0, 1].set_ylabel(r"error")
-       >>> axes[0, 1].set_ylim(ymin=0, ymax=1.1)
-
-       >>> axes[1, 1].semilogy(stepper.values, stepper.error)
-       >>> axes[1, 1].set_ylabel("error")
-       >>> axes[1, 1].set_xlabel(r"$t$")
-       >>> axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
-
-       >>> plt.tight_layout()
-       >>> plt.show()
+       >>> plotSteps() # doctest: +SKIP
 
     """
 
