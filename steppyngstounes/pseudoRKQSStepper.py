@@ -62,7 +62,10 @@ class PseudoRKQSStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(stepperclass="PseudoRKQSStepper", dt=50.)
+    __doc__ += Stepper._stepper_test.format(stepperclass="PseudoRKQSStepper",
+                                            dt=50.,
+                                            steps=369,
+                                            attempts=392)
 
     def __init__(self, solvefor=(), minStep=0.,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,

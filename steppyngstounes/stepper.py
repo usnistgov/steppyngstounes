@@ -40,6 +40,8 @@ class Stepper(object):
         The value of the control variable at each successful step.
     error : list of float
         The error at each successful step.
+    attempts : int
+        The number of solution attempts taken.
 
     """
 
@@ -118,8 +120,16 @@ class Stepper(object):
        >>> for until in checkpoints:
        ...     prevStep, tryStep = stepper.step(until=until, tryStep=tryStep)
 
-       >>> print(len(stepper.steps))
-       12345
+       >>> s = "{{}} succesful steps in {{}} attempts".format(len(stepper.steps),
+       ...                                                    stepper.attempts)
+       >>> print(s)
+       {steps} succesful steps in {attempts} attempts
+
+       Ensure solution tolerance is achieved (aside from a few "starter"
+       steps).
+
+       >>> print(max(stepper.error[3:]) < 1.)
+       True
 
     .. plot::
        :context:
@@ -157,6 +167,7 @@ class Stepper(object):
         self.steps = []
         self.values = []
         self.error = []
+        self.attempts = 0
 
     def calcError(self, var, equation, boundaryConditions, residual):
         """Calculate error of current solution.
@@ -399,8 +410,11 @@ class Stepper(object):
             The next step to try.
 
         """
+        attempts = 0
         while True:
             error = self.solve(tryStep=tryStep)
+
+            attempts += 1
 
             if error <= 1. or tryStep <= self.minStep:
                 # step succeeded
@@ -408,6 +422,8 @@ class Stepper(object):
             else:
                 # reject the step
                 tryStep = self.failure(triedStep=tryStep, error=error)
+
+        self.attempts += attempts
 
         nextStep = self.success(triedStep=tryStep, error=error)
 

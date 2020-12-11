@@ -27,7 +27,10 @@ class FixedStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(stepperclass="FixedStepper", dt=0.1)
+    __doc__ += Stepper._stepper_test.format(stepperclass="FixedStepper",
+                                            dt=0.15,
+                                            steps=8089,
+                                            attempts=8089)
 
     def _step(self, tryStep):
         """Solve at given step.
