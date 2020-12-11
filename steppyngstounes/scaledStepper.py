@@ -49,7 +49,7 @@ class ScaledStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(stepperclass="ScaledStepper",
+    __doc__ += Stepper._stepper_test.format(StepperClass="ScaledStepper",
                                             dt=50.,
                                             steps=383,
                                             attempts=478)

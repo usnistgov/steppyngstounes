@@ -57,85 +57,54 @@ class Stepper(object):
        :include-source:
        :nofigs:
 
-       >>> import fipy as fp
-       >>> from fipy.tools import numerix
+       >>> import numpy as np
+       >>> from fipy.steppers import {StepperClass}
 
-       Declare a trivial 1D mesh
-
-       >>> mesh = fp.Grid1D(nx=1, dx=1.)
-
-       Instantiate a solution variable :math:`$\phi$` on that mesh.
-
-       >>> phi = fp.CellVariable(mesh=mesh, name=r"$\phi$", value=0., hasOld=True)
-
-       Determine a desired time step and total runtime, as well as the
-       intervals to capture results.
+       Rather than solve any actual PDEs, we'll demonstrate using an
+       artificial function that changes abruptly, but smoothly, with time,
+       :math:`\tanh\left((t / \mathtt{{totaltime}} - 1/2) / (2 *
+       \mathtt{{width}}))`, where :math:`t` is the elapsed time,
+       :math:`\mathtt{{totaltime}}` is desired duration, and
+       :math:`\mathtt{{width}}` is a measure of the step width
 
        >>> dt = {dt}
        >>> totaltime = 1000.
-       >>> checkpoints = (fp.numerix.arange(int(totaltime / dt)) + 1) * dt
+       >>> width = 0.01
 
-       Rather than solve any actual PDEs, we'll demonstrate using an
-       artificial function that changes abruptly, but smoothly, with time.
-
-       >>> def dummyfunc(t, width):
-       ...     return numerix.tanh((t / totaltime - 0.5) / (2 * width))
-
-       Create a stepper subclass that customizes how to update :math:`\phi`
-       (using `dummyfunc`), how to determine the scaled "error" (here we
-       calculate :math:`\|\phi - \phi^\mathrm{{old}}\|_1 /
-       \mathtt{{errorscale}}`), and records the values of :math:`\phi` at
-       successful steps.
+       The scaled "error" will be a measure of how much the solution has
+       changed since the last step :math:`\|\mathtt{{new}} -
+       \mathtt{{old}}\|_1 / \mathtt{{errorscale}}`).
 
        >>> errorscale = 1e-2
 
-       >>> from fipy.steppers import {stepperclass}
+       Iterate over the stepper from `start` to `finish` (inclusive of
+       calculating at `start`), using a suggested initial step size of
+       `tryStep`.
 
-       >>> class My{stepperclass}({stepperclass}):
-       ...     def __init__(self, solvefor, *args, **kwargs):
-       ...         super(My{stepperclass}, self).__init__(solvefor, *args, **kwargs)
-       ...         self.var = solvefor[0][0]
-       ...         # `signal` must have same length as `steps` and `values`
-       ...         self.signal = [self.var.cellVolumeAverage.value] * len(self.steps)
+       >>> stepper = {StepperClass}(start=0., end=totaltime, tryStep=dt, inclusive=True)
+       >>> for step in stepper:
+       ...     step.save = phi.value
        ...
-       ...     def solve1(self, tryStep, var, eqn, bcs):
-       ...         var.value = dummyfunc(t=self.current + tryStep, width=0.01)
-       ...         return 0.
+       ...     new = np.tanh((step.next / totaltime - 0.5) / (2 * width))
        ...
-       ...     def calcError(self, var, equation, boundaryConditions, residual):
-       ...         return numerix.L1norm(var - var.old) / errorscale
+       ...     error = abs(new - old) / errorscale
        ...
-       ...     def success(self, *args, **kwargs):
-       ...         self.signal.append(self.var.cellVolumeAverage.value)
-       ...         return super(My{stepperclass}, self).success(*args, **kwargs)
+       ...     if step.succeeded(error=error, metric=new):
+       ...         old = new
 
-       Finally, instantiate a stepper with the variable to solve for and the
-       smallest step to allow.
-
-       >>> stepper = My{stepperclass}(solvefor=((phi, None, ()),), minStep=dt / 1e6)
-
-       Call :meth:`~fipy.steppers.stepper.Stepper.step` for each desired
-       time step.  Pass the time to step to `until` and the time step to try
-       first `tryStep`.
-
-       >>> tryStep = dt
-       >>> for until in checkpoints:
-       ...     prevStep, tryStep = stepper.step(until=until, tryStep=tryStep)
-
-       >>> s = "{{}} succesful steps in {{}} attempts".format(len(stepper.steps),
-       ...                                                    stepper.attempts)
-       >>> print(s)
+       >>> s = "{{}} succesful steps in {{}} attempts"
+       >>> print(s.format(len(stepper.steps[stepper.succeeded]),
+       ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
        Ensure solution tolerance is achieved (aside from a few "starter"
        steps).
 
-       >>> print(max(stepper.error[3:]) < 1.)
+       >>> print(max(stepper.errors[3:]) < 1.)
        True
 
     .. plot::
        :context:
-       :include-source:
 
        >>> def plotSteps():
        ...     from matplotlib import pyplot as plt
@@ -144,18 +113,23 @@ class Stepper(object):
        ...     plt.rcParams['lines.marker'] = "."
        ...     fix, axes = plt.subplots(2, 2, sharex=True)
        ...
-       ...     axes[0, 0].plot(stepper.values, stepper.signal)
+       ...     axes[0, 0].plot(stepper.steps[stepper.succeeded],
+       ...                     stepper.values[stepper.succeeded])
        ...     axes[0, 0].set_ylabel(r"$\phi$")
        ...
-       ...     axes[1, 0].semilogy(stepper.values, stepper.steps)
-       ...     axes[1, 0].set_ylabel(r"$\Delta t$")
+       ...     axes[0, 1].semilogy(stepper.steps[stepper.succeeded],
+       ...                         stepper.sizes[stepper.succeeded])
+       ...     axes[0, 1].set_ylabel(r"$\Delta t$")
+       ...
+       ...     axes[1, 0].plot(stepper.steps, stepper.values,
+       ...                     linestyle="-", linewidth=0.5, marker="")
+       ...     axes[1, 0].plot(stepper.steps[stepper.succeeded],
+       ...                     stepper.values[stepper.succeeded])
+       ...     axes[1, 0].set_ylabel(r"$\phi$")
        ...     axes[1, 0].set_xlabel(r"$t$")
        ...
-       ...     axes[0, 1].plot(stepper.values, stepper.error)
-       ...     axes[0, 1].set_ylabel(r"error")
-       ...     axes[0, 1].set_ylim(ymin=0, ymax=1.1)
-       ...
-       ...     axes[1, 1].semilogy(stepper.values, stepper.error)
+       ...     axes[1, 1].semilogy(stepper.steps[stepper.succeeded],
+       ...                         stepper.errors[stepper.succeeded])
        ...     axes[1, 1].set_ylabel("error")
        ...     axes[1, 1].set_xlabel(r"$t$")
        ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
