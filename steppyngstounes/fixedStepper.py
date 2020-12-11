@@ -53,3 +53,12 @@ class FixedStepper(Stepper):
         nextStep = self.success(triedStep=tryStep, error=error)
 
         return tryStep, nextStep
+
+def _test():
+    import fipy.tests.doctestPlus
+    return fipy.tests.doctestPlus.testmod()
+
+        return tryStep, nextStep
+
+if __name__ == "__main__":
+    _test()
