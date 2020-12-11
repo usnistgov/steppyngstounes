@@ -42,6 +42,8 @@ class Stepper(object):
         The error at each successful step.
     attempts : int
         The number of solution attempts taken.
+    maxattempts : int
+        The maximum number of solution attempts taken.
 
     """
 
@@ -173,6 +175,7 @@ class Stepper(object):
         self.values = []
         self.error = []
         self.attempts = 0
+        self.maxattempts = 10
 
     def calcError(self, var, equation, boundaryConditions, residual):
         """Calculate error of current solution.
@@ -398,6 +401,25 @@ class Stepper(object):
         """
         return triedStep
 
+    def _failed(self, triedStep, error, attempts):
+        """Determine if most recent attempt failed
+
+        Parameters
+        ----------
+        triedStep : float
+            Step that was attempted.
+        error : float
+            Error (positive and normalized to 1) from the last solve.
+        attempts : int
+            Number of failed attempts so far.
+
+        Returns
+        -------
+        bool
+        """
+        return ((error > 1. or attempts > (self.maxattempts + 1))
+                and triedStep > self.minStep)
+
     def _step(self, tryStep):
         """Solve at given step and then adapt.
 
@@ -420,18 +442,33 @@ class Stepper(object):
 
             attempts += 1
 
-            if error <= 1. or tryStep <= self.minStep:
-                # step succeeded
-                break
-            else:
+            if self._failed(triedStep=tryStep, error=error, attempts=attempts):
                 # reject the step
                 tryStep = self.failure(triedStep=tryStep, error=error)
+            else:
+                # step succeeded
+                break
 
         self.attempts += attempts
 
         nextStep = self.success(triedStep=tryStep, error=error)
 
         return tryStep, nextStep
+
+    def _done(self, maxStep):
+        """Determine if stepper has reached objective.
+
+        Parameters
+        ----------
+        maxStep : float
+            Maximum step size to attempt.
+
+        Returns
+        -------
+        bool
+
+        """
+        return maxStep == 0
 
     def step(self, until, tryStep=None):
         """Perform an adaptive solution step.
@@ -456,7 +493,7 @@ class Stepper(object):
         saveStep = None
         while True:
             maxStep = until - self.current
-            if maxStep == 0:
+            if self._done(maxStep=maxStep):
                 # reached `until`
                 break
 

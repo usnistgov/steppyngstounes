@@ -32,36 +32,20 @@ class FixedStepper(Stepper):
                                             steps=8089,
                                             attempts=8089)
 
-    def _step(self, tryStep):
-        """Solve at given step.
+    def _failed(self, triedStep, error, attempts):
+        """Determine if most recent attempt failed.
 
-        This method never "fails" and the step is never changed.
-
-        Parameters
-        ----------
-        tryStep : float
-            Step to attempt.
+        .. note:: Fixed steps always succeed.
 
         Returns
         -------
-        triedStep : float
-            The step actually taken.
-        nextStep : float
-            The next step to try.
-
+        bool
         """
-        # step always "succeeds"
-        error = self.solve(tryStep=tryStep)
-
-        nextStep = self.success(triedStep=tryStep, error=error)
-
-        return tryStep, nextStep
+        return False
 
 def _test():
     import fipy.tests.doctestPlus
     return fipy.tests.doctestPlus.testmod()
-
-        return tryStep, nextStep
 
 if __name__ == "__main__":
     _test()
