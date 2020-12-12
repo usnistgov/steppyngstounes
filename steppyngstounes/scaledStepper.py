@@ -37,9 +37,14 @@ class ScaledStepper(Stepper):
 
     Parameters
     ----------
-    solvefor : tuple of tuple
-        Each tuple holds a `CellVariable` to solve for, the equation to
-        solve, and the old-style boundary conditions to apply.
+    start : float
+        Beginning of range to step over.
+    stop : float
+        Finish of range to step over.
+    tryStep : float
+        Suggested step size to try (default None).
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default 0).
     growFactor : float
@@ -50,51 +55,38 @@ class ScaledStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test.format(StepperClass="ScaledStepper",
-                                            dt=50.,
+                                            dt=250.,
                                             steps=383,
                                             attempts=478)
 
-    def __init__(self, solvefor=(), minStep=0.,
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=0.,
                  growFactor=1.2, shrinkFactor=0.5):
-        super(ScaledStepper, self).__init__(solvefor=solvefor, minStep=minStep)
+        super(ScaledStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+                                            inclusive=inclusive, minStep=minStep)
         self.growFactor = growFactor
         self.shrinkFactor = shrinkFactor
 
-    def _shrinkStep(self, triedStep, error):
+    def _shrinkStep(self):
         """Reduce step after failure
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        return triedStep * self.shrinkFactor
+        return self._sizes[-1] * self.shrinkFactor
 
-    def _calcNext(self, triedStep, error):
+    def _calcNext(self):
         """Calculate next step after success
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that succeeded.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        return triedStep * self.growFactor
+        return self._sizes[-1] * self.growFactor
 
 def _test():
     import fipy.tests.doctestPlus

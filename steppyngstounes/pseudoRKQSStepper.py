@@ -44,9 +44,14 @@ class PseudoRKQSStepper(Stepper):
 
     Parameters
     ----------
-    solvefor : tuple of tuple
-        Each tuple holds a `CellVariable` to solve for, the equation to
-        solve, and the old-style boundary conditions to apply.
+    start : float
+        Beginning of range to step over.
+    stop : float
+        Finish of range to step over.
+    tryStep : float
+        Suggested step size to try (default None).
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default 0).
     safety : float
@@ -67,10 +72,11 @@ class PseudoRKQSStepper(Stepper):
                                             steps=369,
                                             attempts=392)
 
-    def __init__(self, solvefor=(), minStep=0.,
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=0.,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,
                  maxgrow=5, minshrink=0.1):
-        super(PseudoRKQSStepper, self).__init__(solvefor=solvefor, minStep=minStep)
+        super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+                                                inclusive=inclusive, minStep=minStep)
         self.safety = safety
         self.pgrow = pgrow
         self.pshrink = pshrink
@@ -78,47 +84,33 @@ class PseudoRKQSStepper(Stepper):
         self.minshrink = minshrink
         self.errcon = (maxgrow/safety)**(1./pgrow)
 
-    def _shrinkStep(self, triedStep, error):
+    def _shrinkStep(self):
         """Reduce step after failure
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        factor = max(self.safety * error**self.pshrink, self.minshrink)
-        return factor * triedStep
+        factor = max(self.safety * self._errors[-1]**self.pshrink, self.minshrink)
+        return factor * self._sizes[-1]
 
-    def _calcNext(self, triedStep, error):
+    def _calcNext(self):
         """Calculate next step after success
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that succeeded.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        if error > self.errcon:
-            factor = self.safety * error**self.pgrow
+        if self._errors[-1] > self.errcon:
+            factor = self.safety * self._errors[-1]**self.pgrow
         else:
             factor = self.maxgrow
 
-        return factor * triedStep
+        return factor * self._sizes[-1]
 
 def _test():
     import fipy.tests.doctestPlus

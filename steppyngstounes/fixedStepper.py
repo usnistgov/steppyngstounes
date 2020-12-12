@@ -9,19 +9,16 @@ __all__ = [text_to_native_str(n) for n in __all__]
 class FixedStepper(Stepper):
     r"""Stepper that takes steps of fixed size.
 
-    .. note::
-
-        The user must override
-        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.solve`,
-        :meth:`~fipy.steppers.stepper.Stepper.success`, and
-        :meth:`~fipy.steppers.stepper.Stepper.failure`.
-
     Parameters
     ----------
-    solvefor : tuple of tuple
-        Each tuple holds a `CellVariable` to solve for, the equation to
-        solve, and the old-style boundary conditions to apply.
+    start : float
+        Beggining of range to step over.
+    stop : float
+        Finish of range to step over.
+    tryStep : float
+        Suggested step size to try (default None).
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default 0).
 
@@ -32,7 +29,7 @@ class FixedStepper(Stepper):
                                             steps=8089,
                                             attempts=8089)
 
-    def _failed(self, triedStep, error, attempts):
+    def _succeeded(self, error):
         """Determine if most recent attempt failed.
 
         .. note:: Fixed steps always succeed.
@@ -41,7 +38,7 @@ class FixedStepper(Stepper):
         -------
         bool
         """
-        return False
+        return True
 
 def _test():
     import fipy.tests.doctestPlus

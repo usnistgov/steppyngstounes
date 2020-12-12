@@ -81,8 +81,14 @@ class PIDStepper(Stepper):
         self.derivative = derivative
 
         # pre-seed the error list as this algorithm needs historical errors
-        self.error += [1., 1.]
-        self.steps += [self.minStep, self.minStep]
+        self._sizes = [tryStep or (stop - start)]
+        self._steps = [start]
+        self._successes = [True]
+        self._values = [np.NaN]
+        self._errors = [1.]
+
+        self._errors += [1., 1.]
+        self._steps += [self.minStep, self.minStep]
         if self.values:
             current = self.values[-1]
         else:
@@ -122,50 +128,36 @@ class PIDStepper(Stepper):
 
         return nextStep
 
-    def _shrinkStep(self, triedStep, error):
+    def _shrinkStep(self):
         """Reduce step after failure
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        factor = min(1. / error, 0.8)
-        return factor * triedStep
+        factor = min(1. / self.errors[-1], 0.8)
+        return factor * self._sizes[-1]
 
-    def _calcNext(self, triedStep, error):
+    def _calcNext(self):
         """Calculate next step after success
 
-        Parameters
-        ----------
-        triedStep : float
-            Step that succeeded.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
         Returns
         -------
         float
             New step.
 
         """
-        factor = ((self.error[-2] / self.error[-1])**self.proportional
-                  * (1. / self.error[-1])**self.integral
-                  * (self.error[-2]**2
-                     / (self.error[-1] * self.error[-3]))**self.derivative)
+        factor = ((self.errors[-2] / self.errors[-1])**self.proportional
+                  * (1. / self.errors[-1])**self.integral
+                  * (self.errors[-2]**2
+                     / (self.errors[-1] * self.errors[-3]))**self.derivative)
 
         # could optionally drop the oldest error
         # _ = self.error.pop(0)
 
-        tryStep = factor * (self.prevStep or triedStep)
+        tryStep = factor * (self.prevStep or self._sizes[-1])
 
         self.prevStep = tryStep
 

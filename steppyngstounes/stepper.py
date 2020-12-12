@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from builtins import object
 
-from fipy.tools import numerix
+import numpy as np
 
 __docformat__ = 'restructuredtext'
 
@@ -9,41 +9,30 @@ __all__ = ["Stepper"]
 from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
+class Step(object):
+    def __init__(self, current, size, stepper):
+        self.current = current
+        self.size = size
+        self.stepper = stepper
+
+    def succeeded(self, value, error):
+        return self.stepper.succeeded(step=self, value=value, error=error)
+
 class Stepper(object):
     """Adaptive stepper base class.
 
-    .. note::
-
-        The user must override
-        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.solve`,
-        :meth:`~fipy.steppers.stepper.Stepper.success`, and
-        :meth:`~fipy.steppers.stepper.Stepper.failure`.
-
     Parameters
     ----------
-    solvefor : tuple of tuple
-        Each tuple holds a
-        :class:`~fipy.variables.cellVariable.CellVariable` to solve for,
-        the equation to solve, and the old-style boundary conditions to
-        apply (if any).
+    start : float
+        Beginning of range to step over.
+    stop : float
+        Finish of range to step over.
+    tryStep : float
+        Suggested step size to try (default None).
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default 0).
-
-    Attributes
-    ----------
-    current : float
-        The present value of the control variable.
-    steps : list of float
-        The steps successfully taken so far.
-    values : list of float
-        The value of the control variable at each successful step.
-    error : list of float
-        The error at each successful step.
-    attempts : int
-        The number of solution attempts taken.
-    maxattempts : int
-        The maximum number of solution attempts taken.
 
     """
 
@@ -60,12 +49,16 @@ class Stepper(object):
        >>> import numpy as np
        >>> from fipy.steppers import {StepperClass}
 
-       Rather than solve any actual PDEs, we'll demonstrate using an
-       artificial function that changes abruptly, but smoothly, with time,
-       :math:`\tanh\left((t / \mathtt{{totaltime}} - 1/2) / (2 *
-       \mathtt{{width}}))`, where :math:`t` is the elapsed time,
-       :math:`\mathtt{{totaltime}}` is desired duration, and
-       :math:`\mathtt{{width}}` is a measure of the step width
+       We'll demonstrate using an artificial function that changes
+       abruptly, but smoothly, with time,
+
+       .. math::
+
+          \tanh\frac{{\frac{{t}}{{t_\mathrm{{max}}}} - \frac{{1}}{{2}}}}
+                      {{2 w}}
+
+       where :math:`t` is the elapsed time, :math:`t_\mathrm{{max}}` is
+       total time desired, and :math:`w` is a measure of the step width.
 
        >>> dt = {dt}
        >>> totaltime = 1000.
@@ -77,23 +70,23 @@ class Stepper(object):
 
        >>> errorscale = 1e-2
 
-       Iterate over the stepper from `start` to `finish` (inclusive of
-       calculating at `start`), using a suggested initial step size of
-       `tryStep`.
+       Iterate over the stepper from `start` to `stop` (inclusive of
+       calculating a value at `start`), using a suggested initial step size
+       of `tryStep`.
 
-       >>> stepper = {StepperClass}(start=0., end=totaltime, tryStep=dt, inclusive=True)
+       >>> old = -1.
+       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt, inclusive=True)
        >>> for step in stepper:
-       ...     step.save = phi.value
-       ...
-       ...     new = np.tanh((step.next / totaltime - 0.5) / (2 * width))
+       ...     t = step.current + step.size
+       ...     new = np.tanh((t / totaltime - 0.5) / (2 * width))
        ...
        ...     error = abs(new - old) / errorscale
        ...
-       ...     if step.succeeded(error=error, metric=new):
+       ...     if step.succeeded(value=new, error=error):
        ...         old = new
 
        >>> s = "{{}} succesful steps in {{}} attempts"
-       >>> print(s.format(len(stepper.steps[stepper.succeeded]),
+       >>> print(s.format(len(stepper.steps[stepper.successes]),
        ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
@@ -111,25 +104,26 @@ class Stepper(object):
        ...
        ...     plt.rcParams['lines.linestyle'] = ""
        ...     plt.rcParams['lines.marker'] = "."
+       ...     plt.rcParams['lines.markersize'] = 1
        ...     fix, axes = plt.subplots(2, 2, sharex=True)
        ...
-       ...     axes[0, 0].plot(stepper.steps[stepper.succeeded],
-       ...                     stepper.values[stepper.succeeded])
+       ...     axes[0, 0].plot(stepper.steps[stepper.successes],
+       ...                     stepper.values[stepper.successes])
        ...     axes[0, 0].set_ylabel(r"$\phi$")
        ...
-       ...     axes[0, 1].semilogy(stepper.steps[stepper.succeeded],
-       ...                         stepper.sizes[stepper.succeeded])
+       ...     axes[0, 1].semilogy(stepper.steps[stepper.successes],
+       ...                         stepper.sizes[stepper.successes])
        ...     axes[0, 1].set_ylabel(r"$\Delta t$")
        ...
        ...     axes[1, 0].plot(stepper.steps, stepper.values,
        ...                     linestyle="-", linewidth=0.5, marker="")
-       ...     axes[1, 0].plot(stepper.steps[stepper.succeeded],
-       ...                     stepper.values[stepper.succeeded])
+       ...     axes[1, 0].plot(stepper.steps[stepper.successes],
+       ...                     stepper.values[stepper.successes])
        ...     axes[1, 0].set_ylabel(r"$\phi$")
        ...     axes[1, 0].set_xlabel(r"$t$")
        ...
-       ...     axes[1, 1].semilogy(stepper.steps[stepper.succeeded],
-       ...                         stepper.errors[stepper.succeeded])
+       ...     axes[1, 1].semilogy(stepper.steps[stepper.successes],
+       ...                         stepper.errors[stepper.successes])
        ...     axes[1, 1].set_ylabel("error")
        ...     axes[1, 1].set_xlabel(r"$t$")
        ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
@@ -138,171 +132,113 @@ class Stepper(object):
        ...     plt.show()
 
        >>> plotSteps() # doctest: +SKIP
+       >>> plotSteps()
 
     """
 
-    def __init__(self, solvefor=(), minStep=0.):
-        self.solvefor = solvefor
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=0.):
+        self.start = start
+        self.stop = stop
+        self.inclusive = inclusive
         self.minStep = minStep
-        self.current = 0.
-        self.steps = []
-        self.values = []
-        self.error = []
-        self.attempts = 0
-        self.maxattempts = 10
 
-    def calcError(self, var, equation, boundaryConditions, residual):
-        """Calculate error of current solution.
+        self.current = start
+        self._sizes = [tryStep or (stop - start)]
+        self._steps = [start - self._sizes[-1]]
+        self._successes = [True]
+        self._values = [np.NaN]
+        self._errors = [1.]
+        self._saveStep = None
 
-        Users must subclass the desired class of
-        :class:`~fipy.steppers.stepper.Stepper` and override this method to
-        calculate a value normalized to 1.
+        # number of artificial steps needed by the algorithm
+        self._bogus = 1
 
-        Parameters
-        ----------
-        var : ~fipy.variables.cellVariable.CellVariable
-            Solution variable.
-        equation : ~fipy.terms.term.Term
-            Equation that solved `var`.
-        boundaryConditions : tuple
-            Boundary conditions applied to solution of `var`.
-        residual : float
-            Residual from solution of `var`.
-
-        Returns
-        -------
-        float
-            Solution error, positive and normalized to 1.  Returning a
-            value greater than 1 will cause the next step to shrink,
-            otherwise it will grow.
-
+    @property
+    def steps(self):
+        """`ndarray` of values of the control variable attempted so far.
         """
-        raise NotImplementedError
+        return np.asarray(self._steps[self._bogus:])
 
-    def solve1(self, tryStep, var, eqn, bcs):
-        """Solve one equation at each adapted step attempt.
-
-        The default performs one sweep and returns its residual.  Override
-        this method in order to customize the sweep loop.
-
-        Parameters
-        ----------
-        tryStep : float
-            Adapted step to attempt.
-        var : ~fipy.variables.cellVariable.CellVariable
-            Solution variable.
-        eqn : ~fipy.terms.term.Term
-            Equation to solve for `var`.
-        bcs : tuple of ~fipy.boundaryConditions.BoundaryCondition
-            Boundary conditions to apply in solution.
-
-        Returns
-        -------
-        float
-            Solution residual, as returned from
-            :meth:~fipy.terms.term.Term.sweep`.
+    @property
+    def sizes(self):
+        """`ndarray` of the step size at each step attempt.
         """
-        return eqn.sweep(var=var,
-                         dt=tryStep,
-                         boundaryConditions=bcs)
+        return np.asarray(self._sizes[self._bogus:])
 
-    def solve(self, tryStep):
-        """Solve equations at each adapted step attempt.
-
-        The default solves each variable/equation/boundary-condition set in
-        succession and calculates the maximum error from all of them.
-        Override this method in order to customize the sweep loop.
-
-        Parameters
-        ----------
-        tryStep : float
-            Adapted step to attempt.
-
-        Returns
-        -------
-        float
-            Solution error, positive and normalized to 1.
-
+    @property
+    def successes(self):
+        """`ndarray` of whether the step was successful at each step attempt.
         """
-        for var, eqn, bcs in self.solvefor:
-            var.updateOld()
+        return np.asarray(self._successes[self._bogus:])
 
-        error = 0.
-        for var, eqn, bcs in self.solvefor:
-            res = self.solve1(tryStep=tryStep,
-                              var=var,
-                              eqn=eqn,
-                              bcs=bcs)
+    @property
+    def values(self):
+        """`ndarray` of the "metric" at each step attempt.
 
-            error = max(error,
-                        self.calcError(var=var,
-                                       equation=eqn,
-                                       boundaryConditions=bcs,
-                                       residual=res))
+        The user-determined "metric" scalar value at each step attempt is
+        passed to :class:`~fipy.steppers.Stepper` via
+        :meth:`~fipy.steppers.Step.succeeded`.
+        """
+        return np.asarray(self._values[self._bogus:])
+
+    @property
+    def errors(self):
+        """`ndarray` of the "error" at each step attempt.
+
+        The user-determined "error" scalar value (positive and normalized
+        to 1) at each step attempt is passed to
+        :class:`~fipy.steppers.Stepper` via
+        :meth:`~fipy.steppers.Step.succeeded`.
+        """
+        return np.asarray(self._errors[self._bogus:])
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self.next()
+
+    def next(self):
+        if self._saveStep is not None:
+            nextStep = self._saveStep
+        elif self._successes[-1]:
+            nextStep = self._calcNext()
+        else:
+            nextStep = self._shrinkStep()
+
+        nextStep = self._lowerBound(tryStep=nextStep)
+
+        maxStep = self.stop - self.current
+        if self._done(maxStep=maxStep):
+            raise StopIteration()
+
+        if abs(nextStep) > abs(maxStep):
+            self._saveStep = nextStep
+            nextStep = maxStep
+        else:
+            self._saveStep = None
+
+        return Step(current=self.current, size=nextStep, stepper=self)
+
+    def _succeeded(self, error):
+        return error <= 1.
+
+    def succeeded(self, step, value, error):
+        self._steps.append(step.current + step.size)
+        self._sizes.append(step.size)
 
         # don't let error be zero
-        return error + numerix.finfo(float).eps
+        self._errors.append(error + np.finfo(float).eps)
 
-    def success(self, triedStep, error):
-        """Action to perform after a successful adaptive solution step.
+        self._values.append(value)
 
-        Default determines the next step to take.
+        success = self._succeeded(error=error)
+        self._successes.append(success)
 
-        .. warning::
+        if success:
+            self.current = self._steps[-1]
 
-           If the user overrides this method they should ensure to call the
-           inherited :meth:`~fipy.steppers.stepper.Stepper.failure` method.
-
-        Parameters
-        ----------
-        triedStep : float
-            The step that was actually taken.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
-        Returns
-        -------
-        nextStep : float
-            The next step to attempt.
-
-        """
-        self.error.append(error)
-
-        nextStep = self._calcNext(triedStep=triedStep, error=error)
-        nextStep = self._lowerBound(tryStep=nextStep)
-
-        return nextStep
-
-    def failure(self, triedStep, error):
-        """Action to perform when `solve()` returns an error greater than 1.
-
-        Default resets the variable values and shrinks the step.
-
-        .. warning::
-
-           If the user overrides this method they should ensure to call the
-           inherited :meth:`~fipy.steppers.stepper.Stepper.failure` method.
-
-        Parameters
-        ----------
-        triedStep : float
-            The step that was attempted.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
-        Returns
-        -------
-        nextStep : float
-            The next step to attempt.
-
-        """
-        for var, eqn, bcs in self.solvefor:
-            var.value = var.old
-
-        nextStep = self._shrinkStep(triedStep=triedStep, error=error)
-        nextStep = self._lowerBound(tryStep=nextStep)
-
-        return nextStep
+        return success
 
     def _lowerBound(self, tryStep):
         """Determine minimum step.
@@ -333,7 +269,7 @@ class Stepper(object):
 
         return tryStep
 
-    def _shrinkStep(self, triedStep, error):
+    def _shrinkStep(self):
         """Reduce step after failure
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
@@ -352,9 +288,9 @@ class Stepper(object):
             New step.
 
         """
-        return triedStep
+        return self._sizes[-1]
 
-    def _calcNext(self, triedStep, error):
+    def _calcNext(self):
         """Calculate next step after success
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
@@ -373,7 +309,7 @@ class Stepper(object):
             New step.
 
         """
-        return triedStep
+        return self._sizes[-1]
 
     def _failed(self, triedStep, error, attempts):
         """Determine if most recent attempt failed
@@ -394,41 +330,6 @@ class Stepper(object):
         return ((error > 1. or attempts > (self.maxattempts + 1))
                 and triedStep > self.minStep)
 
-    def _step(self, tryStep):
-        """Solve at given step and then adapt.
-
-        Parameters
-        ----------
-        tryStep : float
-            Adapted step to attempt.
-
-        Returns
-        -------
-        triedStep : float
-            The step actually taken.
-        nextStep : float
-            The next step to try.
-
-        """
-        attempts = 0
-        while True:
-            error = self.solve(tryStep=tryStep)
-
-            attempts += 1
-
-            if self._failed(triedStep=tryStep, error=error, attempts=attempts):
-                # reject the step
-                tryStep = self.failure(triedStep=tryStep, error=error)
-            else:
-                # step succeeded
-                break
-
-        self.attempts += attempts
-
-        nextStep = self.success(triedStep=tryStep, error=error)
-
-        return tryStep, nextStep
-
     def _done(self, maxStep):
         """Determine if stepper has reached objective.
 
@@ -443,45 +344,3 @@ class Stepper(object):
 
         """
         return maxStep == 0
-
-    def step(self, until, tryStep=None):
-        """Perform an adaptive solution step.
-
-        Parameters
-        ----------
-        until : float
-            The value of the control variable to step to.
-        tryStep : float
-            The step to try first (default None).
-
-        Returns
-        -------
-        triedStep : float
-            The step actually taken.
-        nextStep : float
-            The next step to try.
-
-        """
-        tryStep = tryStep or self.minStep or (until - self.current)
-
-        saveStep = None
-        while True:
-            maxStep = until - self.current
-            if self._done(maxStep=maxStep):
-                # reached `until`
-                break
-
-            if abs(tryStep) > abs(maxStep):
-                saveStep = tryStep
-                tryStep = maxStep
-            else:
-                saveStep = None
-
-            triedStep, tryStep = self._step(tryStep=tryStep)
-
-            self.current += triedStep
-
-            self.steps.append(triedStep)
-            self.values.append(self.current)
-
-        return saveStep or triedStep, saveStep or tryStep
