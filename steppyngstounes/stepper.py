@@ -143,25 +143,19 @@ class Stepper(object):
         else:
             nextStep = self._shrinkStep()
 
-        nextStep = self._lowerBound(tryStep=nextStep)
-
-        maxStep = self.stop - self.current
-        if self._done(maxStep=maxStep):
-            raise StopIteration()
-
-        if abs(nextStep) > abs(maxStep):
-            self._saveStep = nextStep
-            nextStep = maxStep
-        else:
-            self._saveStep = None
+        nextStep = self._lowerBound(step=nextStep)
+        nextStep = self._upperBound(step=nextStep)
 
         if self._inclusive:
             self.current -= nextStep
 
+        if self._done():
+            raise StopIteration()
+
         return Step(current=self.current, size=nextStep, stepper=self)
 
     def _succeeded(self, error):
-        return (error <= 1.) or self._inclusive
+        return (error <= 1.)
 
     def succeeded(self, step, value, error):
         self._steps.append(step.current + step.size)
@@ -185,18 +179,18 @@ class Stepper(object):
 
         return success
 
-    def _lowerBound(self, tryStep):
+    def _lowerBound(self, step):
         """Determine minimum step.
 
         Parameters
         ----------
-        tryStep : float
+        step : float
             Desired step.
 
         Returns
         -------
         float
-            Maximum magnitude of `tryStep` and `self.minStep`.
+            Maximum magnitude of `step` and `self.minStep`.
 
         Raises
         ------
@@ -204,15 +198,41 @@ class Stepper(object):
             If the resulting step would underflow.
 
         """
-        if tryStep < 0:
+        if step < 0:
             sign = -1
         else:
             sign = 1
-        tryStep = sign * max(abs(tryStep), abs(self.minStep))
-        if self.current + tryStep == self.current:
-            raise FloatingPointError("step size underflow: %g + %g == %g" % (self.current, tryStep, self.current))
+        step = sign * max(abs(step), abs(self.minStep))
+        if self.current + step == self.current:
+            raise FloatingPointError("step size underflow: %g + %g == %g"
+                                     % (self.current, step, self.current))
 
-        return tryStep
+        return step
+
+    def _upperBound(self, step):
+        """Determine maximum step.
+
+        Parameters
+        ----------
+        step : float
+            Desired step.
+
+        Returns
+        -------
+        float
+            Maximum magnitude of `step` and distance remaining to
+            `self.stop`.
+
+        """
+        maxStep = self.stop - self.current
+
+        if abs(step) > abs(maxStep):
+            self._saveStep = step
+            step = maxStep
+        else:
+            self._saveStep = None
+
+        return step
 
     def _shrinkStep(self):
         """Reduce step after failure
@@ -249,20 +269,15 @@ class Stepper(object):
         """
         return self._sizes[-1]
 
-    def _done(self, maxStep):
+    def _done(self):
         """Determine if stepper has reached objective.
-
-        Parameters
-        ----------
-        maxStep : float
-            Maximum step size to attempt.
 
         Returns
         -------
         bool
 
         """
-        return maxStep == 0
+        return self.current == self.stop
 
     _stepper_test = r"""
 
@@ -318,8 +333,7 @@ class Stepper(object):
        ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
-       Ensure solution tolerance is achieved (aside from a few "starter"
-       steps).
+       Ensure solution tolerance is achieved.
 
        >>> print(max(stepper.errors[stepper.successes]) < 1.)
        True
