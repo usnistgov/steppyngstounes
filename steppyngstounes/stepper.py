@@ -5,21 +5,47 @@ import numpy as np
 
 __docformat__ = 'restructuredtext'
 
-__all__ = ["Stepper"]
+__all__ = ["Step", "Stepper"]
 from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
 class Step(object):
+    """Object describing a step to take.
+
+    Parameters
+    ----------
+    current : float
+        The present value of the variable to step over.
+    size : float
+        The amount to change the value of the variable to step over.
+    stepper : ~fipy.steppers.stepper.Stepper
+        The adaptive stepper that generated this step.
+    """
     def __init__(self, current, size, stepper):
         self.current = current
         self.size = size
         self.stepper = stepper
 
     def succeeded(self, value, error):
+        """Test if step was successful.
+
+        Parameters
+        ----------
+        value : float
+            User-determined scalar value that characterizes the last solve.
+        error : float
+            User-determined error (positive and normalized to 1) from the
+            last solve.
+
+        Returns
+        -------
+        bool
+            Whether step was successful.
+        """
         return self.stepper.succeeded(step=self, value=value, error=error)
 
 class Stepper(object):
-    """Adaptive stepper base class.
+    r"""Adaptive stepper base class.
 
     Parameters
     ----------
@@ -33,6 +59,10 @@ class Stepper(object):
         Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default 0).
+
+    Yields
+    ------
+    ~fipy.steppers.stepper.Step
 
     """
 
@@ -93,34 +123,36 @@ class Stepper(object):
        Ensure solution tolerance is achieved (aside from a few "starter"
        steps).
 
-       >>> print(max(stepper.errors[3:]) < 1.)
+       >>> print(max(stepper.errors[stepper.successes]) < 1.)
        True
 
     .. plot::
        :context:
+       :alt: Plot of successful steps and trajectory of attempts.
 
        >>> def plotSteps():
        ...     from matplotlib import pyplot as plt
        ...
        ...     plt.rcParams['lines.linestyle'] = ""
        ...     plt.rcParams['lines.marker'] = "."
-       ...     plt.rcParams['lines.markersize'] = 1
+       ...     plt.rcParams['lines.markersize'] = 3
        ...     fix, axes = plt.subplots(2, 2, sharex=True)
        ...
+       ...     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
+       ...                     linestyle="-", linewidth=0.5, marker="")
        ...     axes[0, 0].plot(stepper.steps[stepper.successes],
        ...                     stepper.values[stepper.successes])
        ...     axes[0, 0].set_ylabel(r"$\phi$")
        ...
-       ...     axes[0, 1].semilogy(stepper.steps[stepper.successes],
+       ...     axes[1, 0].semilogy(stepper.steps[stepper.successes],
        ...                         stepper.sizes[stepper.successes])
-       ...     axes[0, 1].set_ylabel(r"$\Delta t$")
-       ...
-       ...     axes[1, 0].plot(stepper.steps, stepper.values,
-       ...                     linestyle="-", linewidth=0.5, marker="")
-       ...     axes[1, 0].plot(stepper.steps[stepper.successes],
-       ...                     stepper.values[stepper.successes])
-       ...     axes[1, 0].set_ylabel(r"$\phi$")
+       ...     axes[1, 0].set_ylabel(r"$\Delta t$")
        ...     axes[1, 0].set_xlabel(r"$t$")
+       ...
+       ...     axes[0, 1].plot(stepper.steps[stepper.successes],
+       ...                     stepper.errors[stepper.successes])
+       ...     axes[0, 1].set_ylabel("error")
+       ...     axes[0, 1].set_ylim(ymin=1e-17, ymax=1.1)
        ...
        ...     axes[1, 1].semilogy(stepper.steps[stepper.successes],
        ...                         stepper.errors[stepper.successes])
@@ -132,7 +164,6 @@ class Stepper(object):
        ...     plt.show()
 
        >>> plotSteps() # doctest: +SKIP
-       >>> plotSteps()
 
     """
 
@@ -173,9 +204,9 @@ class Stepper(object):
 
     @property
     def values(self):
-        """`ndarray` of the "metric" at each step attempt.
+        """`ndarray` of the "value" at each step attempt.
 
-        The user-determined "metric" scalar value at each step attempt is
+        The user-determined scalar value at each step attempt is
         passed to :class:`~fipy.steppers.Stepper` via
         :meth:`~fipy.steppers.Step.succeeded`.
         """
