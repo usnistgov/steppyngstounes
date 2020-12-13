@@ -70,7 +70,7 @@ class ScaledStepper(Stepper):
         """
         return self._sizes[-1] * self.shrinkFactor
 
-    def _calcNext(self):
+    def _adaptStep(self):
         """Calculate next step after success
 
         Returns

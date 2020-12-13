@@ -89,7 +89,7 @@ class PseudoRKQSStepper(Stepper):
         factor = max(self.safety * self._errors[-1]**self.pshrink, self.minshrink)
         return factor * self._sizes[-1]
 
-    def _calcNext(self):
+    def _adaptStep(self):
         """Calculate next step after success
 
         Returns

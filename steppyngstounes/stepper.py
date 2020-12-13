@@ -139,7 +139,7 @@ class Stepper(object):
         if self._saveStep is not None:
             nextStep = self._saveStep
         elif self._successes[-1]:
-            nextStep = self._calcNext()
+            nextStep = self._adaptStep()
         else:
             nextStep = self._shrinkStep()
 
@@ -235,18 +235,11 @@ class Stepper(object):
         """
         return self._sizes[-1]
 
-    def _calcNext(self):
+    def _adaptStep(self):
         """Calculate next step after success
 
         Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
-        override this method (default returns `triedStep` unchanged).
-
-        Parameters
-        ----------
-        triedStep : float
-            Step that succeeded.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
+        override this method (default returns last step unchanged).
 
         Returns
         -------

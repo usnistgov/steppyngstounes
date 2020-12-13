@@ -110,7 +110,7 @@ class PIDStepper(Stepper):
         factor = min(1. / self._errors[-1], 0.8)
         return factor * self._sizes[-1]
 
-    def _calcNext(self):
+    def _adaptStep(self):
         """Calculate next step after success
 
         Returns
