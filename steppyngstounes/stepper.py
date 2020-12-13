@@ -70,107 +70,6 @@ class Stepper(object):
 
     """
 
-    _stepper_test = r"""
-
-    Examples
-    --------
-
-    .. plot::
-       :context: reset
-       :include-source:
-       :nofigs:
-
-       >>> import numpy as np
-       >>> from fipy.steppers import {StepperClass}
-
-       We'll demonstrate using an artificial function that changes
-       abruptly, but smoothly, with time,
-
-       .. math::
-
-          \tanh\frac{{\frac{{t}}{{t_\mathrm{{max}}}} - \frac{{1}}{{2}}}}
-                      {{2 w}}
-
-       where :math:`t` is the elapsed time, :math:`t_\mathrm{{max}}` is
-       total time desired, and :math:`w` is a measure of the step width.
-
-       >>> dt = {dt}
-       >>> totaltime = 1000.
-       >>> width = 0.01
-
-       The scaled "error" will be a measure of how much the solution has
-       changed since the last step :math:`\|\mathtt{{new}} -
-       \mathtt{{old}}\|_1 / \mathtt{{errorscale}}`).
-
-       >>> errorscale = 1e-2
-
-       Iterate over the stepper from `start` to `stop` (inclusive of
-       calculating a value at `start`), using a suggested initial step size
-       of `tryStep`.
-
-       >>> old = -1.
-       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt, inclusive=True)
-       >>> for step in stepper:
-       ...     t = step.current + step.size
-       ...     new = np.tanh((t / totaltime - 0.5) / (2 * width))
-       ...
-       ...     error = abs(new - old) / errorscale
-       ...
-       ...     if step.succeeded(value=new, error=error):
-       ...         old = new
-
-       >>> s = "{{}} succesful steps in {{}} attempts"
-       >>> print(s.format(len(stepper.steps[stepper.successes]),
-       ...                len(stepper.steps)))
-       {steps} succesful steps in {attempts} attempts
-
-       Ensure solution tolerance is achieved (aside from a few "starter"
-       steps).
-
-       >>> print(max(stepper.errors[stepper.successes]) < 1.)
-       True
-
-    .. plot::
-       :context:
-       :alt: Plot of successful steps and trajectory of attempts.
-
-       >>> def plotSteps():
-       ...     from matplotlib import pyplot as plt
-       ...
-       ...     plt.rcParams['lines.linestyle'] = ""
-       ...     plt.rcParams['lines.marker'] = "."
-       ...     plt.rcParams['lines.markersize'] = 3
-       ...     fix, axes = plt.subplots(2, 2, sharex=True)
-       ...
-       ...     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
-       ...                     linestyle="-", linewidth=0.5, marker="")
-       ...     axes[0, 0].plot(stepper.steps[stepper.successes],
-       ...                     stepper.values[stepper.successes])
-       ...     axes[0, 0].set_ylabel(r"$\phi$")
-       ...
-       ...     axes[1, 0].semilogy(stepper.steps[stepper.successes],
-       ...                         stepper.sizes[stepper.successes])
-       ...     axes[1, 0].set_ylabel(r"$\Delta t$")
-       ...     axes[1, 0].set_xlabel(r"$t$")
-       ...
-       ...     axes[0, 1].plot(stepper.steps[stepper.successes],
-       ...                     stepper.errors[stepper.successes])
-       ...     axes[0, 1].set_ylabel("error")
-       ...     axes[0, 1].set_ylim(ymin=1e-17, ymax=1.1)
-       ...
-       ...     axes[1, 1].semilogy(stepper.steps[stepper.successes],
-       ...                         stepper.errors[stepper.successes])
-       ...     axes[1, 1].set_ylabel("error")
-       ...     axes[1, 1].set_xlabel(r"$t$")
-       ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
-       ...
-       ...     plt.tight_layout()
-       ...     plt.show()
-
-       >>> plotSteps() # doctest: +SKIP
-
-    """
-
     def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None):
         self.start = start
         self.stop = stop
@@ -364,3 +263,104 @@ class Stepper(object):
 
         """
         return maxStep == 0
+
+    _stepper_test = r"""
+
+    Examples
+    --------
+
+    .. plot::
+       :context: reset
+       :include-source:
+       :nofigs:
+
+       >>> import numpy as np
+       >>> from fipy.steppers import {StepperClass}
+
+       We'll demonstrate using an artificial function that changes
+       abruptly, but smoothly, with time,
+
+       .. math::
+
+          \tanh\frac{{\frac{{t}}{{t_\mathrm{{max}}}} - \frac{{1}}{{2}}}}
+                      {{2 w}}
+
+       where :math:`t` is the elapsed time, :math:`t_\mathrm{{max}}` is
+       total time desired, and :math:`w` is a measure of the step width.
+
+       >>> dt = {dt}
+       >>> totaltime = 1000.
+       >>> width = 0.01
+
+       The scaled "error" will be a measure of how much the solution has
+       changed since the last step :math:`\|\mathtt{{new}} -
+       \mathtt{{old}}\|_1 / \mathtt{{errorscale}}`).
+
+       >>> errorscale = 1e-2
+
+       Iterate over the stepper from `start` to `stop` (inclusive of
+       calculating a value at `start`), using a suggested initial step size
+       of `tryStep`.
+
+       >>> old = -1.
+       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt, inclusive=True)
+       >>> for step in stepper:
+       ...     t = step.current + step.size
+       ...     new = np.tanh((t / totaltime - 0.5) / (2 * width))
+       ...
+       ...     error = abs(new - old) / errorscale
+       ...
+       ...     if step.succeeded(value=new, error=error):
+       ...         old = new
+
+       >>> s = "{{}} succesful steps in {{}} attempts"
+       >>> print(s.format(len(stepper.steps[stepper.successes]),
+       ...                len(stepper.steps)))
+       {steps} succesful steps in {attempts} attempts
+
+       Ensure solution tolerance is achieved (aside from a few "starter"
+       steps).
+
+       >>> print(max(stepper.errors[stepper.successes]) < 1.)
+       True
+
+    .. plot::
+       :context:
+       :alt: Plot of successful steps and trajectory of attempts.
+
+       >>> def plotSteps():
+       ...     from matplotlib import pyplot as plt
+       ...
+       ...     plt.rcParams['lines.linestyle'] = ""
+       ...     plt.rcParams['lines.marker'] = "."
+       ...     plt.rcParams['lines.markersize'] = 3
+       ...     fix, axes = plt.subplots(2, 2, sharex=True)
+       ...
+       ...     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
+       ...                     linestyle="-", linewidth=0.5, marker="")
+       ...     axes[0, 0].plot(stepper.steps[stepper.successes],
+       ...                     stepper.values[stepper.successes])
+       ...     axes[0, 0].set_ylabel(r"$\phi$")
+       ...
+       ...     axes[1, 0].semilogy(stepper.steps[stepper.successes],
+       ...                         stepper.sizes[stepper.successes])
+       ...     axes[1, 0].set_ylabel(r"$\Delta t$")
+       ...     axes[1, 0].set_xlabel(r"$t$")
+       ...
+       ...     axes[0, 1].plot(stepper.steps[stepper.successes],
+       ...                     stepper.errors[stepper.successes])
+       ...     axes[0, 1].set_ylabel("error")
+       ...     axes[0, 1].set_ylim(ymin=1e-17, ymax=1.1)
+       ...
+       ...     axes[1, 1].semilogy(stepper.steps[stepper.successes],
+       ...                         stepper.errors[stepper.successes])
+       ...     axes[1, 1].set_ylabel("error")
+       ...     axes[1, 1].set_xlabel(r"$t$")
+       ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
+       ...
+       ...     plt.tight_layout()
+       ...     plt.show()
+
+       >>> plotSteps() # doctest: +SKIP
+
+    """
