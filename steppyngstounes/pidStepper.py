@@ -70,8 +70,8 @@ class PIDStepper(Stepper):
 
     __doc__ += Stepper._stepper_test.format(StepperClass="PIDStepper",
                                             dt=50.,
-                                            steps=288,
-                                            attempts=505)
+                                            steps=349,
+                                            attempts=503)
 
     def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None,
                  proportional=0.075, integral=0.175, derivative=0.01):

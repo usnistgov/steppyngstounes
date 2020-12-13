@@ -24,8 +24,8 @@ class FixedStepper(Stepper):
 
     __doc__ += Stepper._stepper_test.format(StepperClass="FixedStepper",
                                             dt=0.15,
-                                            steps=8089,
-                                            attempts=8089)
+                                            steps=6668,
+                                            attempts=6668)
 
     def _succeeded(self, error):
         """Determine if most recent attempt failed.
