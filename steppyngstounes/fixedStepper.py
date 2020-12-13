@@ -12,15 +12,13 @@ class FixedStepper(Stepper):
     Parameters
     ----------
     start : float
-        Beggining of range to step over.
+        Beginning of range to step over.
     stop : float
         Finish of range to step over.
     tryStep : float
-        Suggested step size to try (default None).
+        Desired step size.
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
-    minStep : float
-        Smallest step to allow (default 0).
 
     """
 

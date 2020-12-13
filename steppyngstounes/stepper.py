@@ -57,7 +57,7 @@ class Stepper(object):
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
-    minStep : ~fipy.steppers.stepper.Step
+    minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
 
