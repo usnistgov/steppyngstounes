@@ -34,14 +34,6 @@ class PseudoRKQSStepper(Stepper):
     where :math:`P_\text{shrink}` is the shrinkage exponent and :math:`f_\text{min}`
     is the minimum factor to shrink the stepsize.
 
-    .. note::
-
-        The user must override
-        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.solve`,
-        :meth:`~fipy.steppers.stepper.Stepper.success`, and
-        :meth:`~fipy.steppers.stepper.Stepper.failure`.
-
     Parameters
     ----------
     start : float

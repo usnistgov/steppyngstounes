@@ -26,14 +26,6 @@ class ScaledStepper(Stepper):
 
     where :math:`f_\text{shrink}` is the factor by which to shrink the step
     size.
-    
-    .. note::
-
-        The user must override
-        :meth:`~fipy.steppers.stepper.Stepper.calcError` and may override
-        :meth:`~fipy.steppers.stepper.Stepper.solve`,
-        :meth:`~fipy.steppers.stepper.Stepper.success`, and
-        :meth:`~fipy.steppers.stepper.Stepper.failure`.
 
     Parameters
     ----------
