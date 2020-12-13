@@ -351,25 +351,6 @@ class Stepper(object):
         """
         return self._sizes[-1]
 
-    def _failed(self, triedStep, error, attempts):
-        """Determine if most recent attempt failed
-
-        Parameters
-        ----------
-        triedStep : float
-            Step that was attempted.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-        attempts : int
-            Number of failed attempts so far.
-
-        Returns
-        -------
-        bool
-        """
-        return ((error > 1. or attempts > (self.maxattempts + 1))
-                and triedStep > self.minStep)
-
     def _done(self, maxStep):
         """Determine if stepper has reached objective.
 

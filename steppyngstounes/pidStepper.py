@@ -104,36 +104,6 @@ class PIDStepper(Stepper):
 
         self.prevStep = self.minStep
 
-    def failure(self, triedStep, error):
-        """Action to perform when `solve()` returns an error greater than 1.
-
-        Resets the variable values, shrinks the step, and adjusts the
-        "`prevStep`" used by the algorithm.
-
-        .. warning::
-
-           If the user overrides this method they should ensure to call the
-           inherited :meth:`~fipy.steppers.stepper.PIDStepper.failure` method.
-
-        Parameters
-        ----------
-        triedStep : float
-            The step that was attempted.
-        error : float
-            Error (positive and normalized to 1) from the last solve.
-
-        Return
-        ------
-        nextStep : float
-            The next step to attempt.
-
-        """
-        nextStep = super(PIDStepper, self).failure(triedStep=triedStep, error=error)
-
-        self.prevStep = triedStep**2 / (self.prevStep or self.minStep)
-
-        return nextStep
-
     def _shrinkStep(self):
         """Reduce step after failure
 
