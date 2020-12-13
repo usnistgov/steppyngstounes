@@ -1,5 +1,8 @@
 from __future__ import division
 from __future__ import unicode_literals
+
+import numpy as np
+
 from fipy.steppers.stepper import Stepper
 
 __all__ = ["PIDStepper"]
@@ -53,11 +56,17 @@ class PIDStepper(Stepper):
 
     Parameters
     ----------
-    solvefor : tuple of tuple
-        Each tuple holds a `CellVariable` to solve for, the equation to
-        solve, and the old-style boundary conditions to apply.
+    start : float
+        Beginning of range to step over.
+    stop : float
+        Finish of range to step over.
+    tryStep : float
+        Suggested step size to try (default None).
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False)
     minStep : float
-        Smallest step to allow (default 0).
+        Smallest step to allow (default `(stop - start) *`
+        |machineepsilon|_).
     proportional : float
         PID control :math:`k_P` coefficient (default 0.075).
     integral : float
@@ -72,29 +81,26 @@ class PIDStepper(Stepper):
                                             steps=288,
                                             attempts=505)
 
-    def __init__(self, solvefor=(), minStep=0.,
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None,
                  proportional=0.075, integral=0.175, derivative=0.01):
-        super(PIDStepper, self).__init__(solvefor=solvefor, minStep=minStep)
+        super(PIDStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+                                         inclusive=inclusive, minStep=minStep)
 
         self.proportional = proportional
         self.integral = integral
         self.derivative = derivative
 
         # pre-seed the error list as this algorithm needs historical errors
-        self._sizes = [tryStep or (stop - start)]
-        self._steps = [start]
-        self._successes = [True]
-        self._values = [np.NaN]
-        self._errors = [1.]
 
-        self._errors += [1., 1.]
-        self._steps += [self.minStep, self.minStep]
-        if self.values:
-            current = self.values[-1]
-        else:
-            current = 0.
-        self.values += [current + self.steps[-2],
-                        current + self.steps[-2] + self.steps[-1]]
+        # number of artificial steps needed by the algorithm
+        self._bogus = 3
+
+        self._sizes *= self._bogus
+        self._successes *= self._bogus
+        self._values *= self._bogus
+        self._errors *= self._bogus
+
+        self._steps = list(start - np.cumsum(self._sizes)[::-1])
 
         self.prevStep = self.minStep
 
@@ -137,7 +143,9 @@ class PIDStepper(Stepper):
             New step.
 
         """
-        factor = min(1. / self.errors[-1], 0.8)
+        self.prevStep = self._sizes[-1]**2 / (self.prevStep or self.minStep)
+
+        factor = min(1. / self._errors[-1], 0.8)
         return factor * self._sizes[-1]
 
     def _calcNext(self):
@@ -149,10 +157,10 @@ class PIDStepper(Stepper):
             New step.
 
         """
-        factor = ((self.errors[-2] / self.errors[-1])**self.proportional
-                  * (1. / self.errors[-1])**self.integral
-                  * (self.errors[-2]**2
-                     / (self.errors[-1] * self.errors[-3]))**self.derivative)
+        factor = ((self._errors[-2] / self._errors[-1])**self.proportional
+                  * (1. / self._errors[-1])**self.integral
+                  * (self._errors[-2]**2
+                     / (self._errors[-1] * self._errors[-3]))**self.derivative)
 
         # could optionally drop the oldest error
         # _ = self.error.pop(0)
