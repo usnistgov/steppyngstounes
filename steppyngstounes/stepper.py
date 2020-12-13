@@ -57,8 +57,12 @@ class Stepper(object):
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
-    minStep : float
-        Smallest step to allow (default 0).
+    minStep : ~fipy.steppers.stepper.Step
+        Smallest step to allow (default `(stop - start) *`
+        |machineepsilon|_).
+
+        .. |machineepsilon| replace::   `eps`
+        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     Yields
     ------
@@ -167,10 +171,13 @@ class Stepper(object):
 
     """
 
-    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=0.):
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None):
         self.start = start
         self.stop = stop
         self.inclusive = inclusive
+
+        if minStep is None:
+            minStep = (stop - start) * np.finfo(float).eps
         self.minStep = minStep
 
         self.current = start
@@ -268,6 +275,8 @@ class Stepper(object):
 
         if success:
             self.current = self._steps[-1]
+        else:
+            self._saveStep = None
 
         return success
 

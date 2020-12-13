@@ -53,7 +53,8 @@ class PseudoRKQSStepper(Stepper):
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
     minStep : float
-        Smallest step to allow (default 0).
+        Smallest step to allow (default `(stop - start) *`
+        |machineepsilon|_).
     safety : float
         RKQS control safety factor :math:`S` (default 0.9).
     pgrow : float
@@ -72,7 +73,7 @@ class PseudoRKQSStepper(Stepper):
                                             steps=369,
                                             attempts=392)
 
-    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=0.,
+    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,
                  maxgrow=5, minshrink=0.1):
         super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
