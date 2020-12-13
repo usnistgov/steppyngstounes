@@ -264,11 +264,10 @@ class Stepper(object):
     def succeeded(self, step, value, error):
         self._steps.append(step.current + step.size)
         self._sizes.append(step.size)
+        self._values.append(value)
 
         # don't let error be zero
         self._errors.append(error + np.finfo(float).eps)
-
-        self._values.append(value)
 
         success = self._succeeded(error=error)
         self._successes.append(success)
