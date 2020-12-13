@@ -73,7 +73,7 @@ class Stepper(object):
     def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None):
         self.start = start
         self.stop = stop
-        self.inclusive = inclusive
+        self._inclusive = inclusive
 
         if minStep is None:
             minStep = (stop - start) * np.finfo(float).eps
@@ -155,10 +155,13 @@ class Stepper(object):
         else:
             self._saveStep = None
 
+        if self._inclusive:
+            self.current -= nextStep
+
         return Step(current=self.current, size=nextStep, stepper=self)
 
     def _succeeded(self, error):
-        return error <= 1.
+        return (error <= 1.) or self._inclusive
 
     def succeeded(self, step, value, error):
         self._steps.append(step.current + step.size)
@@ -169,6 +172,10 @@ class Stepper(object):
         self._errors.append(error + np.finfo(float).eps)
 
         success = self._succeeded(error=error)
+        if self._inclusive:
+            success = True
+            self._inclusive = False
+
         self._successes.append(success)
 
         if success:
