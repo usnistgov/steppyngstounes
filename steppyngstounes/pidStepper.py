@@ -72,8 +72,8 @@ class PIDStepper(Stepper):
 
     __doc__ += Stepper._stepper_test.format(StepperClass="PIDStepper",
                                             dt=50.,
-                                            steps=349,
-                                            attempts=503)
+                                            steps=264,
+                                            attempts=281)
 
     def __init__(self, start, stop, tryStep=None, minStep=None,
                  inclusive=False, recorded=False,
@@ -109,10 +109,12 @@ class PIDStepper(Stepper):
             New step.
 
         """
-        self.prevStep = self._sizes[-1]**2 / (self.prevStep or self.minStep)
-
         factor = min(1. / self._errors[-1], 0.8)
-        return factor * self._sizes[-1]
+        tryStep = factor * self._sizes[-1]
+
+        self.prevStep = tryStep**2 / (self.prevStep or self.minStep)
+
+        return tryStep
 
     def _adaptStep(self):
         """Calculate next step after success
@@ -123,15 +125,13 @@ class PIDStepper(Stepper):
             New step.
 
         """
-        factor = ((self._errors[-2] / self._errors[-1])**self.proportional
-                  * (1. / self._errors[-1])**self.integral
-                  * (self._errors[-2]**2
-                     / (self._errors[-1] * self._errors[-3]))**self.derivative)
+        errors = np.asarray(self._errors)[self._successes]
+        factor = ((errors[-2] / errors[-1])**self.proportional
+                  * (1. / errors[-1])**self.integral
+                  * (errors[-2]**2
+                     / (errors[-1] * errors[-3]))**self.derivative)
 
-        # could optionally drop the oldest error
-        # _ = self.error.pop(0)
-
-        tryStep = factor * (self.prevStep or self._sizes[-1])
+        tryStep = factor * (self.prevStep or self._sizes[self._successes][-1])
 
         self.prevStep = tryStep
 
