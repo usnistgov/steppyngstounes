@@ -56,6 +56,8 @@ class PIDStepper(Stepper):
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
+    recorded : bool
+        Whether to keep history of steps, errors, values, etc. (default False).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
@@ -73,10 +75,12 @@ class PIDStepper(Stepper):
                                             steps=349,
                                             attempts=503)
 
-    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None,
+    def __init__(self, start, stop, tryStep=None, minStep=None,
+                 inclusive=False, recorded=False,
                  proportional=0.075, integral=0.175, derivative=0.01):
         super(PIDStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
-                                         inclusive=inclusive, minStep=minStep)
+                                         minStep=minStep, inclusive=inclusive,
+                                         recorded=recorded)
 
         self.proportional = proportional
         self.integral = integral
@@ -85,12 +89,12 @@ class PIDStepper(Stepper):
         # pre-seed the error list as this algorithm needs historical errors
 
         # number of artificial steps needed by the algorithm
-        self._bogus = 3
+        self._needs = 3
 
-        self._sizes *= self._bogus
-        self._successes *= self._bogus
-        self._values *= self._bogus
-        self._errors *= self._bogus
+        self._sizes *= self._needs
+        self._successes *= self._needs
+        self._values *= self._needs
+        self._errors *= self._needs
 
         self._steps = list(start - np.cumsum(self._sizes)[::-1])
 

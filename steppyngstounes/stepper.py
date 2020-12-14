@@ -55,8 +55,6 @@ class Stepper(object):
         Finish of range to step over.
     tryStep : float
         Suggested step size to try (default None).
-    inclusive : bool
-        Whether to include an evaluation at `start` (default False)
     minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
@@ -64,16 +62,23 @@ class Stepper(object):
         .. |machineepsilon| replace::   `eps`
         .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
+    inclusive : bool
+        Whether to include an evaluation at `start` (default False).
+    recorded : bool
+        Whether to keep history of steps, errors, values, etc. (default False).
+
     Yields
     ------
     ~fipy.steppers.stepper.Step
 
     """
 
-    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None):
+    def __init__(self, start, stop, tryStep=None, minStep=None,
+                 inclusive=False, recorded=False):
         self.start = start
         self.stop = stop
         self._inclusive = inclusive
+        self.recorded = recorded
 
         if minStep is None:
             minStep = (stop - start) * np.finfo(float).eps
@@ -88,25 +93,25 @@ class Stepper(object):
         self._saveStep = None
 
         # number of artificial steps needed by the algorithm
-        self._bogus = 1
+        self._needs = 1
 
     @property
     def steps(self):
         """`ndarray` of values of the control variable attempted so far.
         """
-        return np.asarray(self._steps[self._bogus:])
+        return np.asarray(self._steps[self._needs:])
 
     @property
     def sizes(self):
         """`ndarray` of the step size at each step attempt.
         """
-        return np.asarray(self._sizes[self._bogus:])
+        return np.asarray(self._sizes[self._needs:])
 
     @property
     def successes(self):
         """`ndarray` of whether the step was successful at each step attempt.
         """
-        return np.asarray(self._successes[self._bogus:])
+        return np.asarray(self._successes[self._needs:])
 
     @property
     def values(self):
@@ -116,7 +121,7 @@ class Stepper(object):
         passed to :class:`~fipy.steppers.Stepper` via
         :meth:`~fipy.steppers.Step.succeeded`.
         """
-        return np.asarray(self._values[self._bogus:])
+        return np.asarray(self._values[self._needs:])
 
     @property
     def errors(self):
@@ -127,7 +132,7 @@ class Stepper(object):
         :class:`~fipy.steppers.Stepper` via
         :meth:`~fipy.steppers.Step.succeeded`.
         """
-        return np.asarray(self._errors[self._bogus:])
+        return np.asarray(self._errors[self._needs:])
 
     def __iter__(self):
         return self
@@ -149,6 +154,9 @@ class Stepper(object):
         if self._inclusive:
             self.current -= nextStep
 
+        if not self.recorded:
+            self._purge()
+
         if self._done():
             raise StopIteration()
 
@@ -157,23 +165,59 @@ class Stepper(object):
     def _succeeded(self, error):
         return (error <= 1.)
 
+    def _purge(self):
+        """Discard any steps no longer needed.
+
+        Failed steps and any successful steps no longer needed by the
+        stepping algorithm are removed from the step records.
+        """
+        def extract(l, keep):
+            return list(np.asarray(l)[keep])
+
+        keep = np.nonzero(self._successes)[0]
+        keep = keep[-self._needs:]
+
+        self._steps = extract(self._steps, keep)
+        self._sizes = extract(self._sizes, keep)
+        self._values = extract(self._values, keep)
+        self._successes = extract(self._successes, keep)
+        self._errors = extract(self._errors, keep)
+
     def succeeded(self, step, value, error):
-        self._steps.append(step.current + step.size)
-        self._sizes.append(step.size)
-        self._values.append(value)
+        """Test if step was successful.
 
-        # don't let error be zero
-        self._errors.append(error + np.finfo(float).eps)
+        Stores data about the last step.
 
+        Parameters
+        ----------
+        step : ~fipy.steppers.stepper.Step
+            The step to test.
+        value : float
+            User-determined scalar value that characterizes the last step.
+        error : float
+            User-determined error (positive and normalized to 1) from the
+            last step.
+
+        Returns
+        -------
+        bool
+            Whether step was successful.
+        """
         success = self._succeeded(error=error)
         if self._inclusive:
             success = True
             self._inclusive = False
 
+        self._steps.append(step.current + step.size)
+        self._sizes.append(step.size)
+        self._values.append(value)
         self._successes.append(success)
 
+        # don't let error be zero
+        self._errors.append(error + np.finfo(float).eps)
+
         if success:
-            self.current = self._steps[-1]
+            self.current += step.size
         else:
             self._saveStep = None
 
@@ -318,7 +362,8 @@ class Stepper(object):
        of `tryStep`.
 
        >>> old = -1.
-       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt, inclusive=True)
+       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt,
+       ...                          inclusive=True, recorded=True)
        >>> for step in stepper:
        ...     t = step.current + step.size
        ...     new = np.tanh((t / totaltime - 0.5) / (2 * width))

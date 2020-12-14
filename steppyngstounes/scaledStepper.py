@@ -37,6 +37,8 @@ class ScaledStepper(Stepper):
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
+    recorded : bool
+        Whether to keep history of steps, errors, values, etc. (default False).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
@@ -52,10 +54,12 @@ class ScaledStepper(Stepper):
                                             steps=295,
                                             attempts=374)
 
-    def __init__(self, start, stop, tryStep=None, inclusive=False, minStep=None,
+    def __init__(self, start, stop, tryStep=None, minStep=None,
+                 inclusive=False, recorded=False,
                  growFactor=1.2, shrinkFactor=0.5):
         super(ScaledStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
-                                            inclusive=inclusive, minStep=minStep)
+                                            minStep=minStep, inclusive=inclusive,
+                                            recorded=recorded)
         self.growFactor = growFactor
         self.shrinkFactor = shrinkFactor
 

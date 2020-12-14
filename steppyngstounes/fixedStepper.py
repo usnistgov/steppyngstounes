@@ -19,6 +19,8 @@ class FixedStepper(Stepper):
         Desired step size.
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
+    recorded : bool
+        Whether to keep history of steps, errors, values, etc. (default False).
 
     """
 
@@ -26,6 +28,12 @@ class FixedStepper(Stepper):
                                             dt=0.15,
                                             steps=6668,
                                             attempts=6668)
+
+    def __init__(self, start, stop, tryStep,
+                 inclusive=False, recorded=False):
+        super(FixedStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+                                           minStep=minStep, inclusive=inclusive,
+                                           recorded=recorded)
 
     def _succeeded(self, error):
         """Determine if most recent attempt failed.
