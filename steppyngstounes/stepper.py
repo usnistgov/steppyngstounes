@@ -375,7 +375,7 @@ class Stepper(object):
        ...         old = new
 
        >>> s = "{{}} succesful steps in {{}} attempts"
-       >>> print(s.format(len(stepper.steps[stepper.successes]),
+       >>> print(s.format(stepper.successes.sum(),
        ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
