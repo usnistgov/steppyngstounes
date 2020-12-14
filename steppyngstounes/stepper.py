@@ -14,16 +14,16 @@ class Step(object):
 
     Parameters
     ----------
-    current : float
+    begin : float
         The present value of the variable to step over.
-    size : float
-        The amount to change the value of the variable to step over.
+    end : float
+        The desired value of the variable to step over.
     stepper : ~fipy.steppers.stepper.Stepper
         The adaptive stepper that generated this step.
     """
-    def __init__(self, current, size, stepper):
-        self.current = current
-        self.size = size
+    def __init__(self, begin, end, stepper):
+        self.begin = begin
+        self.end = end
         self.stepper = stepper
 
     def succeeded(self, value, error):
@@ -160,7 +160,7 @@ class Stepper(object):
         if self._done():
             raise StopIteration()
 
-        return Step(current=self.current, size=nextStep, stepper=self)
+        return Step(begin=self.current, end=self.current + nextStep, stepper=self)
 
     def _succeeded(self, error):
         """Test if last step was successful.
@@ -210,8 +210,8 @@ class Stepper(object):
             success = True
             self._inclusive = False
 
-        self._steps.append(step.current + step.size)
-        self._sizes.append(step.size)
+        self._steps.append(step.end)
+        self._sizes.append(step.end - step.begin)
         self._values.append(value)
         self._successes.append(success)
 
@@ -219,7 +219,7 @@ class Stepper(object):
         self._errors.append(error + np.finfo(float).eps)
 
         if success:
-            self.current += step.size
+            self.current = step.end
         else:
             self._saveStep = None
 
@@ -367,8 +367,7 @@ class Stepper(object):
        >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt,
        ...                          inclusive=True, recorded=True)
        >>> for step in stepper:
-       ...     t = step.current + step.size
-       ...     new = np.tanh((t / totaltime - 0.5) / (2 * width))
+       ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
        ...
        ...     error = abs(new - old) / errorscale
        ...
