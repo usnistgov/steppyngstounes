@@ -32,10 +32,10 @@ class Step(object):
         Parameters
         ----------
         value : float
-            User-determined scalar value that characterizes the last solve.
+            User-determined scalar value that characterizes the last step.
         error : float
             User-determined error (positive and normalized to 1) from the
-            last solve.
+            last step.
 
         Returns
         -------
@@ -163,6 +163,8 @@ class Stepper(object):
         return Step(current=self.current, size=nextStep, stepper=self)
 
     def _succeeded(self, error):
+        """Test if last step was successful.
+        """
         return (error <= 1.)
 
     def _purge(self):
@@ -289,7 +291,7 @@ class Stepper(object):
         triedStep : float
             Step that failed.
         error : float
-            Error (positive and normalized to 1) from the last solve.
+            Error (positive and normalized to 1) from the last step.
 
         Returns
         -------
