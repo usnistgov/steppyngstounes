@@ -7,7 +7,7 @@ from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
 class FixedStepper(Stepper):
-    r"""Stepper that takes steps of fixed size.
+    r"""Stepper that takes steps of constant size.
 
     Parameters
     ----------
@@ -15,7 +15,7 @@ class FixedStepper(Stepper):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    tryStep : float
+    step : float
         Desired step size.
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -29,9 +29,9 @@ class FixedStepper(Stepper):
                                             steps=6668,
                                             attempts=6668)
 
-    def __init__(self, start, stop, tryStep,
+    def __init__(self, start, stop, step,
                  inclusive=False, recorded=False):
-        super(FixedStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+        super(FixedStepper, self).__init__(start=start, stop=stop, tryStep=step,
                                            minStep=minStep, inclusive=inclusive,
                                            recorded=recorded)
 
