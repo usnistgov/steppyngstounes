@@ -18,7 +18,7 @@ class Step(object):
         The present value of the variable to step over.
     end : float
         The desired value of the variable to step over.
-    stepper : ~fipy.steppers.stepper.Stepper
+    stepper : ~steppyngstounes.stepper.Stepper
         The adaptive stepper that generated this step.
     """
     def __init__(self, begin, end, stepper):
@@ -69,7 +69,7 @@ class Stepper(object):
 
     Yields
     ------
-    ~fipy.steppers.stepper.Step
+    ~steppyngstounes.stepper.Step
 
     """
 
@@ -118,8 +118,8 @@ class Stepper(object):
         """`ndarray` of the "value" at each step attempt.
 
         The user-determined scalar value at each step attempt is
-        passed to :class:`~fipy.steppers.Stepper` via
-        :meth:`~fipy.steppers.Step.succeeded`.
+        passed to :class:`~steppyngstounes.Stepper` via
+        :meth:`~steppyngstounes.Step.succeeded`.
         """
         return np.asarray(self._values[self._needs:])
 
@@ -129,8 +129,8 @@ class Stepper(object):
 
         The user-determined "error" scalar value (positive and normalized
         to 1) at each step attempt is passed to
-        :class:`~fipy.steppers.Stepper` via
-        :meth:`~fipy.steppers.Step.succeeded`.
+        :class:`~steppyngstounes.Stepper` via
+        :meth:`~steppyngstounes.Step.succeeded`.
         """
         return np.asarray(self._errors[self._needs:])
 
@@ -192,7 +192,7 @@ class Stepper(object):
 
         Parameters
         ----------
-        step : ~fipy.steppers.stepper.Step
+        step : ~steppyngstounes.stepper.Step
             The step to test.
         value : float
             User-determined scalar value that characterizes the last step.
@@ -283,7 +283,7 @@ class Stepper(object):
     def _shrinkStep(self):
         """Reduce step after failure
 
-        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
+        Most subclasses of :class:`~steppyngstounes.stepper.Stepper` should
         override this method (default returns `triedStep` unchanged).
 
         Parameters
@@ -304,7 +304,7 @@ class Stepper(object):
     def _adaptStep(self):
         """Calculate next step after success
 
-        Most subclasses of :class:`~fipy.steppers.stepper.Stepper` should
+        Most subclasses of :class:`~steppyngstounes.stepper.Stepper` should
         override this method (default returns last step unchanged).
 
         Returns
@@ -336,7 +336,7 @@ class Stepper(object):
        :nofigs:
 
        >>> import numpy as np
-       >>> from fipy.steppers import {StepperClass}
+       >>> from steppyngstounes import {StepperClass}
 
        We'll demonstrate using an artificial function that changes
        abruptly, but smoothly, with time,

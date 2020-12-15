@@ -1,6 +1,6 @@
 from __future__ import division
 from __future__ import unicode_literals
-from fipy.steppers.stepper import Stepper
+from steppyngstounes.stepper import Stepper
 
 __all__ = ["FixedStepper"]
 from future.utils import text_to_native_str
@@ -45,10 +45,3 @@ class FixedStepper(Stepper):
         bool
         """
         return True
-
-def _test():
-    import fipy.tests.doctestPlus
-    return fipy.tests.doctestPlus.testmod()
-
-if __name__ == "__main__":
-    _test()

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import numpy as np
 
-from fipy.steppers.stepper import Stepper
+from steppyngstounes.stepper import Stepper
 
 __all__ = ["PIDStepper"]
 from future.utils import text_to_native_str
@@ -136,10 +136,3 @@ class PIDStepper(Stepper):
         self.prevStep = tryStep
 
         return tryStep
-
-def _test():
-    import fipy.tests.doctestPlus
-    return fipy.tests.doctestPlus.testmod()
-
-if __name__ == "__main__":
-    _test()
