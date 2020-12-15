@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+.*~ 
+*~
+.DS_Store
+MANIFEST.in
+dist/
+documentation/_build/
+worktrees/
