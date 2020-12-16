@@ -44,7 +44,7 @@ class PseudoRKQSStepper(Stepper):
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
-    recorded : bool
+    record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
@@ -68,12 +68,12 @@ class PseudoRKQSStepper(Stepper):
                                             attempts=363)
 
     def __init__(self, start, stop, tryStep=None, minStep=None,
-                 inclusive=False, recorded=False,
+                 inclusive=False, record=False,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,
                  maxgrow=5, minshrink=0.1):
         super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
                                                 minStep=minStep, inclusive=inclusive,
-                                                recorded=recorded)
+                                                record=record)
         self.safety = safety
         self.pgrow = pgrow
         self.pshrink = pshrink

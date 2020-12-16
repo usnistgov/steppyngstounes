@@ -64,7 +64,7 @@ class Stepper(object):
 
     inclusive : bool
         Whether to include an evaluation at `start` (default False).
-    recorded : bool
+    record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
 
     Yields
@@ -74,11 +74,11 @@ class Stepper(object):
     """
 
     def __init__(self, start, stop, tryStep=None, minStep=None,
-                 inclusive=False, recorded=False):
+                 inclusive=False, record=False):
         self.start = start
         self.stop = stop
         self._inclusive = inclusive
-        self.recorded = recorded
+        self.record = record
 
         if minStep is None:
             minStep = (stop - start) * np.finfo(float).eps
@@ -154,7 +154,7 @@ class Stepper(object):
         if self._inclusive:
             self.current -= nextStep
 
-        if not self.recorded:
+        if not self.record:
             self._purge()
 
         if self._done():
@@ -365,7 +365,7 @@ class Stepper(object):
 
        >>> old = -1.
        >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt,
-       ...                          inclusive=True, recorded=True)
+       ...                          inclusive=True, record=True)
        >>> for step in stepper:
        ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
        ...
