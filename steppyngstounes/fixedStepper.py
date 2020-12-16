@@ -15,7 +15,7 @@ class FixedStepper(Stepper):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    step : float
+    tryStep : float
         Desired step size.
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -29,11 +29,10 @@ class FixedStepper(Stepper):
                                             steps=6668,
                                             attempts=6668)
 
-    def __init__(self, start, stop, step,
+    def __init__(self, start, stop, tryStep,
                  inclusive=False, recorded=False):
-        super(FixedStepper, self).__init__(start=start, stop=stop, tryStep=step,
-                                           minStep=minStep, inclusive=inclusive,
-                                           recorded=recorded)
+        super(FixedStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+                                           inclusive=inclusive, recorded=recorded)
 
     def _succeeded(self, error):
         """Determine if most recent attempt failed.
