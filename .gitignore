@@ -5,5 +5,5 @@
 .DS_Store
 MANIFEST.in
 dist/
-documentation/_build/
+doc/_build/
 worktrees/
