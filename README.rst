@@ -1,17 +1,18 @@
 **steppyngstounes** / ˈstɛp ɪŋˌstoʊnz /
 
-  1.   *pl. n.* *[Middle English]* "Stone[s] used as [steps] of a stairway;
-      also, [stones] in a stream used for crossing." <sup id="a1">[1](#MED)</sup>
+  1.  *pl.  n.* *[Middle English]* "Stone[s] used as [steps] of a stairway;
+  also, [stones] in a stream used for crossing."  [*]_
   
-      > _...while at Calais in 1474 we find 40 'steppyngstounes' bought for
-        the stairways of the town._ <sup id="a2">[2](#BiE)</sup>
+      *...while at Calais in 1474 we find 40 'steppyngstounes' bought for
+      the stairways of the town.* [*]_
 
   
-  2.  *n.* *[chiefly Pythonic]* A package that provides iterators for advancing
-      from `start` to `stop`, subject to algorithms that depend on
-      user-defined `value` or `error`.
+  2.  *n.* *[chiefly Pythonic]* A package that provides iterators for
+  advancing from `start` to `stop`, subject to algorithms that depend on
+  user-defined `value` or `error`.
 
-## Installation
+Installation
+============
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Aenean eu blandit
 magna, ac pretium odio.  In a nisl erat.  Cras dolor massa, tristique in
@@ -29,7 +30,22 @@ bibendum augue diam, et congue purus ornare at.  Praesent dapibus magna
 vitae consectetur congue.  Quisque sed dictum nibh.  Sed imperdiet
 condimentum enim, quis tristique nunc consectetur et.
 
-## Usage
+Usage
+============
+
+.. code-block:: python
+
+   old = initial_condition
+   for step in SomeStepper(start=0., stop=totaltime, tryStep=dt):
+       new = value_fn(step.begin, step.end)
+
+       error = error_fn(new, old)
+
+       if step.succeeded(value=new, error=error):
+           old = new
+           # do happy things
+       else:
+           # do sad things
 
 Interdum et malesuada fames ac ante ipsum primis in faucibus.  Pellentesque
 lobortis risus quis dolor interdum, vel auctor urna scelerisque.  Nulla
@@ -61,20 +77,21 @@ ridiculus mus.  Vivamus orci massa, sollicitudin sit amet elit nec,
 scelerisque congue enim.  Proin libero velit, imperdiet in vestibulum
 vulputate, mattis sit amet justo.
 
+License
+============
+
 ----
 
-<sup id="MED">1</sup>
-    [_Middle English Dictionary_](https://quod.lib.umich.edu/m/middle-english-dictionary/dictionary/MED42815),
+.. [*] *Middle English Dictionary*,
     Ed.  Robert E. Lewis, *et al.*,
     Ann Arbor: University of Michigan Press, 1952-2001.
-    Online edition in _Middle English Compendium_,
+    Online edition in *Middle English Compendium*,
     Ed.  Frances McSparran, *et al.*,
     Ann Arbor: University of Michigan Library, 2000-2018.
-    <http://quod.lib.umich.edu/m/middle-english-dictionary/>.
+    <https://quod.lib.umich.edu/m/middle-english-dictionary/dictionary/MED42815>.
     Accessed 16 December 2020.
-    [↩](#a1)
 
-<sup id="BiE">2</sup>
-    [_Building in England, Down to 1540: A Documentary History_](https://books.google.com/books?id=WtZPAAAAMAAJ&focus=searchwithinvolume&q=steppyngstounes),
+.. [*] *Building in England, Down to 1540: A Documentary History*,
     L. F. Salzman, Clarenden Press, Oxford, 1952.
-    [↩](#a2)
+    <https://books.google.com/books?id=WtZPAAAAMAAJ&focus=searchwithinvolume&q=steppyngstounes>.
+    Accessed 16 December 2020.
