@@ -329,6 +329,9 @@ class Stepper(object):
     def _stepper_test(StepperClass, steps, attempts,
                       stepper_args="record=True"):
 
+        instantiation = "stepper = {StepperClass}".format(**locals())
+        indent = " " * len(instantiation)
+
         return r"""
 
     Examples
@@ -367,8 +370,8 @@ class Stepper(object):
        of `tryStep`.
 
        >>> old = -1.
-       >>> stepper = {StepperClass}(start=0., stop=totaltime, inclusive=True,
-       ...                          {stepper_args})
+       >>> {instantiation}(start=0., stop=totaltime, inclusive=True,
+       ... {indent} {stepper_args})
        >>> for step in stepper:
        ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
        ...
