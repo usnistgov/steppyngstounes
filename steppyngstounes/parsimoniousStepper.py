@@ -64,10 +64,11 @@ class ParsimoniousStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(StepperClass="ParsimoniousStepper",
-                                            args="N=50",
-                                            steps=50,
-                                            attempts=50)
+    __doc__ += Stepper._stepper_test(StepperClass="ParsimoniousStepper",
+                                     stepper_args="N=50",
+                                     control_error=False,
+                                     steps=50,
+                                     attempts=50)
 
 
     def __init__(self, start, stop, N, minStep=0., inclusive=False,
