@@ -379,9 +379,13 @@ class Stepper(object):
        ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
-       Ensure solution tolerance is achieved.
+       Check that the post hoc error satisfies the desired tolerance.
 
-       >>> print(max(stepper.errors[stepper.successes]) < 1.)
+       >>> steps = stepper.steps[stepper.successes]
+       >>> ix = steps.argsort()
+       >>> values = stepper.values[stepper.successes][ix]
+       >>> errors = abs(values[1:] - values[:-1]) / errorscale
+       >>> print(max(errors) < 1.)
        True
 
     .. plot::
@@ -400,20 +404,19 @@ class Stepper(object):
        ...                     linestyle="-", linewidth=0.5, marker="")
        ...     axes[0, 0].plot(stepper.steps[stepper.successes],
        ...                     stepper.values[stepper.successes])
-       ...     axes[0, 0].set_ylabel(r"$\phi$")
+       ...     axes[0, 0].set_ylabel("value")
        ...
-       ...     axes[1, 0].semilogy(stepper.steps[stepper.successes],
-       ...                         stepper.sizes[stepper.successes])
+       ...     # plot post-hoc step size and error
+       ...
+       ...     axes[1, 0].semilogy(steps[1:], steps[1:] - steps[:-1])
        ...     axes[1, 0].set_ylabel(r"$\Delta t$")
        ...     axes[1, 0].set_xlabel(r"$t$")
        ...
-       ...     axes[0, 1].plot(stepper.steps[stepper.successes],
-       ...                     stepper.errors[stepper.successes])
+       ...     axes[0, 1].plot(steps[1:], errors)
        ...     axes[0, 1].set_ylabel("error")
        ...     axes[0, 1].set_ylim(ymin=1e-17, ymax=1.1)
        ...
-       ...     axes[1, 1].semilogy(stepper.steps[stepper.successes],
-       ...                         stepper.errors[stepper.successes])
+       ...     axes[1, 1].semilogy(steps[1:], errors)
        ...     axes[1, 1].set_ylabel("error")
        ...     axes[1, 1].set_xlabel(r"$t$")
        ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
