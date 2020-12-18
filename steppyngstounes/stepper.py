@@ -366,8 +366,7 @@ class Stepper(object):
        >>> errorscale = 1e-2
 
        Iterate over the stepper from `start` to `stop` (inclusive of
-       calculating a value at `start`), using a suggested initial step size
-       of `tryStep`.
+       calculating a value at `start`).
 
        >>> old = -1.
        >>> {instantiation}(start=0., stop=totaltime, inclusive=True,
