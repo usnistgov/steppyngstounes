@@ -1,6 +1,6 @@
 **steppyngstounes** / ˈstɛp ɪŋˌstoʊnz /
 
-  1.  *pl.  n.* *[Middle English]* "Stone[s] used as [steps] of a stairway;
+  1.  *pl. n.* *[Middle English]* "Stone[s] used as [steps] of a stairway;
   also, [stones] in a stream used for crossing."  [*]_
   
       *...while at Calais in 1474 we find 40 'steppyngstounes' bought for

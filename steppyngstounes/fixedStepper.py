@@ -41,6 +41,6 @@ class FixedStepper(Stepper):
 
         Returns
         -------
-        bool
+        True
         """
         return True

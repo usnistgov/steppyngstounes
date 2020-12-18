@@ -7,7 +7,7 @@ from future.utils import text_to_native_str
 __all__ = [text_to_native_str(n) for n in __all__]
 
 class ScaledStepper(Stepper):
-    r"""Adaptive stepper adjust the step by fixed factors.
+    r"""Adaptive stepper that adjusts the step by fixed factors.
 
     Calculates a new step as
 
@@ -35,13 +35,13 @@ class ScaledStepper(Stepper):
         Finish of range to step over.
     tryStep : float
         Suggested step size to try (default None).
+    minStep : float
+        Smallest step to allow (default `(stop - start) *`
+        |machineepsilon|_).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
     record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
-    minStep : float
-        Smallest step to allow (default `(stop - start) *`
-        |machineepsilon|_).
     growFactor : float
         Growth factor :math:`f_\text{grow}` (default 1.2).
     shrinkFactor : float
