@@ -49,10 +49,9 @@ class ScaledStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(StepperClass="ScaledStepper",
-                                            args=Stepper._stepper_test_args,
-                                            steps=296,
-                                            attempts=377)
+    __doc__ += Stepper._stepper_test(StepperClass="ScaledStepper",
+                                     steps=296,
+                                     attempts=377)
 
     def __init__(self, start, stop, tryStep=None, minStep=None,
                  inclusive=False, record=False,

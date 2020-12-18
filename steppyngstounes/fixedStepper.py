@@ -24,10 +24,10 @@ class FixedStepper(Stepper):
 
     """
 
-    __doc__ += Stepper._stepper_test.format(StepperClass="FixedStepper",
-                                            args="tryStep=0.15, record=True",
-                                            steps=6668,
-                                            attempts=6668)
+    __doc__ += Stepper._stepper_test(StepperClass="FixedStepper",
+                                     stepper_args="tryStep=0.15, record=True",
+                                     steps=6668,
+                                     attempts=6668)
 
     def __init__(self, start, stop, tryStep,
                  inclusive=False, record=False):

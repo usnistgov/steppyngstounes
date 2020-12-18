@@ -325,7 +325,11 @@ class Stepper(object):
         """
         return self.current == self.stop
 
-    _stepper_test = r"""
+    @staticmethod
+    def _stepper_test(StepperClass, steps, attempts,
+                      stepper_args="record=True"):
+
+        return r"""
 
     Examples
     --------
@@ -364,7 +368,7 @@ class Stepper(object):
 
        >>> old = -1.
        >>> stepper = {StepperClass}(start=0., stop=totaltime, inclusive=True,
-       ...                          {args})
+       ...                          {stepper_args})
        >>> for step in stepper:
        ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
        ...
@@ -425,6 +429,6 @@ class Stepper(object):
 
        >>> plotSteps() # doctest: +SKIP
 
-    """
+    """.format(**locals())
 
     _stepper_test_args = "record=True"
