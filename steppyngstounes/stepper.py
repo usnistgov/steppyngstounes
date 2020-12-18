@@ -512,6 +512,12 @@ class Stepper(object):
        ...     axes[0, 0].set_ylabel("value")
        ...
        ...     # plot post-hoc step size and error
+       ...     # reorder, as steps may not be monotonic
+       ...
+       ...     steps = stepper.steps[stepper.successes]
+       ...     ix = steps.argsort()
+       ...     values = stepper.values[stepper.successes][ix]
+       ...     errors = abs(values[1:] - values[:-1]) / errorscale
        ...
        ...     axes[1, 0].semilogy(steps[1:], steps[1:] - steps[:-1])
        ...     axes[1, 0].set_ylabel(r"$\Delta t$")
