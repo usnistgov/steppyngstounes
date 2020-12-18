@@ -5,12 +5,13 @@
 
 .. include:: ../README.rst
 
-Welcome to steppyngstounes's documentation!
-===========================================
+API
+===
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. autosummary::
+   :toctree: modules
+
+   steppyngstounes
 
 Indices and tables
 ==================
