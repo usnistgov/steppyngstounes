@@ -403,7 +403,9 @@ class Stepper(object):
        ...     plt.rcParams['lines.linestyle'] = ""
        ...     plt.rcParams['lines.marker'] = "."
        ...     plt.rcParams['lines.markersize'] = 3
-       ...     fix, axes = plt.subplots(2, 2, sharex=True)
+       ...     fig, axes = plt.subplots(2, 2, sharex=True)
+       ...
+       ...     fig.suptitle(r"{steps} successful $\mathtt{{{StepperClass}}}$ steps and trajectory of {attempts} attempts")
        ...
        ...     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
        ...                     linestyle="-", linewidth=0.5, marker="")
@@ -426,7 +428,7 @@ class Stepper(object):
        ...     axes[1, 1].set_xlabel(r"$t$")
        ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
        ...
-       ...     plt.tight_layout()
+       ...     plt.tight_layout(rect=[0, 0, 1, 0.95])
        ...     plt.show()
 
        >>> plotSteps() # doctest: +SKIP
