@@ -71,7 +71,7 @@ class PIDStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test.format(StepperClass="PIDStepper",
-                                            dt=50.,
+                                            args=Stepper._stepper_test_args,
                                             steps=264,
                                             attempts=281)
 

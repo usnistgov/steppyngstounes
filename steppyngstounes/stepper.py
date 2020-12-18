@@ -349,7 +349,6 @@ class Stepper(object):
        where :math:`t` is the elapsed time, :math:`t_\mathrm{{max}}` is
        total time desired, and :math:`w` is a measure of the step width.
 
-       >>> dt = {dt}
        >>> totaltime = 1000.
        >>> width = 0.01
 
@@ -364,8 +363,8 @@ class Stepper(object):
        of `tryStep`.
 
        >>> old = -1.
-       >>> stepper = {StepperClass}(start=0., stop=totaltime, tryStep=dt,
-       ...                          inclusive=True, record=True)
+       >>> stepper = {StepperClass}(start=0., stop=totaltime, inclusive=True,
+       ...                          {args})
        >>> for step in stepper:
        ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
        ...
@@ -427,3 +426,5 @@ class Stepper(object):
        >>> plotSteps() # doctest: +SKIP
 
     """
+
+    _stepper_test_args = "record=True"

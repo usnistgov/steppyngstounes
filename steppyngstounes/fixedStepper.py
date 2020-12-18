@@ -25,7 +25,7 @@ class FixedStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test.format(StepperClass="FixedStepper",
-                                            dt=0.15,
+                                            args="tryStep=0.15, record=True",
                                             steps=6668,
                                             attempts=6668)
 
