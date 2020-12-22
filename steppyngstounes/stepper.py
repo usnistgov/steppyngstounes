@@ -492,7 +492,7 @@ class Stepper(object):
 
     .. plot::
        :context:
-       :alt: Plot of successful steps and trajectory of attempts.
+       :alt: Plot of {steps} successful {StepperClass} steps and trajectory of {attempts} attempts.
 
        >>> def plotSteps():
        ...     from matplotlib import pyplot as plt
