@@ -91,6 +91,7 @@ class Stepper(object):
         self._values = [np.NaN]
         self._errors = [1.]
         self._saveStep = None
+        self._isDone = False
 
         # number of artificial steps needed by the algorithm
         self._needs = 1
@@ -167,6 +168,15 @@ class Stepper(object):
         StopIteration
             If there are no further steps to take
         """
+        if self._isDone or self._done():
+            # "Once an iterator’s __next__() method raises StopIteration,
+            # it must continue to do so on subsequent calls.
+            # Implementations that do not obey this property are deemed
+            # broken."
+            # -- https://docs.python.org/3/library/stdtypes.html#iterator-types
+            self._isDone = True
+            raise StopIteration()
+
         if self._saveStep is not None:
             nextStep = self._saveStep
         elif self._successes[-1]:
@@ -182,9 +192,6 @@ class Stepper(object):
 
         if not self.record:
             self._purge()
-
-        if self._done():
-            raise StopIteration()
 
         return Step(begin=self.current, end=self.current + nextStep, stepper=self)
 
