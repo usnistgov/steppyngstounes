@@ -138,9 +138,35 @@ class Stepper(object):
         return self
 
     def __next__(self):
+        """Return the next step.
+
+        .. note:: Py3k interface.
+
+        Returns
+        -------
+        ~steppyngstounes.stepper.Step
+
+        Raises
+        ------
+        StopIteration
+            If there are no further steps to take
+        """
         return self.next()
 
     def next(self):
+        """Return the next step.
+
+        .. note:: Legacy Python 2.7 support.
+
+        Returns
+        -------
+        ~steppyngstounes.stepper.Step
+
+        Raises
+        ------
+        StopIteration
+            If there are no further steps to take
+        """
         if self._saveStep is not None:
             nextStep = self._saveStep
         elif self._successes[-1]:
