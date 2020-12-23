@@ -360,8 +360,7 @@ class Stepper(object):
        >>> width = 0.01
 
        The scaled "error" will be a measure of how much the solution has
-       changed since the last step :math:`\|\mathtt{{new}} -
-       \mathtt{{old}}\|_1 / \mathtt{{errorscale}}`).
+       changed since the last step, \| `new` - `old` \| / `errorscale`).
 
        >>> errorscale = 1e-2
 
