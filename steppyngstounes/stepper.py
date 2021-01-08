@@ -61,7 +61,7 @@ class Stepper(object):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    tryStep : float
+    size : float
         Suggested step size to try (default None).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
@@ -81,7 +81,7 @@ class Stepper(object):
 
     """
 
-    def __init__(self, start, stop, tryStep=None, minStep=None,
+    def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False):
         self.start = start
         self.stop = stop
@@ -93,7 +93,7 @@ class Stepper(object):
         self.minStep = minStep
 
         self.current = start
-        self._sizes = [tryStep or (stop - start)]
+        self._sizes = [size or (stop - start)]
         self._steps = [start - self._sizes[-1]]
         self._successes = [True]
         self._values = [np.NaN]

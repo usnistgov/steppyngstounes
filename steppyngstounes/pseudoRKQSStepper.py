@@ -40,7 +40,7 @@ class PseudoRKQSStepper(Stepper):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    tryStep : float
+    size : float
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -66,11 +66,11 @@ class PseudoRKQSStepper(Stepper):
                                      steps=346,
                                      attempts=361)
 
-    def __init__(self, start, stop, tryStep=None, minStep=None,
+    def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,
                  maxgrow=5, minshrink=0.1):
-        super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+        super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, size=size,
                                                 minStep=minStep, inclusive=inclusive,
                                                 record=record)
         self.safety = safety

@@ -33,7 +33,7 @@ class ScaledStepper(Stepper):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    tryStep : float
+    size : float
         Suggested step size to try (default None).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
@@ -53,10 +53,10 @@ class ScaledStepper(Stepper):
                                      steps=296,
                                      attempts=377)
 
-    def __init__(self, start, stop, tryStep=None, minStep=None,
+    def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False,
                  growFactor=1.2, shrinkFactor=0.5):
-        super(ScaledStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+        super(ScaledStepper, self).__init__(start=start, stop=stop, size=size,
                                             minStep=minStep, inclusive=inclusive,
                                             record=record)
         self.growFactor = growFactor

@@ -52,7 +52,7 @@ class PIDStepper(Stepper):
         Beginning of range to step over.
     stop : float
         Finish of range to step over.
-    tryStep : float
+    size : float
         Suggested step size to try (default None).
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -74,10 +74,10 @@ class PIDStepper(Stepper):
                                      steps=264,
                                      attempts=281)
 
-    def __init__(self, start, stop, tryStep=None, minStep=None,
+    def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False,
                  proportional=0.075, integral=0.175, derivative=0.01):
-        super(PIDStepper, self).__init__(start=start, stop=stop, tryStep=tryStep,
+        super(PIDStepper, self).__init__(start=start, stop=stop, size=size,
                                          minStep=minStep, inclusive=inclusive,
                                          record=record)
 
@@ -109,11 +109,11 @@ class PIDStepper(Stepper):
 
         """
         factor = min(1. / self._errors[-1], 0.8)
-        tryStep = factor * self._sizes[-1]
+        size = factor * self._sizes[-1]
 
-        self.prevStep = tryStep**2 / (self.prevStep or self.minStep)
+        self.prevStep = size**2 / (self.prevStep or self.minStep)
 
-        return tryStep
+        return size
 
     def _adaptStep(self):
         """Calculate next step after success
@@ -130,8 +130,8 @@ class PIDStepper(Stepper):
                   * (errors[-2]**2
                      / (errors[-1] * errors[-3]))**self.derivative)
 
-        tryStep = factor * (self.prevStep or self._sizes[self._successes][-1])
+        size = factor * (self.prevStep or self._sizes[self._successes][-1])
 
-        self.prevStep = tryStep
+        self.prevStep = size
 
-        return tryStep
+        return size
