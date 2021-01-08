@@ -20,11 +20,15 @@ class Step(object):
         The desired value of the variable to step over.
     stepper : ~steppyngstounes.stepper.Stepper
         The adaptive stepper that generated this step.
+    want : float
+        The step size really desired if not constrained by, e.g., end of
+        range.
     """
-    def __init__(self, begin, end, stepper):
+    def __init__(self, begin, end, stepper, want):
         self.begin = begin
         self.end = end
         self.stepper = stepper
+        self.want = want
 
     def succeeded(self, value, error):
         """Test if step was successful.
@@ -184,6 +188,7 @@ class Stepper(object):
         else:
             nextStep = self._shrinkStep()
 
+        want = nextStep
         nextStep = self._lowerBound(step=nextStep)
         nextStep = self._upperBound(step=nextStep)
 
@@ -193,7 +198,7 @@ class Stepper(object):
         if not self.record:
             self._purge()
 
-        return Step(begin=self.current, end=self.current + nextStep, stepper=self)
+        return Step(begin=self.current, end=self.current + nextStep, stepper=self, want=want)
 
     def _succeeded(self, error):
         """Test if last step was successful.
