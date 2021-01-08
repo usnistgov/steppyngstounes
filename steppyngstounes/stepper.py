@@ -30,6 +30,10 @@ class Step(object):
         self.stepper = stepper
         self.want = want
 
+    @property
+    def size(self):
+        return self.end - self.begin
+
     def succeeded(self, value, error):
         """Test if step was successful.
 
