@@ -71,8 +71,8 @@ class PIDStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test(StepperClass="PIDStepper",
-                                     steps=264,
-                                     attempts=281)
+                                     steps=256,
+                                     attempts=274)
 
     def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False,
