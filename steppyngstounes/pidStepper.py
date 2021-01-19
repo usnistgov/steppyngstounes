@@ -97,7 +97,7 @@ class PIDStepper(Stepper):
 
         self._steps = list(start - np.cumsum(self._sizes)[::-1])
 
-        self.prevStep = self.minStep
+        self.prevStep = self._sizes[-1]
 
     def _shrinkStep(self):
         """Reduce step after failure
