@@ -75,10 +75,6 @@ class Stepper(object):
     record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
 
-    Yields
-    ------
-    ~steppyngstounes.stepper.Step
-
     """
 
     def __init__(self, start, stop, size=None, minStep=None,
@@ -327,13 +323,6 @@ class Stepper(object):
 
         Most subclasses of :class:`~steppyngstounes.stepper.Stepper` should
         override this method (default returns `triedStep` unchanged).
-
-        Parameters
-        ----------
-        triedStep : float
-            Step that failed.
-        error : float
-            Error (positive and normalized to 1) from the last step.
 
         Returns
         -------
