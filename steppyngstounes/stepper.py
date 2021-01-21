@@ -34,21 +34,27 @@ class Step(object):
     def size(self):
         return self.end - self.begin
 
-    def succeeded(self, value, error):
+    def succeeded(self, value=None, error=None):
         """Test if step was successful.
 
         Parameters
         ----------
-        value : float
+        value : float, optional
             User-determined scalar value that characterizes the last step.
-        error : float
+            Whether this parameter is required depends on which
+            :class:`~steppyngstounes.stepper.Stepper` is being used.
+            (default None).
+        error : float, optional
             User-determined error (positive and normalized to 1) from the
-            last step.
+            last step.  Whether this parameter is required depends on which
+            :class:`~steppyngstounes.stepper.Stepper` is being used.
+            (default None).
 
         Returns
         -------
         bool
-            Whether step was successful.
+            Whether step was successful.  If `error` is not required,
+            returns `True`.
         """
         return self.stepper.succeeded(step=self, value=value, error=error)
 
@@ -202,8 +208,15 @@ class Stepper(object):
 
     def _succeeded(self, error):
         """Test if last step was successful.
+
+        Returns
+        -------
+        success : bool
+            Whether step was successful.
+        error : float
+            Error to record.
         """
-        return (error <= 1.)
+        return (error <= 1.), error
 
     def _purge(self):
         """Discard any steps no longer needed.
@@ -223,7 +236,7 @@ class Stepper(object):
         self._successes = extract(self._successes, keep)
         self._errors = extract(self._errors, keep)
 
-    def succeeded(self, step, value, error):
+    def succeeded(self, step, value=None, error=None):
         """Test if step was successful.
 
         Stores data about the last step.
@@ -232,18 +245,23 @@ class Stepper(object):
         ----------
         step : :class:`~steppyngstounes.stepper.Step`
             The step to test.
-        value : float
+        value : float, optional
             User-determined scalar value that characterizes the last step.
-        error : float
+            Whether this parameter is required depends on which
+            :class:`~steppyngstounes.stepper.Stepper` is being used.
+            (default None).
+        error : float, optional
             User-determined error (positive and normalized to 1) from the
-            last step.
+            last step.  Whether this parameter is required depends on which
+            :class:`~steppyngstounes.stepper.Stepper` is being used.
+            (default None).
 
         Returns
         -------
         bool
             Whether step was successful.
         """
-        success = self._succeeded(error=error)
+        success, error = self._succeeded(error=error)
         if self._inclusive:
             success = True
             self._inclusive = False
@@ -358,12 +376,28 @@ class Stepper(object):
 
     @staticmethod
     def _stepper_test(StepperClass, steps, attempts,
-                      stepper_args="record=True"):
+                      stepper_args="record=True",
+                      control_error=True):
+        """Generate doctest for this Stepper
+
+        Parameters
+        ----------
+        StepperClass : :class:`~steppyngstounes.stepper.Stepper`
+            Class to test.
+        steps : int
+            Number of successful steps required.
+        attempts : int
+            Total number of steps required.
+        stepper_args : str
+            Arguments to pass to initialize class (default "record=True").
+        control_error : bool
+            Whether `StepperClass` uses error to control step size.
+        """
 
         instantiation = "stepper = {StepperClass}".format(**locals())
         indent = " " * len(instantiation)
 
-        return r"""
+        test = r"""
 
     Examples
     --------
@@ -398,30 +432,60 @@ class Stepper(object):
        Iterate over the stepper from `start` to `stop` (inclusive of
        calculating a value at `start`).
 
-       >>> old = -1.
+       """
+
+        if control_error:
+            test += r"""
+       >>> old = -1."""
+
+        test += r"""
        >>> {instantiation}(start=0., stop=totaltime, inclusive=True,
        ... {indent} {stepper_args})
        >>> for step in stepper:
        ...     new = np.tanh((step.end / totaltime - 0.5) / (2 * width))
-       ...
+       ..."""
+
+        if control_error:
+            test += r"""
        ...     error = abs(new - old) / errorscale
        ...
        ...     if step.succeeded(value=new, error=error):
-       ...         old = new
+       ...         old = new"""
+        else:
+            test += r"""
+       ...     _ = step.succeeded(value=new)"""
+
+        test += r"""
 
        >>> s = "{{}} succesful steps in {{}} attempts"
        >>> print(s.format(stepper.successes.sum(),
        ...                len(stepper.steps)))
        {steps} succesful steps in {attempts} attempts
 
-       Check that the post hoc error satisfies the desired tolerance.
-
        >>> steps = stepper.steps[stepper.successes]
        >>> ix = steps.argsort()
        >>> values = stepper.values[stepper.successes][ix]
-       >>> errors = abs(values[1:] - values[:-1]) / errorscale
+       >>> errors = abs(values[1:] - values[:-1]) / errorscale"""
+
+        if control_error:
+            test += r"""
+
+       Check that the post hoc error satisfies the desired tolerance.
+
        >>> print(max(errors) < 1.)
-       True
+       True"""
+        else:
+            test += r"""
+
+       As this stepper doesn't use the error, we don't expect the post
+       hoc error to satisfy the tolerance."""
+
+        if control_error:
+            max_error = 1.1
+        else:
+            max_error = None
+
+        test += r"""
 
     .. plot::
        :context:
@@ -451,18 +515,18 @@ class Stepper(object):
        ...
        ...     axes[0, 1].plot(steps[1:], errors)
        ...     axes[0, 1].set_ylabel("error")
-       ...     axes[0, 1].set_ylim(ymin=1e-17, ymax=1.1)
+       ...     axes[0, 1].set_ylim(ymin=1e-17, ymax={max_error})
        ...
        ...     axes[1, 1].semilogy(steps[1:], errors)
        ...     axes[1, 1].set_ylabel("error")
        ...     axes[1, 1].set_xlabel(r"$t$")
-       ...     axes[1, 1].set_ylim(ymin=1e-17, ymax=1.1)
+       ...     axes[1, 1].set_ylim(ymin=1e-17, ymax={max_error})
        ...
        ...     plt.tight_layout(rect=[0, 0, 1, 0.95])
        ...     plt.show()
 
-       >>> plotSteps() # doctest: +SKIP
+       >>> plotSteps() # doctest: +SKIP"""
 
-    """.format(**locals())
+        return test.format(**locals())
 
     _stepper_test_args = "record=True"

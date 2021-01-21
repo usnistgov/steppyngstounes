@@ -28,8 +28,9 @@ class SequenceStepper(Stepper):
 
     __doc__ += Stepper._stepper_test(StepperClass="SequenceStepper",
                                      stepper_args="sizes=range(1,10000), record=True",
-                                     steps=14,
-                                     attempts=14)
+                                     control_error=False,
+                                     steps=45,
+                                     attempts=45)
 
     def __init__(self, start, stop, sizes,
                  inclusive=False, record=False):
@@ -58,10 +59,13 @@ class SequenceStepper(Stepper):
     def _succeeded(self, error):
         """Determine if most recent attempt failed.
 
-        .. note:: Fixed steps always succeed.
-
         Returns
         -------
         True
+            Fixed steps always succeed.
+        error : float
+            Error to record. If `error` was None, returns 0.
         """
-        return True
+        if error is None:
+            error = 0.
+        return True, error

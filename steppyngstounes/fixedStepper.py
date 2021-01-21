@@ -25,9 +25,10 @@ class FixedStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test(StepperClass="FixedStepper",
-                                     stepper_args="size=0.15, record=True",
-                                     steps=6668,
-                                     attempts=6668)
+                                     stepper_args="size=3., record=True",
+                                     control_error=False,
+                                     steps=335,
+                                     attempts=335)
 
     def __init__(self, start, stop, size,
                  inclusive=False, record=False):
@@ -37,10 +38,13 @@ class FixedStepper(Stepper):
     def _succeeded(self, error):
         """Determine if most recent attempt failed.
 
-        .. note:: Fixed steps always succeed.
-
         Returns
         -------
         True
+            Fixed steps always succeed.
+        error : float
+            Error to record. If `error` was None, returns 0.
         """
-        return True
+        if error is None:
+            error = 0.
+        return True, error

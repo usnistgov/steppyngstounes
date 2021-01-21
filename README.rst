@@ -36,12 +36,10 @@ Usage
 .. code-block:: python
 
    old = initial_condition
-   for step in SomeStepper(start=0., stop=totaltime, tryStep=dt):
-       new = value_fn(step.begin, step.end)
+   for step in SomeStepper(start=0., stop=totaltime, size=dt):
+       new = value_fn(step.begin, step.end, step.size)
 
-       error = error_fn(new, old)
-
-       if step.succeeded(value=new, error=error):
+       if step.succeeded(error=error_fn(new, old)):
            old = new
            # do happy things
        else:
