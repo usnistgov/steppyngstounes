@@ -18,7 +18,7 @@ class Step(object):
         The present value of the variable to step over.
     end : float
         The desired value of the variable to step over.
-    stepper : ~steppyngstounes.stepper.Stepper
+    stepper : :class:`~steppyngstounes.stepper.Stepper`
         The adaptive stepper that generated this step.
     want : float
         The step size really desired if not constrained by, e.g., end of
@@ -123,8 +123,8 @@ class Stepper(object):
         """`ndarray` of the "value" at each step attempt.
 
         The user-determined scalar value at each step attempt is
-        passed to :class:`~steppyngstounes.Stepper` via
-        :meth:`~steppyngstounes.Step.succeeded`.
+        passed to :class:`~steppyngstounes.stepper.Stepper` via
+        :meth:`~steppyngstounes.stepper.Step.succeeded`.
         """
         return np.asarray(self._values[self._needs:])
 
@@ -134,8 +134,8 @@ class Stepper(object):
 
         The user-determined "error" scalar value (positive and normalized
         to 1) at each step attempt is passed to
-        :class:`~steppyngstounes.Stepper` via
-        :meth:`~steppyngstounes.Step.succeeded`.
+        :class:`~steppyngstounes.stepper.Stepper` via
+        :meth:`~steppyngstounes.stepper.Step.succeeded`.
         """
         return np.asarray(self._errors[self._needs:])
 
@@ -149,7 +149,7 @@ class Stepper(object):
 
         Returns
         -------
-        ~steppyngstounes.stepper.Step
+        :class:`~steppyngstounes.stepper.Step`
 
         Raises
         ------
@@ -165,7 +165,7 @@ class Stepper(object):
 
         Returns
         -------
-        ~steppyngstounes.stepper.Step
+        :class:`~steppyngstounes.stepper.Step`
 
         Raises
         ------
@@ -230,7 +230,7 @@ class Stepper(object):
 
         Parameters
         ----------
-        step : ~steppyngstounes.stepper.Step
+        step : :class:`~steppyngstounes.stepper.Step`
             The step to test.
         value : float
             User-determined scalar value that characterizes the last step.
