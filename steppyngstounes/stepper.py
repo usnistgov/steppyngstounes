@@ -514,10 +514,14 @@ class Stepper(object):
        ...     axes[1, 0].set_xlabel(r"$t$")
        ...
        ...     axes[0, 1].plot(steps[1:], errors)
+       ...     axes[0, 1].axhline(y=1., color="red",
+       ...                        linestyle="-", linewidth=0.5, marker="")
        ...     axes[0, 1].set_ylabel("error")
        ...     axes[0, 1].set_ylim(ymin=1e-17, ymax={max_error})
        ...
        ...     axes[1, 1].semilogy(steps[1:], errors)
+       ...     axes[1, 1].axhline(y=1., color="red",
+       ...                        linestyle="-", linewidth=0.5, marker="")
        ...     axes[1, 1].set_ylabel("error")
        ...     axes[1, 1].set_xlabel(r"$t$")
        ...     axes[1, 1].set_ylim(ymin=1e-17, ymax={max_error})
