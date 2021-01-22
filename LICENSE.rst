@@ -1,6 +1,5 @@
-------------
 Terms of Use
-------------
+============
 
 This software was developed by employees of the `National Institute of
 Standards and Technology`_ (NIST_), an agency of the Federal Government and

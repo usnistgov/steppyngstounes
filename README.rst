@@ -31,7 +31,7 @@ vitae consectetur congue.  Quisque sed dictum nibh.  Sed imperdiet
 condimentum enim, quis tristique nunc consectetur et.
 
 Usage
-============
+=====
 
 .. code-block:: python
 
@@ -75,8 +75,24 @@ ridiculus mus.  Vivamus orci massa, sollicitudin sit amet elit nec,
 scelerisque congue enim.  Proin libero velit, imperdiet in vestibulum
 vulputate, mattis sit amet justo.
 
-License
-============
+Building Documentation
+======================
+
+::
+
+  sphinx-apidoc --output-dir=doc/modules --suffix=rst --force steppyngstounes
+  python setup.py build_sphinx
+
+If the figures do not update,
+
+::
+
+  touch doc/modules/*.rst
+  python setup.py build_sphinx --all-files --fresh-env
+
+Documentation can be found in :file:`build/sphinx/html`.
+
+.. include:: ../LICENSE.rst
 
 ----
 
