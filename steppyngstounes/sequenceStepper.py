@@ -29,8 +29,8 @@ class SequenceStepper(Stepper):
     __doc__ += Stepper._stepper_test(StepperClass="SequenceStepper",
                                      stepper_args="sizes=range(1,10000), record=True",
                                      control_error=False,
-                                     steps=45,
-                                     attempts=45)
+                                     steps=46,
+                                     attempts=46)
 
     def __init__(self, start, stop, sizes,
                  inclusive=False, record=False):
@@ -38,7 +38,11 @@ class SequenceStepper(Stepper):
         
         # peek at first value
         peek = next(self._wantsizes)
-        self._wantsizes = itertools.chain([peek], self._wantsizes)
+        if inclusive:
+            pushback = [peek, peek]
+        else:
+            pushback = [peek]
+        self._wantsizes = itertools.chain(pushback, self._wantsizes)
         
         super(SequenceStepper, self).__init__(start=start, stop=stop, size=peek,
                                               inclusive=inclusive, record=record)
