@@ -14,6 +14,8 @@ API
 
    steppyngstounes
 
+.. include:: ../LICENSE.rst
+
 Indices and tables
 ==================
 
