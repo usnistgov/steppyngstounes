@@ -61,6 +61,10 @@ class PIDStepper(Stepper):
     minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
+
+        .. |machineepsilon| replace::   `eps`
+        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+
     proportional : float
         PID control :math:`k_P` coefficient (default 0.075).
     integral : float
