@@ -179,7 +179,7 @@ class Stepper(object):
             If there are no further steps to take
         """
         if self._isDone or self._done():
-            # "Once an iterator’s __next__() method raises StopIteration,
+            # "Once an iterator's __next__() method raises StopIteration,
             # it must continue to do so on subsequent calls.
             # Implementations that do not obey this property are deemed
             # broken."
