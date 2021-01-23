@@ -30,11 +30,13 @@
    {% if classes %}
    .. rubric:: {{ _('Classes') }}
 
-   .. autosummary::
-      :toctree:
    {% for item in classes %}
-      {{ item }}
-   {%- endfor %}
+   .. autoclass:: {{ item }}
+      :members:
+      :inherited-members:
+      :show-inheritance:
+
+   {% endfor %}
    {% endif %}
    {% endblock %}
 
