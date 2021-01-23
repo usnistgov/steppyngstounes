@@ -6,5 +6,5 @@
 MANIFEST.in
 build/
 dist/
-doc/_autosummary/
+docs/_autosummary/
 worktrees/

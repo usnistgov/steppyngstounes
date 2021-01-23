@@ -86,7 +86,7 @@ If the figures do not update
 
 ::
 
-  touch doc/_autosummary/*.rst
+  touch docs/_autosummary/*.rst
 
 and repeat.
 
