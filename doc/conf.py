@@ -29,7 +29,7 @@ author = 'Jonathan E. Guyer'
 # ones.
 extensions = ['sphinx.ext.autosummary',
               'sphinx.ext.doctest',
-              'numpydoc',
+              'sphinx.ext.napoleon',
               'matplotlib.sphinxext.plot_directive'
 ]
 
