@@ -9,7 +9,8 @@ API
 ===
 
 .. autosummary::
-   :toctree: modules
+   :toctree: _autosummary
+   :recursive:
 
    steppyngstounes
 

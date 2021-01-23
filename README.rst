@@ -80,19 +80,21 @@ Building Documentation
 
 ::
 
-  sphinx-apidoc --output-dir=doc/modules --suffix=rst --force steppyngstounes
   python setup.py build_sphinx
 
-If the figures do not update,
+If the figures do not update
 
 ::
 
   touch doc/modules/*.rst
+
+and repeat.
+
+If the documentation seems not to build correctly in other respects::
+
   python setup.py build_sphinx --all-files --fresh-env
 
 Documentation can be found in :file:`build/sphinx/html`.
-
-.. include:: ../LICENSE.rst
 
 ----
 

@@ -4,6 +4,7 @@
 *~
 .DS_Store
 MANIFEST.in
+build/
 dist/
-doc/_build/
+doc/_autosummary/
 worktrees/
