@@ -11,28 +11,6 @@
   advancing from `start` to `stop`, subject to algorithms that depend on
   user-defined `value` or `error`.
 
-Installation
-============
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Aenean eu blandit
-magna, ac pretium odio.  In a nisl erat.  Cras dolor massa, tristique in
-lectus vel, elementum tristique lectus.  Phasellus at ipsum eget est
-pharetra consectetur.  Nullam euismod hendrerit libero sed commodo.  Duis
-et mollis eros.  Nulla mattis scelerisque elit vel blandit.  Vestibulum sit
-amet turpis quis augue cursus dapibus.  Duis ut congue est.  Sed sagittis
-porta lorem, ac tincidunt lacus pharetra ac.  Pellentesque fringilla felis
-id libero dapibus, eu vehicula diam tempus.
-
-Curabitur arcu arcu, rhoncus vitae dapibus vitae, hendrerit ut sem.
-Pellentesque odio massa, rhoncus non ligula sit amet, efficitur fringilla
-tellus.  Nullam scelerisque quam non ante elementum aliquet.  Nullam
-bibendum augue diam, et congue purus ornare at.  Praesent dapibus magna
-vitae consectetur congue.  Quisque sed dictum nibh.  Sed imperdiet
-condimentum enim, quis tristique nunc consectetur et.
-
-Usage
-=====
-
 .. code-block:: python
 
    old = initial_condition
@@ -74,27 +52,6 @@ Orci varius natoque penatibus et magnis dis parturient montes, nascetur
 ridiculus mus.  Vivamus orci massa, sollicitudin sit amet elit nec,
 scelerisque congue enim.  Proin libero velit, imperdiet in vestibulum
 vulputate, mattis sit amet justo.
-
-Building Documentation
-======================
-
-::
-
-  python setup.py build_sphinx
-
-If the figures do not update
-
-::
-
-  touch docs/_autosummary/*.rst
-
-and repeat.
-
-If the documentation seems not to build correctly in other respects::
-
-  python setup.py build_sphinx --all-files --fresh-env
-
-Documentation can be found in :file:`build/sphinx/html`.
 
 ----
 

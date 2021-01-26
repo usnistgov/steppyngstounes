@@ -5,16 +5,12 @@
 
 .. include:: ../README.rst
 
-API
-===
+.. toctree::
+   :hidden:
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
-
-   steppyngstounes
-
-.. include:: ../LICENSE.rst
+   INSTALLATION-proxy
+   API
+   LICENSE-proxy
 
 Indices and tables
 ==================
