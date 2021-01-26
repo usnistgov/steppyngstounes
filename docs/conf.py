@@ -52,6 +52,11 @@ html_theme = 'alabaster'
 
 html_theme_options = {
     'fixed_sidebar': True,
+    'extra_nav_links': {
+      'Index': 'genindex.html',
+      'Module Index': 'py-modindex.html',
+      'Search': 'search.html',
+    },
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
