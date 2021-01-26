@@ -1,11 +1,11 @@
 from __future__ import division
 from __future__ import unicode_literals
-from steppyngstounes.stepper import Stepper
+
 import itertools
 
+from steppyngstounes.stepper import Stepper
+
 __all__ = ["SequenceStepper"]
-from future.utils import text_to_native_str
-__all__ = [text_to_native_str(n) for n in __all__]
 
 class SequenceStepper(Stepper):
     r"""Stepper that takes a series of fixed steps.

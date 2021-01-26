@@ -1,13 +1,10 @@
 from __future__ import unicode_literals
-from builtins import object
 
 import numpy as np
 
 __docformat__ = 'restructuredtext'
 
 __all__ = ["Step", "Stepper"]
-from future.utils import text_to_native_str
-__all__ = [text_to_native_str(n) for n in __all__]
 
 class Step(object):
     """Object describing a step to take.

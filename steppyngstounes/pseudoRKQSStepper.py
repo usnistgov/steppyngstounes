@@ -1,9 +1,9 @@
+from __future__ import division
 from __future__ import unicode_literals
+
 from steppyngstounes.stepper import Stepper
 
 __all__ = ["PseudoRKQSStepper"]
-from future.utils import text_to_native_str
-__all__ = [text_to_native_str(n) for n in __all__]
 
 class PseudoRKQSStepper(Stepper):
     r"""Pseudo-Runge-Kutta adaptive stepper.

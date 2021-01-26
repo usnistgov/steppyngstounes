@@ -5,7 +5,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="steppyngstounes",
-    install_requires=["numpy", "future"],
+    install_requires=["numpy"],
     version="0.1",
     author="Jonathan E. Guyer",
     author_email="guyer@nist.gov",

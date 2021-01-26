@@ -6,8 +6,6 @@ import numpy as np
 from steppyngstounes.stepper import Stepper
 
 __all__ = ["PIDStepper"]
-from future.utils import text_to_native_str
-__all__ = [text_to_native_str(n) for n in __all__]
 
 class PIDStepper(Stepper):
     r"""Adaptive stepper using a PID controller.

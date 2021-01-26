@@ -8,10 +8,8 @@ Using
 ^^^^^
 
 - `numpy`__
-- `future`__
 
 __ https://numpy.org/
-__ https://python-future.org/
 
 Testing
 ^^^^^^^
