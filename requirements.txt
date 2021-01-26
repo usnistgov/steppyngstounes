@@ -1,2 +1,4 @@
+matplotlib
 numpy
 pytest
+Sphinx>=3.1
