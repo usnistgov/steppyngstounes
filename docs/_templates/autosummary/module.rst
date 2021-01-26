@@ -36,6 +36,10 @@
       :inherited-members:
       :show-inheritance:
 
+   {% if not loop.last %}
+   ----
+   {% endif %}
+
    {% endfor %}
    {% endif %}
    {% endblock %}
