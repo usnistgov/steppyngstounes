@@ -5,7 +5,7 @@ orbs:
   coverage-reporter: codacy/coverage-reporter@11.8.1
 
 jobs:
-  build-and-test:
+  test:
     executor: python/default
     steps:
       - checkout
@@ -28,7 +28,7 @@ jobs:
           coverage-reports: 'coverage.xml'
           project-token: $CODACY_PROJECT_TOKEN
 
-  build-sphinx:
+  sphinx:
     executor: python/default
     steps:
       - checkout
@@ -65,7 +65,7 @@ jobs:
           command: flake8 --statistics
           name: Lint
 
-  spelling:
+  spell:
     executor: python/default
     steps:
       - checkout
@@ -95,7 +95,7 @@ jobs:
 workflows:
   main:
     jobs:
-      - build-and-test
-      - build-sphinx
+      - test
+      - sphinx
       - lint
-      - spelling
+      - spell
