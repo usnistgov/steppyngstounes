@@ -1,6 +1,1 @@
-#
-matplotlib
 numpy
-pytest
-pytest-cov
-Sphinx>=3.1
