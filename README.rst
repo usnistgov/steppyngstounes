@@ -11,7 +11,7 @@
   advancing from `start` to `stop`, subject to algorithms that depend on
   user-defined `value` or `error`.
 
-| |CircleCI| |GitHub| |Codacy|
+|CircleCI| |GitHub| |Codacy|
 
 .. code-block:: python
 
