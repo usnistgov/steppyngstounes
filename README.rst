@@ -43,7 +43,7 @@ are often tailored for applications like solving ordinary differential
 equations, applying them to other stepping problems, even `solving partial
 differential equations`_, can be rather opaque.
 
-The steppyngstounes package is designed to retain the simplicty of the
+The steppyngstounes package is designed to retain the simplicity of the
 original control loop, while allowing great flexibility in how steps are
 taken and automating all of the aspects of increasing and decreasing the
 step size.
@@ -73,8 +73,8 @@ values of the control variable before and after the step are available as
 the :class:`~steppyngstounes.stepper.Step` attributes
 :attr:`~steppyngstounes.stepper.Step.begin` and
 :attr:`~steppyngstounes.stepper.Step.end`.  The attribute
-:attr:`~steppyngstounes.stepper.Step.size` is a shorthand for ``step.end -
-step.begin``.
+:attr:`~steppyngstounes.stepper.Step.size` is a shorthand for
+``step.end - step.begin``.
 
 If the size of the steps should be adjusted by some characteristic of the
 calculation, such as the change in the value since the last solution, the
