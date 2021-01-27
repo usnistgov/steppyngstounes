@@ -1,0 +1,11 @@
+API
+doctest
+NIST
+PID
+Pseudo-Runge-Kutta
+Py3k
+Runge-Kutta
+steppyngstounes
+...while
+ˈstɛp
+ɪŋˌstoʊnz
