@@ -11,6 +11,8 @@
   advancing from `start` to `stop`, subject to algorithms that depend on
   user-defined `value` or `error`.
 
+| |CircleCI| |GitHub| |Codacy|
+
 .. code-block:: python
 
    old = initial_condition
@@ -68,3 +70,10 @@ vulputate, mattis sit amet justo.
     L. F. Salzman, Clarenden Press, Oxford, 1952.
     <https://books.google.com/books?id=WtZPAAAAMAAJ&focus=searchwithinvolume&q=steppyngstounes>.
     Accessed 16 December 2020.
+
+.. |CircleCI|      image:: https://circleci.com/gh/guyer/steppyngstounes.svg?style=svg
+    :target: https://circleci.com/gh/guyer/steppyngstounes
+.. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/442966c7b8a24ca4af23a31fe4ac2df8
+    :target: https://www.codacy.com/gh/guyer/steppyngstounes/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guyer/steppyngstounes&amp;utm_campaign=Badge_Grade
+.. |GitHub|        image:: https://img.shields.io/github/contributors/guyer/steppyngstounes.svg
+    :target: https://github.com/guyer/steppyngstounes
