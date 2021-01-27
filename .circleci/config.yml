@@ -44,7 +44,7 @@ jobs:
           path: build/sphinx/html
           destination: docs
 
-  flake8:
+  lint:
     executor: python/default
     steps:
       - checkout
@@ -61,9 +61,37 @@ jobs:
           command: flake8 --statistics
           name: Lint
 
+  spelling:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - python/install-packages:
+          pip-dependency-file: requirements.txt
+          pkg-manager: pip
+      - run:
+          name: Install hunspell
+          command: |
+            sudo apt-get --yes update
+            sudo apt-get --yes install hunspell hunspell-en-us libhunspell-dev
+      - python/install-packages:
+          args: pyspelling hunspell
+          pkg-manager: pip
+          pypi-cache: false
+      - run:
+          name: Fetch Dictionaries
+          command: |
+            wget -O en_US.aff  https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff?id=a4473e06b56bfe35187e302754f6baaa8d75e54f
+            wget -O en_US.dic https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic?id=a4473e06b56bfe35187e302754f6baaa8d75e54f
+      - run:
+          command: pyspelling
+          name: Spelling
+
 workflows:
   main:
     jobs:
       - build-and-test
       - build-sphinx
-      - flake8
+      - lint
+      - spelling
