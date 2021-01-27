@@ -44,8 +44,26 @@ jobs:
           path: build/sphinx/html
           destination: docs
 
+  flake8:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - python/install-packages:
+          pip-dependency-file: requirements.txt
+          pkg-manager: pip
+      - python/install-packages:
+          args: flake8
+          pkg-manager: pip
+          pypi-cache: false
+      - run:
+          command: flake8 --statistics
+          name: Lint
+
 workflows:
   main:
     jobs:
       - build-and-test
       - build-sphinx
+      - flake8
