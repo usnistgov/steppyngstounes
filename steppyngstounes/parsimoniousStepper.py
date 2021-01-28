@@ -89,7 +89,7 @@ class ParsimoniousStepper(Stepper):
         self.candidates.pop(0)
 
     def _sortxy(self):
-        """Sort x and y so that x is in accending order.
+        """Sort x and y so that x is in ascending order.
         """
         sx = np.squeeze(np.asarray(self.steps))
         sy = np.squeeze(np.asarray(self.values))
