@@ -9,7 +9,7 @@ setuptools.setup(
     version="0.1",
     author="Jonathan E. Guyer",
     author_email="guyer@nist.gov",
-    description="A package that provides iterators for advancing from start to stop",
+    description="A package of iterators for advancing from start to stop",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     url="https://github.com/guyer/steppyngstounes",

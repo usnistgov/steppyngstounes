@@ -7,6 +7,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["SequenceStepper"]
 
+
 class SequenceStepper(Stepper):
     r"""Stepper that takes a series of fixed steps.
 
@@ -27,7 +28,8 @@ class SequenceStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test(StepperClass="SequenceStepper",
-                                     stepper_args="sizes=range(1,10000), record=True",
+                                     stepper_args="sizes=range(1,10000), "
+                                                  "record=True",
                                      control_error=False,
                                      steps=46,
                                      attempts=46)
@@ -35,7 +37,7 @@ class SequenceStepper(Stepper):
     def __init__(self, start, stop, sizes,
                  inclusive=False, record=False):
         self._wantsizes = iter(sizes)
-        
+
         # peek at first value
         peek = next(self._wantsizes)
         if inclusive:
@@ -43,9 +45,12 @@ class SequenceStepper(Stepper):
         else:
             pushback = [peek]
         self._wantsizes = itertools.chain(pushback, self._wantsizes)
-        
-        super(SequenceStepper, self).__init__(start=start, stop=stop, size=peek,
-                                              inclusive=inclusive, record=record)
+
+        super(SequenceStepper, self).__init__(start=start,
+                                              stop=stop,
+                                              size=peek,
+                                              inclusive=inclusive,
+                                              record=record)
 
     def _adaptStep(self):
         """Calculate next step after success

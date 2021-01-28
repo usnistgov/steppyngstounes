@@ -6,6 +6,7 @@ __docformat__ = 'restructuredtext'
 
 __all__ = ["Step", "Stepper"]
 
+
 class Step(object):
     """Object describing a step to take.
 
@@ -55,6 +56,7 @@ class Step(object):
         """
         return self.stepper.succeeded(step=self, value=value, error=error)
 
+
 class Stepper(object):
     r"""Adaptive stepper base class.
 
@@ -71,7 +73,7 @@ class Stepper(object):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     inclusive : bool
         Whether to include an evaluation at `start` (default False).
@@ -201,7 +203,10 @@ class Stepper(object):
         if not self.record:
             self._purge()
 
-        return Step(begin=self.current, end=self.current + nextStep, stepper=self, want=want)
+        return Step(begin=self.current,
+                    end=self.current + nextStep,
+                    stepper=self,
+                    want=want)
 
     def _succeeded(self, error):
         """Test if last step was successful.
@@ -221,8 +226,8 @@ class Stepper(object):
         Failed steps and any successful steps no longer needed by the
         stepping algorithm are removed from the step records.
         """
-        def extract(l, keep):
-            return list(np.asarray(l)[keep])
+        def extract(lst, keep):
+            return list(np.asarray(lst)[keep])
 
         keep = np.nonzero(self._successes)[0]
         keep = keep[-self._needs:]
@@ -496,7 +501,8 @@ class Stepper(object):
        ...     plt.rcParams['lines.markersize'] = 3
        ...     fig, axes = plt.subplots(2, 2, sharex=True)
        ...
-       ...     fig.suptitle(r"{steps} successful $\mathtt{{{StepperClass}}}$ steps and trajectory of {attempts} attempts")
+       ...     fig.suptitle(r"{steps} successful $\mathtt{{{StepperClass}}}$ "
+       ...                  r"steps and trajectory of {attempts} attempts")
        ...
        ...     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
        ...                     linestyle="-", linewidth=0.5, marker="")

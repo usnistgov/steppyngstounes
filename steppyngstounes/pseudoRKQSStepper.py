@@ -5,6 +5,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["PseudoRKQSStepper"]
 
+
 class PseudoRKQSStepper(Stepper):
     r"""Pseudo-Runge-Kutta adaptive stepper.
 
@@ -18,7 +19,8 @@ class PseudoRKQSStepper(Stepper):
 
     .. math::
 
-       \Delta_{n+1} = \mathrm{min}\left[S \left(e_n\right)^{P_\text{grow}}, f_\text{max} \right] \Delta_n
+       \Delta_{n+1} = \mathrm{min}\left[S \left(e_n\right)^{P_\text{grow}},
+                                        f_\text{max} \right] \Delta_n
 
     where :math:`\Delta_n` is the step size for step :math:`n` and
     :math:`e_n` is the error at step :math:`n`.  :math:`S` is the safety
@@ -29,10 +31,11 @@ class PseudoRKQSStepper(Stepper):
 
     .. math::
 
-       \Delta_{n} = \mathrm{max}\left[S \left(e_n\right)^{P_\text{shrink}}, f_\text{min} \right] \Delta_n
+       \Delta_{n} = \mathrm{max}\left[S \left(e_n\right)^{P_\text{shrink}},
+                                      f_\text{min} \right] \Delta_n
 
-    where :math:`P_\text{shrink}` is the shrinkage exponent and :math:`f_\text{min}`
-    is the minimum factor to shrink the stepsize.
+    where :math:`P_\text{shrink}` is the shrinkage exponent and
+    :math:`f_\text{min}` is the minimum factor to shrink the stepsize.
 
     Parameters
     ----------
@@ -51,18 +54,21 @@ class PseudoRKQSStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     safety : float
         RKQS control safety factor :math:`S` (default 0.9).
     pgrow : float
         RKQS control growth exponent :math:`P_\text{grow}` (default -0.2).
     pshrink : float
-        RKQS control shrinkage exponent :math:`P_\text{shrink}` (default -0.25).
+        RKQS control shrinkage exponent :math:`P_\text{shrink}` (default
+        -0.25).
     maxgrow : float
-        RKQS control maximum factor to grow step size :math:`f_\text{max}` (default 5).
+        RKQS control maximum factor to grow step size :math:`f_\text{max}`
+        (default 5).
     minshrink : float
-        RKQS control minimum factor to shrink step size :math:`f_\text{min}` (default 0.1).
+        RKQS control minimum factor to shrink step size
+        :math:`f_\text{min}` (default 0.1).
 
     """
 
@@ -74,8 +80,11 @@ class PseudoRKQSStepper(Stepper):
                  inclusive=False, record=False,
                  safety=0.9, pgrow=-0.2, pshrink=-0.25,
                  maxgrow=5, minshrink=0.1):
-        super(PseudoRKQSStepper, self).__init__(start=start, stop=stop, size=size,
-                                                minStep=minStep, inclusive=inclusive,
+        super(PseudoRKQSStepper, self).__init__(start=start,
+                                                stop=stop,
+                                                size=size,
+                                                minStep=minStep,
+                                                inclusive=inclusive,
                                                 record=record)
         self.safety = safety
         self.pgrow = pgrow
@@ -93,7 +102,8 @@ class PseudoRKQSStepper(Stepper):
             New step.
 
         """
-        factor = max(self.safety * self._errors[-1]**self.pshrink, self.minshrink)
+        factor = max(self.safety * self._errors[-1]**self.pshrink,
+                     self.minshrink)
         return factor * self._sizes[-1]
 
     def _adaptStep(self):

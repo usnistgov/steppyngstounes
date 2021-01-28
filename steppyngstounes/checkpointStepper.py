@@ -8,6 +8,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["CheckpointStepper"]
 
+
 class CheckpointStepper(Stepper):
     r"""Stepper that stops at fixed points.
 
@@ -29,7 +30,8 @@ class CheckpointStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test(StepperClass="CheckpointStepper",
-                                     stepper_args="stops=10.**np.arange(-5, 5), record=True",
+                                     stepper_args="stops=10.**np.arange(-5, 5)"
+                                                  ", record=True",
                                      control_error=False,
                                      steps=10,
                                      attempts=10)
@@ -46,8 +48,11 @@ class CheckpointStepper(Stepper):
             pushback = [start + peek]
         self._wantstops = itertools.chain(pushback, self._wantstops)
 
-        super(CheckpointStepper, self).__init__(start=start, stop=stop, size=peek,
-                                                inclusive=inclusive, record=record)
+        super(CheckpointStepper, self).__init__(start=start,
+                                                stop=stop,
+                                                size=peek,
+                                                inclusive=inclusive,
+                                                record=record)
 
     def _adaptStep(self):
         """Calculate next step after success

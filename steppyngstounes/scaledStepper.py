@@ -5,6 +5,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["ScaledStepper"]
 
+
 class ScaledStepper(Stepper):
     r"""Adaptive stepper that adjusts the step by fixed factors.
 
@@ -39,7 +40,7 @@ class ScaledStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -59,8 +60,11 @@ class ScaledStepper(Stepper):
     def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False,
                  growFactor=1.2, shrinkFactor=0.5):
-        super(ScaledStepper, self).__init__(start=start, stop=stop, size=size,
-                                            minStep=minStep, inclusive=inclusive,
+        super(ScaledStepper, self).__init__(start=start,
+                                            stop=stop,
+                                            size=size,
+                                            minStep=minStep,
+                                            inclusive=inclusive,
                                             record=record)
         self.growFactor = growFactor
         self.shrinkFactor = shrinkFactor

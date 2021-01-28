@@ -7,6 +7,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["PIDStepper"]
 
+
 class PIDStepper(Stepper):
     r"""Adaptive stepper using a PID controller.
 
@@ -34,9 +35,9 @@ class PIDStepper(Stepper):
 
         @article{PIDpaper,
            author =  {A. M. P. Valli and G. F. Carey and A. L. G. A. Coutinho},
-           title =   {Control strategies for timestep selection in finite element
-                      simulation of incompressible flows and coupled
-                      reaction-convection-diffusion processes},
+           title =   {Control strategies for timestep selection in finite
+                      element simulation of incompressible flows and
+                      coupled reaction-convection-diffusion processes},
            journal = {Int. J. Numer. Meth. Fluids},
            volume =  47,
            year =    2005,
@@ -61,7 +62,7 @@ class PIDStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     proportional : float
         PID control :math:`k_P` coefficient (default 0.075).

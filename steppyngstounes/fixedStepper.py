@@ -5,6 +5,7 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["FixedStepper"]
 
+
 class FixedStepper(Stepper):
     r"""Stepper that takes steps of constant size.
 

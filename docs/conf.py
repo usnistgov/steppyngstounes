@@ -18,7 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'steppyngstounes'
-copyright = u'works of NIST employees are not not subject to copyright protection'
+copyright = u'works of NIST employees are not not subject to '
+            u'copyright protection'
 author = 'Jonathan E. Guyer'
 
 
@@ -31,7 +32,7 @@ extensions = ['sphinx.ext.autosummary',
               'sphinx.ext.doctest',
               'sphinx.ext.napoleon',
               'matplotlib.sphinxext.plot_directive'
-]
+             ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
