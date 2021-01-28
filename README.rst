@@ -57,7 +57,7 @@ A steppyngstounes control loop can be as simple as
    for step in FixedStepper(start=0., stop=totaltime, size=dt):
        do_something(step.size)
 
-       step.succeeded()
+       _ = step.succeeded()
 
 which replicates the :keyword:`while` construct above, but further ensures
 that ``totaltime`` is not overshot if it isn't evenly divisible by ``dt``.
@@ -129,7 +129,7 @@ most efficient path between those checkpoints.
 
        save_or_plot()
 
-       checkpoint.succeeded()
+       _ = checkpoint.succeeded()
 
 A variety of stepping algorithms are described and demonstrated in the
 documentation of the individual :mod:`steppyngstounes` classes.
