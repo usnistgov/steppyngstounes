@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@1.3.2
-  coverage-reporter: codacy/coverage-reporter@11.8.1
+  coverage-reporter: codacy/coverage-reporter@11.9.0
 
 jobs:
   test:
@@ -27,7 +27,6 @@ jobs:
       - coverage-reporter/send_report:
           coverage-reports: 'coverage.xml'
           project-token: $CODACY_PROJECT_TOKEN
-          pypi-cache: false
 
   sphinx:
     executor: python/default
