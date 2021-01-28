@@ -40,7 +40,8 @@ class ScaledStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon:
+           https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     inclusive : bool
         Whether to include an evaluation at `start` (default False)

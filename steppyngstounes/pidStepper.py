@@ -62,7 +62,8 @@ class PIDStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon:
+           https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     proportional : float
         PID control :math:`k_P` coefficient (default 0.075).

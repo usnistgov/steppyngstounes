@@ -54,7 +54,8 @@ class PseudoRKQSStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon: https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon:
+           https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     safety : float
         RKQS control safety factor :math:`S` (default 0.9).
