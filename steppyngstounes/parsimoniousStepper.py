@@ -8,12 +8,13 @@ from steppyngstounes.stepper import Stepper
 
 __all__ = ["ParsimoniousStepper"]
 
+
 class ParsimoniousStepper(Stepper):
     r"""Non-monotonic stepper that attempts to find something "interesting".
 
     Compute the function where the curvature is highest and where not many
     points have been computed.
-    
+
     Based on an email::
 
         From: David Huard <david.huard@gmail.com>
@@ -53,7 +54,8 @@ class ParsimoniousStepper(Stepper):
         |machineepsilon|_).
 
         .. |machineepsilon| replace::   `eps`
-        .. _machineepsilon:             https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
+        .. _machineepsilon:
+           https://numpy.org/doc/stable/reference/generated/numpy.finfo.html
 
     inclusive : bool
         Whether to include an evaluation at `start` (default False)
@@ -74,11 +76,12 @@ class ParsimoniousStepper(Stepper):
                                      steps=50,
                                      attempts=50)
 
-
     def __init__(self, start, stop, N, minStep=0., inclusive=False,
                  scale="dl", minsteps=4, maxinitial=11):
-        super(ParsimoniousStepper, self).__init__(start=start, stop=stop,
-                                                  minStep=minStep, inclusive=inclusive,
+        super(ParsimoniousStepper, self).__init__(start=start,
+                                                  stop=stop,
+                                                  minStep=minStep,
+                                                  inclusive=inclusive,
                                                   record=True)
         self.numsteps = N
         assert scale in ["dl", "dy"]
@@ -111,9 +114,9 @@ class ParsimoniousStepper(Stepper):
 
         dx = np.diff(x)
         dy = np.diff(y)
-        dn2 = np.diff(y,2)
-        dn2 = np.concatenate([[dn2[0]/2,], dn2, [dn2[-1]/2]])
-        der2 = interp1d(x,dn2)
+        dn2 = np.diff(y, 2)
+        dn2 = np.concatenate([[dn2[0]/2], dn2, [dn2[-1]/2]])
+        der2 = interp1d(x, dn2)
         dl = np.sqrt(dx**2 + dy**2)
         centerx = x[:-1]+dx/2
         d2 = der2(centerx)
@@ -123,10 +126,7 @@ class ParsimoniousStepper(Stepper):
             cons = abs(dy)*abs(d2)
         i = np.argmax(cons)
 
-        #newx = x[max(0,i-1):i+1]+dx[max(0,i-1):i+1]/2.
         newx = centerx[i].tolist()
-#         if len(newx) == 0:
-#             raise 'No candidate found.'
 
         return newx
 
