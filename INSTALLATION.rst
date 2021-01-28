@@ -8,8 +8,10 @@ Using
 ^^^^^
 
 - `numpy`__
+- `scipy`__
 
 __ https://numpy.org/
+__ https://scipy.org/
 
 Testing
 ^^^^^^^
