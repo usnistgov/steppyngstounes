@@ -107,12 +107,11 @@ most efficient path between those checkpoints.
 
 .. code-block:: python
 
-   from steppyngstounes import SequenceStepper, SomeStepper
+   from steppyngstounes import CheckpointStepper, SomeStepper
 
    old = initial_condition
-   for checkpoint in SequenceStepper(start=0.,
-                                     stop=totaltime,
-                                     sizes=[1e-3, 1, 1e3, 1e6]):
+   for checkpoint in CheckpointStepper(start=0.,
+                                       stops=[1e-3, 1, 1e3, 1e6]):
 
        for step in SomeStepper(start=checkpoint.begin,
                                stop=checkpoint.end,
