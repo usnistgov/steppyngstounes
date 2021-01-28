@@ -27,6 +27,7 @@ jobs:
       - coverage-reporter/send_report:
           coverage-reports: 'coverage.xml'
           project-token: $CODACY_PROJECT_TOKEN
+          pypi-cache: false
 
   sphinx:
     executor: python/default
