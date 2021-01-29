@@ -27,9 +27,6 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: htmlcov
-      - coverage-reporter/send_report:
-          coverage-reports: 'coverage.xml'
-          project-token: $CODACY_PROJECT_TOKEN
 
   sphinx:
     executor: python/default
