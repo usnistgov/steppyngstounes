@@ -1,4 +1,0 @@
-[flake8]
-per-file-ignores =
-    # intentional `import *` for this flat package
-    steppyngstounes/__init__.py: F401,F403
