@@ -30,7 +30,9 @@ jobs:
           pypi-cache: false
           cache-version: v2
       - run:
-          command: pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
+          command: |
+            pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
+            mv coverage.xml /tmp/workspace/
           name: Test
       - store_artifacts:
           path: htmlcov
