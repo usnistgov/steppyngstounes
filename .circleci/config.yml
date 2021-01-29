@@ -32,10 +32,12 @@ jobs:
       - run:
           command: |
             pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
-            mv coverage.xml /tmp/workspace/
+            cp coverage.xml /tmp/workspace/
           name: Test
       - store_artifacts:
           path: htmlcov
+      - store_artifacts:
+          path: coverage.xml
       - persist_to_workspace: # store the coverage files into the workspace for other jobs.
           root: *workspace_root
           paths:
