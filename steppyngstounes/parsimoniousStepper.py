@@ -10,31 +10,10 @@ __all__ = ["ParsimoniousStepper"]
 
 
 class ParsimoniousStepper(Stepper):
-    r"""Non-monotonic stepper that attempts to find something "interesting".
+    r"""Non-monotonic stepper that samples sparsely explored regions
 
-    Compute the function where the curvature is highest and where not many
+    Computes the function where the curvature is highest and where not many
     points have been computed.
-
-    Based on an email::
-
-        From: David Huard <david.huard@gmail.com>
-        Date: April 1, 2009 4:23:14 PM EDT
-        To: "Guyer, Jonathan E. Dr." <jonathan.guyer@nist.gov>
-        Subject: Re: [SciPy-user] "smooth" plots
-
-        Jonathan,
-
-        Here are bits of code I've extracted from a project of mine.
-        You'll have to do some imports from numpy to get it to work.  It's
-        not pretty, but it was enough for my use case.  I'd be interested
-        to look at papers that discuss this problem if you have references
-        nearby.  Note that I also have a version that calls func on
-        multiple processes (using ipython).  With 2 quad cores, this sped
-        up considerably my application.
-
-        HTH,
-
-        David
 
     .. note::
 
