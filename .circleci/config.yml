@@ -4,28 +4,52 @@ orbs:
   python: circleci/python@1.3.2
   coverage-reporter: codacy/coverage-reporter@11.9.0
 
+references:
+  workspace_root: &workspace_root
+    /tmp/workspace
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
 jobs:
   test:
     executor: python/default
     steps:
+      - *attach_workspace
       - checkout
       - python/install-packages:
           pkg-manager: pip
+          cache-version: v2
       - python/install-packages:
           pip-dependency-file: requirements.txt
           pkg-manager: pip
+          cache-version: v2
       - python/install-packages:
           args: pytest pytest-cov
           pkg-manager: pip
           pypi-cache: false
+          cache-version: v2
       - run:
-          command: pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
+          command: |
+            pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
+            cp coverage.xml /tmp/workspace/
           name: Test
       - store_artifacts:
           path: htmlcov
-          destination: htmlcov
+      - store_artifacts:
+          path: coverage.xml
+      - persist_to_workspace: # store the coverage files into the workspace for other jobs.
+          root: *workspace_root
+          paths:
+            - coverage.xml
+
+  cover:
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - *attach_workspace
       - coverage-reporter/send_report:
-          coverage-reports: 'coverage.xml'
+          coverage-reports: /tmp/workspace/coverage.xml
           project-token: $CODACY_PROJECT_TOKEN
 
   sphinx:
@@ -99,3 +123,6 @@ workflows:
       - sphinx
       - lint
       - spell
+      - cover:
+         requires:
+           - test
