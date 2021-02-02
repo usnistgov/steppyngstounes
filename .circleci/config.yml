@@ -14,7 +14,7 @@ references:
 jobs:
   test:
     docker:
-       - image: python:3.6
+       - image: python:3.9
 
     executor: python/default
     steps:
@@ -22,12 +22,10 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-          cache-version: v3
       - python/install-packages:
           args: tox
           pkg-manager: pip
           pypi-cache: false
-          cache-version: v3
       - run:
           command: |
             tox
