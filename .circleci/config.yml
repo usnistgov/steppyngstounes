@@ -13,9 +13,7 @@ references:
 
 jobs:
   test:
-    docker:
-       - image: python:3.9
-
+    executor: python/default
     steps:
       - *attach_workspace
       - checkout
