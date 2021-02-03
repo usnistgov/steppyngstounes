@@ -34,6 +34,8 @@ extensions = ['sphinx.ext.autosummary',
               'matplotlib.sphinxext.plot_directive'
               ]
 
+master_doc = 'index'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -67,3 +69,17 @@ html_static_path = ['_static']
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 html_show_copyright = False
+
+# -- Options for LaTeX output --------------------------------------------------
+
+# Just for rendering the IPA silliness in the README
+latex_engine = 'xelatex'
+
+latex_elements = {
+    'babel': r"\usepackage{babel}"
+}
+
+latex_documents = [
+    (master_doc, 'steppyngstounes.tex', 'steppyngstounes: Iterators for Python',
+     author, 'howto')
+]
