@@ -70,7 +70,7 @@ html_static_path = ['_static']
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 html_show_copyright = False
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output ------------------------------------------------
 
 # Just for rendering the IPA silliness in the README
 latex_engine = 'xelatex'
@@ -80,6 +80,7 @@ latex_elements = {
 }
 
 latex_documents = [
-    (master_doc, 'steppyngstounes.tex', 'steppyngstounes: Iterators for Python',
+    (master_doc, 'steppyngstounes.tex',
+     'steppyngstounes: Iterators for Python',
      author, 'howto')
 ]
