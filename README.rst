@@ -11,7 +11,9 @@
   advancing from `start` to `stop`, subject to algorithms that depend on
   user-defined `value` or `error`.
 
-|CircleCI| |GitHub| |Codacy|
+.. only:: html
+
+   |CircleCI| |GitHub| |Codacy|
 
 Computations that evolve in time or sweep a variable often boil down to a
 control loop like
