@@ -2,7 +2,6 @@ from __future__ import division
 from __future__ import unicode_literals
 
 import numpy as np
-from scipy.interpolate import interp1d
 
 from steppyngstounes.stepper import Stepper
 
@@ -89,6 +88,8 @@ class ParsimoniousStepper(Stepper):
         regions scarcely sampled by x.
 
         """
+        from scipy.interpolate import interp1d
+
         x, y = self._sortxy()
 
         dx = np.diff(x)
