@@ -11,5 +11,6 @@
    :hidden:
 
    INSTALLATION-proxy
+   SUPPORT
    API
    LICENSE-proxy
