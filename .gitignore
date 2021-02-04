@@ -3,8 +3,16 @@
 .*~ 
 *~
 .DS_Store
+.coverage
+.tox/
 MANIFEST.in
 build/
+coverage.xml
+dictionary.dic
 dist/
 docs/_autosummary/
+en_US.aff
+en_US.dic
+htmlcov/
+steppyngstounes.egg-info/
 worktrees/

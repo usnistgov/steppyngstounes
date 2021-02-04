@@ -18,20 +18,11 @@ jobs:
       - *attach_workspace
       - checkout
       - python/install-packages:
+          args: tox
           pkg-manager: pip
-          cache-version: v2
-      - python/install-packages:
-          pip-dependency-file: requirements.txt
-          pkg-manager: pip
-          cache-version: v2
-      - python/install-packages:
-          args: pytest pytest-cov
-          pkg-manager: pip
-          pypi-cache: false
-          cache-version: v2
       - run:
           command: |
-            pytest --verbose --cov=steppyngstounes --cov-report=html --cov-report=xml
+            tox
             cp coverage.xml /tmp/workspace/
           name: Test
       - store_artifacts:
@@ -57,16 +48,10 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
+          args: tox
           pkg-manager: pip
-      - python/install-packages:
-          pip-dependency-file: requirements.txt
-          pkg-manager: pip
-      - python/install-packages:
-          args: Sphinx>=3.1 matplotlib
-          pkg-manager: pip
-          pypi-cache: false
       - run:
-          command: python setup.py build_sphinx
+          command: tox -e docs
           name: Docs
       - store_artifacts:
           path: build/sphinx/html
@@ -77,16 +62,10 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
+          args: tox
           pkg-manager: pip
-      - python/install-packages:
-          pip-dependency-file: requirements.txt
-          pkg-manager: pip
-      - python/install-packages:
-          args: flake8
-          pkg-manager: pip
-          pypi-cache: false
       - run:
-          command: flake8 --statistics
+          command: tox -e lint
           name: Lint
 
   spell:
