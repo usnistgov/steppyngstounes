@@ -18,11 +18,8 @@ jobs:
       - *attach_workspace
       - checkout
       - python/install-packages:
-          pkg-manager: pip
-      - python/install-packages:
           args: tox
           pkg-manager: pip
-          pypi-cache: false
       - run:
           command: |
             tox
@@ -51,16 +48,10 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
+          args: tox
           pkg-manager: pip
-      - python/install-packages:
-          pip-dependency-file: requirements.txt
-          pkg-manager: pip
-      - python/install-packages:
-          args: Sphinx>=3.1 matplotlib
-          pkg-manager: pip
-          pypi-cache: false
       - run:
-          command: python setup.py build_sphinx
+          command: tox -e docs
           name: Docs
       - store_artifacts:
           path: build/sphinx/html
@@ -71,16 +62,10 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
+          args: tox
           pkg-manager: pip
-      - python/install-packages:
-          pip-dependency-file: requirements.txt
-          pkg-manager: pip
-      - python/install-packages:
-          args: flake8
-          pkg-manager: pip
-          pypi-cache: false
       - run:
-          command: flake8 --statistics setup.py steppyngstounes
+          command: tox -e lint
           name: Lint
 
   spell:
