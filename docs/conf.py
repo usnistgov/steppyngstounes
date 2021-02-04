@@ -76,7 +76,12 @@ html_show_copyright = False
 latex_engine = 'xelatex'
 
 latex_elements = {
-    'babel': r"\usepackage{babel}"
+    'babel': r"\usepackage{babel}",
+    'preamble': r"""
+        \authoraddress{Materials Science and Engineering Division \\
+        Material Measurement Laboratory \\
+        National Institute of Standards and Technology}
+    """
 }
 
 latex_documents = [
