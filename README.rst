@@ -33,7 +33,7 @@ or
        do_something(dt)
 
 which works well enough, until the size of the steps needs to change.  This
-can be either to save or plot results at some fixed points, or because the
+can be to save or plot results at some fixed points, or because the
 computation becomes either harder or easier to perform.  The control loop
 then starts to dominate the script, obscuring the interesting parts of the
 computation, particularly as different edge cases are accounted for.
