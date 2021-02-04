@@ -89,3 +89,5 @@ latex_documents = [
      'steppyngstounes: Iterators for Python',
      author, 'howto')
 ]
+
+latex_show_urls = "inline"
