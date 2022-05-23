@@ -80,15 +80,18 @@ class Stepper(object):
         Whether to include an evaluation at `start` (default False).
     record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
+    limiting : bool
+        Whether to prevent error from exceeding 1 (default False).
 
     """
 
     def __init__(self, start, stop, size=None, minStep=None,
-                 inclusive=False, record=False):
+                 inclusive=False, record=False, limiting=False):
         self.start = start
         self.stop = stop
         self._inclusive = inclusive
         self.record = record
+        self.limiting = limiting
 
         if minStep is None:
             minStep = (stop - start) * np.finfo(float).eps
@@ -219,7 +222,15 @@ class Stepper(object):
         error : float
             Error to record.
         """
-        return (error <= 1.), error
+        if self.limiting:
+            success = (error <= 1.)
+        else:
+            success = True
+
+        if error is None:
+            error = 0.
+
+        return success, error
 
     def _purge(self):
         """Discard any steps no longer needed.

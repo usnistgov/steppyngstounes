@@ -52,7 +52,8 @@ class CheckpointStepper(Stepper):
                                                 stop=stop,
                                                 size=peek,
                                                 inclusive=inclusive,
-                                                record=record)
+                                                record=record,
+                                                limiting=False)
 
     def _adaptStep(self):
         """Calculate next step after success
@@ -66,17 +67,3 @@ class CheckpointStepper(Stepper):
 
         """
         return next(self._wantstops) - self.current
-
-    def _succeeded(self, error):
-        """Determine if most recent attempt failed.
-
-        Returns
-        -------
-        True
-            Fixed steps always succeed.
-        error : float
-            Error to record. If `error` was None, returns 0.
-        """
-        if error is None:
-            error = 0.
-        return True, error
