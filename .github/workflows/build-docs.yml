@@ -1,4 +1,4 @@
-name: Testing and Coverage
+name: Build Documentation
 
 on: [push]
 
