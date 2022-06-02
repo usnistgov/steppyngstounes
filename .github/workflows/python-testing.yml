@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["2.7", "3.9", "3.10"]
+        python-version: ["2.7", "3.10"]
 
     steps:
       - uses: actions/checkout@v3
@@ -42,20 +42,3 @@ jobs:
             coverage.xml
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
-      # Add coverage status report and badge
-      # https://josh-ops.com/posts/github-code-coverage/
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.0.2
-        # uses: joshjohanning/CodeCoverageSummary@v1.0.2
-        with:
-          filename: coverage.xml
-          badge: true
-          format: 'markdown'
-          output: 'both'
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
