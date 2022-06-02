@@ -1,7 +1,5 @@
 name: codacy-coverage-reporter
-
-on: ["push"]
-
+on: [push]
 jobs:
   codacy-coverage-reporter:
     runs-on: ubuntu-latest
