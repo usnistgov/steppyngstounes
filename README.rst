@@ -11,9 +11,7 @@
   advancing from `start` to `stop`, subject to algorithms that depend on
   user-defined `value` or `error`.
 
-.. only:: html
-
-   |CircleCI| |GitHub| |Codacy|
+|Testing| |Documentation| |Linting| |GitHub| |Codacy|
 
 Computations that evolve in time or sweep a variable often boil down to a
 control loop like
@@ -155,8 +153,12 @@ documentation of the individual :mod:`steppyngstounes` classes.
 .. _odeint: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html
 .. _solving partial differential equations: https://www.ctcms.nist.gov/fipy
 
-.. |CircleCI|      image:: https://circleci.com/gh/guyer/steppyngstounes.svg?style=svg
-    :target: https://circleci.com/gh/guyer/steppyngstounes
+.. |Testing|       image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/testing-and-coverage.yml/badge.svg
+    :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/testing-and-coverage.yml
+.. |Documentation| image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/build-docs.yml/badge.svg
+    :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/build-docs.yml
+.. |Linting|       image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml/badge.svg
+    :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml
 .. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/442966c7b8a24ca4af23a31fe4ac2df8
     :target: https://www.codacy.com/gh/guyer/steppyngstounes/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guyer/steppyngstounes&amp;utm_campaign=Badge_Grade
 .. |GitHub|        image:: https://img.shields.io/github/contributors/guyer/steppyngstounes.svg
