@@ -60,7 +60,8 @@ class ParsimoniousStepper(Stepper):
                                                   stop=stop,
                                                   minStep=minStep,
                                                   inclusive=inclusive,
-                                                  record=True)
+                                                  record=True,
+                                                  limiting=False)
         self.numsteps = N
         assert scale in ["dl", "dy"]
         self.scale = scale
@@ -125,22 +126,6 @@ class ParsimoniousStepper(Stepper):
 
         """
         return step
-
-    def _succeeded(self, error):
-        """Determine if most recent attempt failed.
-
-        .. note:: Parsimonious steps always succeed.
-
-        Returns
-        -------
-        True
-            Parsimonious steps always succeed.
-        error : float
-            Error to record. If `error` was None, returns 0.
-        """
-        if error is None:
-            error = 0.
-        return True, error
 
     def _done(self):
         """Determine if all requested steps have been taken.

@@ -66,7 +66,8 @@ class ScaledStepper(Stepper):
                                             size=size,
                                             minStep=minStep,
                                             inclusive=inclusive,
-                                            record=record)
+                                            record=record,
+                                            limiting=True)
         self.growFactor = growFactor
         self.shrinkFactor = shrinkFactor
 

@@ -57,6 +57,8 @@ class PIDStepper(Stepper):
         Whether to include an evaluation at `start` (default False)
     record : bool
         Whether to keep history of steps, errors, values, etc. (default False).
+    limiting : bool
+        Whether to prevent error from exceeding 1 (default True).
     minStep : float
         Smallest step to allow (default `(stop - start) *`
         |machineepsilon|_).
@@ -79,11 +81,11 @@ class PIDStepper(Stepper):
                                      attempts=274)
 
     def __init__(self, start, stop, size=None, minStep=None,
-                 inclusive=False, record=False,
+                 inclusive=False, record=False, limiting=True,
                  proportional=0.075, integral=0.175, derivative=0.01):
         super(PIDStepper, self).__init__(start=start, stop=stop, size=size,
                                          minStep=minStep, inclusive=inclusive,
-                                         record=record)
+                                         record=record, limiting=limiting)
 
         self.proportional = proportional
         self.integral = integral
@@ -134,7 +136,8 @@ class PIDStepper(Stepper):
                   * (errors[-2]**2
                      / (errors[-1] * errors[-3]))**self.derivative)
 
-        size = factor * (self.prevStep or self._sizes[self._successes][-1])
+        sizes = np.asarray(self._sizes)[self._successes]
+        size = factor * (self.prevStep or sizes[-1])
 
         self.prevStep = size
 

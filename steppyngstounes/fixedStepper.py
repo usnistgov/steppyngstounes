@@ -29,22 +29,3 @@ class FixedStepper(Stepper):
                                      control_error=False,
                                      steps=335,
                                      attempts=335)
-
-    def __init__(self, start, stop, size,
-                 inclusive=False, record=False):
-        super(FixedStepper, self).__init__(start=start, stop=stop, size=size,
-                                           inclusive=inclusive, record=record)
-
-    def _succeeded(self, error):
-        """Determine if most recent attempt failed.
-
-        Returns
-        -------
-        True
-            Fixed steps always succeed.
-        error : float
-            Error to record. If `error` was None, returns 0.
-        """
-        if error is None:
-            error = 0.
-        return True, error
