@@ -1,6 +1,6 @@
 name: Build Documentation
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -21,9 +21,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install Sphinx>3.1 matplotlib
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build docs
+          pip install -e .
+          sudo apt-get --yes update
+          sudo apt-get --yes install ghostscript
+          sudo apt-get --yes install gsfonts
+          sudo apt-get --yes install fonts-freefont-otf
+          sudo apt-get --yes install latexmk
+          sudo apt-get --yes install texlive-latex-base
+          sudo apt-get --yes install texlive-fonts-recommended
+          sudo apt-get --yes install texlive-fonts-extra
+          sudo apt-get --yes install texlive-latex-extra
+          sudo apt-get --yes install texlive-science
+          sudo apt-get --yes install texlive-extra-utils
+          sudo apt-get --yes install texlive-xetex
+          sudo apt-get --yes install xindy
+      - name: Build HTML
         run: |
-          python setup.py build_sphinx
+          python setup.py build_sphinx -b html
+      - name: Build PDF
+        run: |
+          python setup.py build_sphinx -b latex
+          make -C build/sphinx/latex
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:
