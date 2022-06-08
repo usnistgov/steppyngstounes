@@ -1,6 +1,6 @@
 name: Linting and Spelling
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
