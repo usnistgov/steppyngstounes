@@ -21,9 +21,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install Sphinx>3.1 matplotlib
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build docs
+      - name: Build HTML
         run: |
-          python setup.py build_sphinx
+          python setup.py build_sphinx -b html
+      - name: Build PDF
+        run: |
+          python setup.py build_sphinx -b latex
+          make latexpdf
       - name: Upload docs
         uses: actions/upload-artifact@v3
         with:
