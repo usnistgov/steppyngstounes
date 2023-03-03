@@ -146,13 +146,13 @@ step size.</p>
 that <code class="docutils literal notranslate"><span class="pre">totaltime</span></code> is not overshot if it isn’t evenly divisible by <code class="docutils literal notranslate"><span class="pre">dt</span></code>.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>The call to <code class="xref py py-meth docutils literal notranslate"><span class="pre">succeeded()</span></code> informs the
-<code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code> to advance, otherwise it will
+<p>The call to <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Step.succeeded" title="steppyngstounes.stepper.Step.succeeded"><code class="xref py py-meth docutils literal notranslate"><span class="pre">succeeded()</span></code></a> informs the
+<a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> to advance, otherwise it will
 iterate on the same step indefinitely.</p>
 </div>
 <p>Rather than manually incrementing the control variable (e.g., <code class="docutils literal notranslate"><span class="pre">t</span></code>), the
 values of the control variable before and after the step are available as
-the <code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code> attributes
+the <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Step" title="steppyngstounes.stepper.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a> attributes
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">begin</span></code> and
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">end</span></code>.  The attribute
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">size</span></code> is a shorthand for
@@ -160,8 +160,8 @@ the <code class="xref py py-class docutils literal notranslate"><span class="pre
 <p>If the size of the steps should be adjusted by some characteristic of the
 calculation, such as the change in the value since the last solution, the
 error (normalized to 1) can be passed to
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">succeeded()</span></code>, causing the
-<code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code> to advance (possibly adjusting
+<a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Step.succeeded" title="steppyngstounes.stepper.Step.succeeded"><code class="xref py py-meth docutils literal notranslate"><span class="pre">succeeded()</span></code></a>, causing the
+<a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> to advance (possibly adjusting
 the next step size) or to retry the step with a smaller step size.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">steppyngstounes</span> <span class="kn">import</span> <span class="n">SomeStepper</span>
 
@@ -178,9 +178,9 @@ the next step size) or to retry the step with a smaller step size.</p>
         <span class="c1"># do sad things</span>
 </pre></div>
 </div>
-<p>A hierarchy of <code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code> iterations enables
+<p>A hierarchy of <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> iterations enables
 saving or plotting results at fixed, possibly irregular, points, while
-allowing an adaptive <code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code> to find the
+allowing an adaptive <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> to find the
 most efficient path between those checkpoints.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">steppyngstounes</span> <span class="kn">import</span> <span class="n">CheckpointStepper</span><span class="p">,</span> <span class="n">SomeStepper</span>
 
@@ -208,7 +208,7 @@ most efficient path between those checkpoints.</p>
 </pre></div>
 </div>
 <p>A variety of stepping algorithms are described and demonstrated in the
-documentation of the individual <code class="xref py py-mod docutils literal notranslate"><span class="pre">steppyngstounes</span></code> classes.</p>
+documentation of the individual <a class="reference internal" href="_autosummary/steppyngstounes.html#module-steppyngstounes" title="steppyngstounes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">steppyngstounes</span></code></a> classes.</p>
 <hr class="docutils" />
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id3" role="note">

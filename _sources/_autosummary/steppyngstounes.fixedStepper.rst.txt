@@ -1,0 +1,35 @@
+steppyngstounes.fixedStepper
+============================
+
+.. automodule:: steppyngstounes.fixedStepper
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   
+   .. autoclass:: FixedStepper
+      :members:
+      :inherited-members:
+      :show-inheritance:
+
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
