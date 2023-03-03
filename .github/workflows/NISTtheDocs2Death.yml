@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ammaraskar/sphinx-action@0.4
+      - uses: usnistgov/sphinx-action@0.5
         with:
-          build-command: "sphinx-build -b html . _build"
           docs-folder: "docs/"
