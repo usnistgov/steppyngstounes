@@ -17,7 +17,7 @@ jobs:
           mkdir nist-pages/latest/
           cp -r docs/_build/html/* nist-pages/latest/
           cd nist-pages
-          touch .nojekyll
+          touch latest/.nojekyll
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
