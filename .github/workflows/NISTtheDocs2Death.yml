@@ -8,3 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ammaraskar/sphinx-action@0.4
+        with:
+          docs-folder: "docs/"
