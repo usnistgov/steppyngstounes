@@ -7,9 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install package
-        run: |
-          pip install -e .
       - uses: usnistgov/sphinx-action@0.5
         with:
           docs-folder: "docs/"
