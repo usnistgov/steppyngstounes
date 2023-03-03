@@ -10,20 +10,20 @@ jobs:
       - uses: usnistgov/sphinx-action@0.5
         with:
           docs-folder: "docs/"
-    - name: Commit documentation changes
-      run: |
-        git clone https://github.com/usnistgov/steppyngstounes.git --branch nist-pages --single-branch nist-pages
-        cp -r docs/_build/html/* nist-pages/
-        cd nist-pages
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation" -a || true
-        # The above command will fail if no changes were present, so we ignore
-        # the return code.
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        branch: nist-pages
-        directory: nist-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit documentation changes
+        run: |
+          git clone https://github.com/usnistgov/steppyngstounes.git --branch nist-pages --single-branch nist-pages
+          cp -r docs/_build/html/* nist-pages/
+          cd nist-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update documentation" -a || true
+          # The above command will fail if no changes were present, so we ignore
+          # the return code.
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: nist-pages
+          directory: nist-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
