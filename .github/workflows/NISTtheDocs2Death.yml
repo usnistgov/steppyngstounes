@@ -6,5 +6,5 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses:actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: ammaraskar/sphinx-action@0.4
