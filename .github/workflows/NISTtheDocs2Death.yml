@@ -13,7 +13,9 @@ jobs:
       - name: Commit documentation changes
         run: |
           git clone https://github.com/usnistgov/steppyngstounes.git --branch nist-pages --single-branch nist-pages
-          cp -r docs/_build/html/* nist-pages/
+          rm -rf nist-pages/latest/
+          mkdir nist-pages/latest/
+          cp -r docs/_build/html/* nist-pages/latest/
           cd nist-pages
           touch .nojekyll
           git config --local user.email "action@github.com"
