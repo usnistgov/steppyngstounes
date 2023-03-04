@@ -14,10 +14,19 @@ jobs:
         run: |
           git clone https://github.com/usnistgov/steppyngstounes.git --branch nist-pages --single-branch nist-pages
           cd nist-pages
+
+          # store built documents in directory named for current branch
           git rm -r --ignore-unmatch ${{ github.ref_name }}
           mkdir -p ${{ github.ref_name }}
           cp -r ../docs/_build/html/* ${{ github.ref_name }}
+          # store built documents in latest/
+          # TODO: only do this for default branch of repo
+          git rm -r --ignore-unmatch latest
+          mkdir -p latest
+          cp -r ../docs/_build/html/* latest
+
           touch .nojekyll
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
