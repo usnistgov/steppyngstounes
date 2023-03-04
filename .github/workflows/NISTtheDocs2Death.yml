@@ -19,6 +19,7 @@ jobs:
           git rm -r --ignore-unmatch ${{ github.ref_name }}
           mkdir -p ${{ github.ref_name }}
           cp -r ../docs/_build/html/* ${{ github.ref_name }}
+
           # store built documents in latest/
           # TODO: only do this for default branch of repo
           git rm -r --ignore-unmatch latest
@@ -30,7 +31,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Update documentation for ${{ github.ref_name }}" -a || true
+          git commit -m "Update documentation for ${{ github.ref_name }}@${{ github.sha }}" -a || true
           # The above command will fail if no changes were present, so we ignore
           # the return code.
       - name: Push changes
