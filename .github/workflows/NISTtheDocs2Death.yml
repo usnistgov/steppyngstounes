@@ -22,9 +22,12 @@ jobs:
 
           # store built documents in latest/
           # TODO: only do this for default branch of repo
-          git rm -r --ignore-unmatch latest
-          mkdir -p latest
-          cp -r ../docs/_build/html/* latest
+          if "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}"
+          then
+            git rm -r --ignore-unmatch latest
+            mkdir -p latest
+            cp -r ../docs/_build/html/* latest
+          fi
 
           touch .nojekyll
 
