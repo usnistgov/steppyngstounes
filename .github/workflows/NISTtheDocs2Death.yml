@@ -12,7 +12,7 @@ jobs:
           docs-folder: "docs/"
       - name: Commit documentation changes
         run: |
-          git clone https://github.com/usnistgov/steppyngstounes.git --branch nist-pages --single-branch nist-pages
+          git clone ${{ github.server_url }}/${{ github.repository }}.git --branch nist-pages --single-branch nist-pages
           cd nist-pages
 
           # store built documents in directory named for current branch
