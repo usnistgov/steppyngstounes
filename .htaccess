@@ -1,1 +1,1 @@
-RewriteRule "^/steppyngstounes/(.*\.html)"       "/NISTtheDocs2Death/$1"
+RewriteRule "^/(.*\.html)"       "/NISTtheDocs2Death/$1"
