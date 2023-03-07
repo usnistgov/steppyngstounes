@@ -1,0 +1,1 @@
+RewriteRule "^/(.*\.html)"       "/latest/$1"
