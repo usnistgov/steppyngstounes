@@ -34,6 +34,7 @@ jobs:
           # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
+          echo > versions.txt
           for path in ${html}/*
           do
               version="${path##*/}"
