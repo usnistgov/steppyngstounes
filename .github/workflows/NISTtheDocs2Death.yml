@@ -15,18 +15,20 @@ jobs:
           git clone ${{ github.server_url }}/${{ github.repository }}.git --branch nist-pages --single-branch nist-pages
           cd nist-pages
 
+          html = "html"
+
           # store built documents in directory named for current branch
-          git rm -r --ignore-unmatch ${{ github.ref_name }}
-          mkdir -p ${{ github.ref_name }}
-          cp -r ../docs/_build/html/* ${{ github.ref_name }}
+          git rm -r --ignore-unmatch "${html}/${{ github.ref_name }}"
+          mkdir -p "${html}/${{ github.ref_name }}"
+          cp -r ../docs/_build/html/* "${html}/${{ github.ref_name }}"
 
           # store built documents in latest/
           # (but only do this for default branch of repo)
           if "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}"
           then
-            git rm -r --ignore-unmatch latest
-            mkdir -p latest
-            cp -r ../docs/_build/html/* latest
+            git rm -r --ignore-unmatch "${html}/latest"
+            mkdir -p "${html}/latest"
+            cp -r ../docs/_build/html/* "${html}/latest"
           fi
 
           # jekyll conflicts with sphinx' underlined directories and files
