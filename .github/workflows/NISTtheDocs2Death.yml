@@ -36,7 +36,7 @@ jobs:
 
           for path in "${html}/*"
           do
-              version = "${path##*/}"
+              version="${path##*/}"
               echo "<a href=\"${path}\">${version}</a>" >> versions.txt
           done
 
