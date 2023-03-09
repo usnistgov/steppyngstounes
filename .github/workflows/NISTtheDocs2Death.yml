@@ -29,6 +29,7 @@ jobs:
             cp -r ../docs/_build/html/* latest
           fi
 
+          # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
           git config --local user.email "action@github.com"
