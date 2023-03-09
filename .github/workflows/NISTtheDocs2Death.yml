@@ -37,6 +37,7 @@ jobs:
           # build index.html with available documentation versions
           rm -f index.html
           cat _templates/index_header.html >> index.html
+          echo "<div class=\"documentation-versions\">" >> index.html
           echo "<ul>" >> index.html
           for path in ${html}/*
           do
@@ -44,6 +45,7 @@ jobs:
               echo "<li><a href=\"${path}\">${version}</a>" >> index.html
           done
           echo "</ul>" >> index.html
+          echo "</div>" >> index.html
           cat _templates/index_footer.html >> index.html
 
           git config --local user.email "action@github.com"
