@@ -34,6 +34,12 @@ jobs:
           # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
+          for path in "${html}/*"
+          do
+              version = "${path##*/}"
+              echo "<a href=\"${path}\">${version}</a>" >> versions.txt
+          done
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
