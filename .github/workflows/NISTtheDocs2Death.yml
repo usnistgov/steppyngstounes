@@ -34,7 +34,7 @@ jobs:
           # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
-          rm -r index.html
+          rm -f index.html
           cat _templates/index_header.html >> index.html
           echo "<ul>" >> index.html
           for path in ${html}/*
