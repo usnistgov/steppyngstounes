@@ -34,12 +34,16 @@ jobs:
           # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
-          echo > versions.txt
+          rm -r index.html
+          cat _templates/index_header.html >> index.html
+          echo "<ul>" >> index.html
           for path in ${html}/*
           do
               version="${path##*/}"
-              echo "<a href=\"${path}\">${version}</a>" >> versions.txt
+              echo "<li><a href=\"${path}\">${version}</a>" >> index.html
           done
+          echo "</ul>" >> index.html
+          cat _templates/index_footer.html >> index.html
 
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
