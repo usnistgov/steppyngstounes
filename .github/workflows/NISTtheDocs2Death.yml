@@ -34,6 +34,7 @@ jobs:
           # jekyll conflicts with sphinx' underlined directories and files
           touch .nojekyll
 
+          # build index.html with available documentation versions
           rm -f index.html
           cat _templates/index_header.html >> index.html
           echo "<ul>" >> index.html
