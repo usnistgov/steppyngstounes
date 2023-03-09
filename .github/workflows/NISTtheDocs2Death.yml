@@ -15,7 +15,7 @@ jobs:
           git clone ${{ github.server_url }}/${{ github.repository }}.git --branch nist-pages --single-branch nist-pages
           cd nist-pages
 
-          html = "html"
+          html="html"
 
           # store built documents in directory named for current branch
           git rm -r --ignore-unmatch "${html}/${{ github.ref_name }}"
