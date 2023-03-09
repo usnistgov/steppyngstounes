@@ -1,2 +1,2 @@
-<a href="html/*">*</a>
+
 <a href="html/NISTtheDocs2Death">NISTtheDocs2Death</a>
