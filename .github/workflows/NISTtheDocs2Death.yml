@@ -14,4 +14,3 @@ jobs:
         with:
           docs-folder: "docs/"
           pages-branch: "nist-pages"
-
