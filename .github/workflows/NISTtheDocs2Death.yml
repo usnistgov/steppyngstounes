@@ -11,5 +11,6 @@ jobs:
         with:
           docs-folder: "docs/"
       - uses: usnistgov/NISTtheDocs2Death@main
+        with:
           docs-folder: "docs/"
           pages-branch: "nist-pages"
