@@ -10,53 +10,6 @@ jobs:
       - uses: usnistgov/sphinx-action@0.5
         with:
           docs-folder: "docs/"
-      - name: Commit documentation changes
-        run: |
-          git clone ${{ github.server_url }}/${{ github.repository }}.git --branch nist-pages --single-branch nist-pages
-          cd nist-pages
-
-          html="html"
-
-          # store built documents in directory named for current branch
-          git rm -r --ignore-unmatch "${html}/${{ github.ref_name }}"
-          mkdir -p "${html}/${{ github.ref_name }}"
-          cp -r ../docs/_build/html/* "${html}/${{ github.ref_name }}"
-
-          # store built documents in latest/
-          # (but only do this for default branch of repo)
-          if "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}"
-          then
-            git rm -r --ignore-unmatch "${html}/latest"
-            mkdir -p "${html}/latest"
-            cp -r ../docs/_build/html/* "${html}/latest"
-          fi
-
-          # jekyll conflicts with sphinx' underlined directories and files
-          touch .nojekyll
-
-          # build index.html with available documentation versions
-          rm -f index.html
-          cat _templates/index_header.html >> index.html
-          echo "<div class=\"documentation-versions\">" >> index.html
-          echo "<ul>" >> index.html
-          for path in ${html}/*
-          do
-              version="${path##*/}"
-              echo "<li><a href=\"${path}\">${version}</a>" >> index.html
-          done
-          echo "</ul>" >> index.html
-          echo "</div>" >> index.html
-          cat _templates/index_footer.html >> index.html
-
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Update documentation for ${{ github.ref_name }}@${{ github.sha }}" -a || true
-          # The above command will fail if no changes were present, so we ignore
-          # the return code.
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: nist-pages
-          directory: nist-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: usnistgov/NISTtheDocs2Death@main
+          docs-folder: "docs/"
+          pages-branch: "nist-pages"
