@@ -45,7 +45,7 @@ jobs:
              && apt-get autoremove \
              && apt-get clean \
              && rm -rf /var/lib/apt/lists/*
-          build-command: "python setup.py build_sphinx -b latex && make -C build/sphinx/latex"
+          build-command: "make latexpdf"
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
           docs-folder: docs/
