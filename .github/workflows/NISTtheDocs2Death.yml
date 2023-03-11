@@ -45,7 +45,8 @@ jobs:
              && apt-get autoremove \
              && apt-get clean \
              && rm -rf /var/lib/apt/lists/* \
-             && convert -list delegate | grep 'svg ='
+             && convert -list delegate | grep 'svg =' \
+             && which rsvg-convert
           build-command: "make latexpdf"
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
