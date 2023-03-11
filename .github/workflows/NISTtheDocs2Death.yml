@@ -45,9 +45,7 @@ jobs:
                   librsvg2-bin \
              && apt-get autoremove \
              && apt-get clean \
-             && rm -rf /var/lib/apt/lists/* \
-             && convert -list delegate | grep 'svg =' \
-             && which rsvg-convert
+             && rm -rf /var/lib/apt/lists/*
           build-command: "make latexpdf"
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
@@ -55,7 +53,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: DocumentationPDF
-          path: docs/_build/pdf/
+          path: docs/_build/latex/
       - uses: actions/upload-artifact@v1
         with:
           name: DocumentationEPUB
