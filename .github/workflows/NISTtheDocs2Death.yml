@@ -17,13 +17,6 @@ jobs:
       - uses: usnistgov/sphinx-action@master
         with:
           docs-folder: docs/
-          build-command: make latexpdf
-      - uses: usnistgov/NISTtheDocs2Death@main
-        with:
-          docs-folder: docs/
-      - uses: actions/upload-artifact@v1
-        with:
-          name: DocumentationPDF
           pre-build-command: |
             apt-get update \
              && apt-get install --no-install-recommends -y \
@@ -48,6 +41,13 @@ jobs:
              && apt-get autoremove \
              && apt-get clean \
              && rm -rf /var/lib/apt/lists/*
+          build-command: make latexpdf
+      - uses: usnistgov/NISTtheDocs2Death@main
+        with:
+          docs-folder: docs/
+      - uses: actions/upload-artifact@v1
+        with:
+          name: DocumentationPDF
           path: docs/_build/pdf/
       - uses: actions/upload-artifact@v1
         with:
