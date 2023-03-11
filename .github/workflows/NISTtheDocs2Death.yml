@@ -24,6 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: DocumentationPDF
+          dockerfile: LaTeXPDFDockerfile
           path: docs/_build/pdf/
       - uses: actions/upload-artifact@v1
         with:
