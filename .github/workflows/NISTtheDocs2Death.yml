@@ -53,11 +53,27 @@ jobs:
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
           docs-folder: docs/
-      - uses: actions/upload-artifact@v1
-        with:
-          name: DocumentationPDF
-          path: docs/_build/latex/
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v3
+        name: Upload HTML
         with:
           name: DocumentationEPUB
-          path: docs/_build/epub/
+          path: docs/_build/html/
+          # Use always() to always run this step to publish documentation
+          # even when there are failures
+          if: ${{ always() }}
+      - uses: actions/upload-artifact@v3
+        name: Upload ePUB
+        with:
+          name: DocumentationEPUB
+          path: docs/_build/epub/*.epub
+          # Use always() to always run this step to publish documentation
+          # even when there are failures
+          if: ${{ always() }}
+      - uses: actions/upload-artifact@v3
+        name: Upload PDF
+        with:
+          name: DocumentationPDF
+          path: docs/_build/latex/*.pdf
+          # Use always() to always run this step to publish documentation
+          # even when there are failures
+          if: ${{ always() }}
