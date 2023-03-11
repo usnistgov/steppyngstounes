@@ -59,8 +59,8 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ github.ref_name }}-${{ github.sha }}
           path: |
             docs/_build/html
-            docs/_build/epub/*.epub
-            docs/_build/latex/*.pdf
+            docs/_build/epub
+            docs/_build/latex/${{ github.event.repository.name }}.pdf
         # Use always() to always run this step to publish documentation
         # artifacts even when there are failures
         if: ${{ always() }}
