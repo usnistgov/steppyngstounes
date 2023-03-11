@@ -44,7 +44,7 @@ jobs:
                   tex-gyre \
              && apt-get autoremove \
              && apt-get clean \
-             && rm -rf /var/lib/apt/lists/*
+             && rm -rf /var/lib/apt/lists/* \
              && convert -list delegate | grep 'svg ='
           build-command: "make latexpdf"
       - uses: usnistgov/NISTtheDocs2Death@main
