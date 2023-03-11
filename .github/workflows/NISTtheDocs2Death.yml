@@ -7,14 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: usnistgov/sphinx-action@0.5
+      - uses: usnistgov/sphinx-action@master
         with:
           docs-folder: docs/
-      - uses: usnistgov/sphinx-action@0.5
+      - uses: usnistgov/sphinx-action@master
         with:
           docs-folder: docs/
           build-command: make epub
-      - uses: usnistgov/sphinx-action@0.5
+      - uses: usnistgov/sphinx-action@master
         with:
           docs-folder: docs/
           build-command: make latexpdf
