@@ -54,26 +54,13 @@ jobs:
         with:
           docs-folder: docs/
       - uses: actions/upload-artifact@v3
-        name: Upload HTML
+        name: Upload Documentation Artifacts
         with:
-          name: DocumentationEPUB
-          path: docs/_build/html/
-        # Use always() to always run this step to publish documentation
-        # even when there are failures
-        if: ${{ always() }}
-      - uses: actions/upload-artifact@v3
-        name: Upload ePUB
-        with:
-          name: DocumentationEPUB
-          path: docs/_build/epub/*.epub
-        # Use always() to always run this step to publish documentation
-        # even when there are failures
-        if: ${{ always() }}
-      - uses: actions/upload-artifact@v3
-        name: Upload PDF
-        with:
-          name: DocumentationPDF
-          path: docs/_build/latex/*.pdf
+          name: ${{ github.repository }}-${{ github.ref_name }}-${{ github.sha }}
+          path: |
+            docs/_build/html
+            docs/_build/epub/*.epub
+            docs/_build/latex/*.pdf
         # Use always() to always run this step to publish documentation
         # even when there are failures
         if: ${{ always() }}
