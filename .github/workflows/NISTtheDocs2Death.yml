@@ -58,22 +58,22 @@ jobs:
         with:
           name: DocumentationEPUB
           path: docs/_build/html/
-          # Use always() to always run this step to publish documentation
-          # even when there are failures
-          if: ${{ always() }}
+        # Use always() to always run this step to publish documentation
+        # even when there are failures
+        if: ${{ always() }}
       - uses: actions/upload-artifact@v3
         name: Upload ePUB
         with:
           name: DocumentationEPUB
           path: docs/_build/epub/*.epub
-          # Use always() to always run this step to publish documentation
-          # even when there are failures
-          if: ${{ always() }}
+        # Use always() to always run this step to publish documentation
+        # even when there are failures
+        if: ${{ always() }}
       - uses: actions/upload-artifact@v3
         name: Upload PDF
         with:
           name: DocumentationPDF
           path: docs/_build/latex/*.pdf
-          # Use always() to always run this step to publish documentation
-          # even when there are failures
-          if: ${{ always() }}
+        # Use always() to always run this step to publish documentation
+        # even when there are failures
+        if: ${{ always() }}
