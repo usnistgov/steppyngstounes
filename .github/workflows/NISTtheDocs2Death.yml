@@ -16,7 +16,7 @@ jobs:
           build-command: make epub
       - uses: usnistgov/sphinx-action@master
         with:
-          docs-folder: docs/
+          docs-folder: ""
           pre-build-command: |
             apt-get update \
              && apt-get install --no-install-recommends -y \
