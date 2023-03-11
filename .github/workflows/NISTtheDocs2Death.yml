@@ -26,6 +26,8 @@ jobs:
                   \
                   latexmk \
                   lmodern \
+                  ghostscript \
+                  gsfonts \
                   fonts-freefont-otf \
                   texlive-latex-recommended \
                   texlive-latex-extra \
@@ -36,6 +38,8 @@ jobs:
                   texlive-lang-japanese \
                   texlive-luatex \
                   texlive-xetex \
+                  texlive-science \
+                  texlive-extra-utils \
                   xindy \
                   tex-gyre \
              && apt-get autoremove \
