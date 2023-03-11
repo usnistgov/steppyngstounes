@@ -13,11 +13,11 @@ jobs:
       - uses: usnistgov/sphinx-action@0.5
         with:
           docs-folder: docs/
-          build-command: make latexpdf
+          build-command: make epub
       - uses: usnistgov/sphinx-action@0.5
         with:
           docs-folder: docs/
-          build-command: make epub
+          build-command: make latexpdf
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
           docs-folder: docs/
