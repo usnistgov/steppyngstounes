@@ -42,6 +42,7 @@ jobs:
                   texlive-extra-utils \
                   xindy \
                   tex-gyre \
+                  librsvg2-bin \
              && apt-get autoremove \
              && apt-get clean \
              && rm -rf /var/lib/apt/lists/* \
