@@ -56,11 +56,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Upload Documentation Artifacts
         with:
-          name: ${{ github.repository }}-${{ github.ref_name }}-${{ github.sha }}
+          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-${{ github.sha }}
           path: |
             docs/_build/html
             docs/_build/epub/*.epub
             docs/_build/latex/*.pdf
         # Use always() to always run this step to publish documentation
-        # even when there are failures
+        # artifacts even when there are failures
         if: ${{ always() }}
