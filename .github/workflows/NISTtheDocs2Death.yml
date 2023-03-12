@@ -16,40 +16,8 @@ jobs:
         with:
           docs-folder: docs/
           build-command: make epub
-      - uses: usnistgov/sphinx-action@master
+      - uses: usnistgov/sphinx-action@latexpdf
         name: Build PDF
-        with:
-          docs-folder: docs/
-          pre-build-command: |
-            apt-get update \
-             && apt-get install --no-install-recommends -y \
-                  graphviz \
-                  imagemagick \
-                  make \
-                  \
-                  latexmk \
-                  lmodern \
-                  ghostscript \
-                  gsfonts \
-                  fonts-freefont-otf \
-                  texlive-latex-recommended \
-                  texlive-latex-extra \
-                  texlive-fonts-recommended \
-                  texlive-fonts-extra \
-                  texlive-lang-cjk \
-                  texlive-lang-chinese \
-                  texlive-lang-japanese \
-                  texlive-luatex \
-                  texlive-xetex \
-                  texlive-science \
-                  texlive-extra-utils \
-                  xindy \
-                  tex-gyre \
-                  librsvg2-bin \
-             && apt-get autoremove \
-             && apt-get clean \
-             && rm -rf /var/lib/apt/lists/*
-          build-command: make latexpdf
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
           docs-folder: docs/
@@ -59,7 +27,7 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ github.ref_name }}-${{ github.sha }}
           path: |
             docs/_build/html
-            docs/_build/epub
+            docs/_build/epub/*.epub
             docs/_build/latex/${{ github.event.repository.name }}.pdf
         # Use always() to always run this step to publish documentation
         # artifacts even when there are failures
