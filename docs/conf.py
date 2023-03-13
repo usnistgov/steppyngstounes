@@ -73,9 +73,6 @@ html_show_copyright = False
 
 # To set-up Alabaster, add an explicit html_sidebars setting so Alabaster’s
 # customized sidebar templates are loaded.
-
-html_static_path = ['_static']
-
 html_sidebars = {
     '**': [
         'about.html',
