@@ -80,6 +80,7 @@ html_sidebars = {
         'relations.html',
         'searchbox.html',
         'donate.html',
+        'versions.html'
     ]
 }
 
