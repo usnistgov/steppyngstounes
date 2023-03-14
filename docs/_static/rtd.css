@@ -573,7 +573,7 @@ big,small{
     content:""
 }
 .fa-book:before,.icon-book:before{
-    content:""
+    content:"📗"
 }
 .fa-bookmark:before{
     content:""
@@ -1017,7 +1017,7 @@ big,small{
     content:""
 }
 .fa-caret-down:before,.wy-dropdown .caret:before,.icon-caret-down:before{
-    content:""
+    content:"▾"
 }
 .fa-caret-up:before{
     content:""

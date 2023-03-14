@@ -87,6 +87,7 @@ html_sidebars = {
 html_css_files = [
     'rtd.css',
 ]
+
 # -- Options for LaTeX output ------------------------------------------------
 
 # Just for rendering the IPA silliness in the README
