@@ -43,7 +43,7 @@ div.sphinxsidebar .dropdown-content hr {
   margin-right: -10px;
 }
 
-.dropdown-content a:hover {background-color: #202020;}
+.dropdown-content a:hover {background-color: #e0e0e0;}
 
 .dropdown:hover .dropdown-content {display: block;}
 
