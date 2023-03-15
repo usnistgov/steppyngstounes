@@ -7,7 +7,7 @@
 }
 
 .dropdown {
-  position: relative;
+  position: fixed;
   display: inline-block;
   right: 20px;
   left: auto;
