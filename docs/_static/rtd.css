@@ -2,6 +2,7 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
+  z-index: 400;
 }
 
 .dropdown {
@@ -24,6 +25,8 @@
   z-index: 1;
   right: 0px;
   left: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .dropdown-content a {
@@ -33,9 +36,9 @@
   display: block;
 }
 
-.dropdown-content hr {
+div.sphinxsidebar.dropdown-content hr {
   margin-left: -10px;
-  width: auto;
+  width: 100%;
   margin-right: -10px;
 }
 
