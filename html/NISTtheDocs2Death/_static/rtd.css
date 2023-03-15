@@ -1,9 +1,4 @@
 .dropbtn {
-/*   background-color: #04AA6D; */
-/*   color: white; */
-/*   padding: 16px; */
-/*   font-size: 16px; */
-/*   border: none; */
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -23,7 +18,7 @@
 .dropdown-content {
   display: none;
   position: relative;
-  background-color: 'ButtonFace';
+  background-color: #f1f1f1;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -36,6 +31,12 @@
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+}
+
+.dropdown-content hr {
+  margin-left: -10px;
+  width: auto;
+  margin-right: -10px;
 }
 
 .dropdown-content a:hover {background-color: 'ButtonBorder';}
