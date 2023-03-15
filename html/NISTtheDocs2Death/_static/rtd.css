@@ -9,6 +9,12 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  right: 20px;
+  left: auto;
+  width: auto;
+  bottom: 20px;
+  top: auto;
+  height: auto;
 }
 
 .dropdown-content {
