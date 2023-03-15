@@ -36,7 +36,7 @@
   display: block;
 }
 
-div.sphinxsidebar.dropdown-content hr {
+.dropdown-content hr {
   margin-left: -10px;
   width: 100%;
   margin-right: -10px;
