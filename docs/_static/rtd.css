@@ -42,9 +42,10 @@
 
 .dropdown:hover .dropdown-content {display: block;}
 
-.dropdown:hover .dropbtn {background-color: 'ButtonBor/* 
- * der';}
- * 
+.dropdown:hover .dropbtn {background-color: 'ButtonBorder';}
+
+
+/* 
  * 
  * *{
  *     -webkit-box-sizing:border-box;
@@ -4759,5 +4760,5 @@
  *     font-weight:700;
  *     src:local("Roboto Slab Bold"),local("RobotoSlab-Bold"),url(../fonts/RobotoSlab-Bold.ttf) format("truetype")
  * }
- *  
+ * 
  */
