@@ -89,8 +89,6 @@ html_css_files = [
     'rtd.css',
 ]
 
-html_baseurl = 'https://pages.nist.gov/steppyngstounes'
-
 # -- Options for LaTeX output ------------------------------------------------
 
 # Just for rendering the IPA silliness in the README
