@@ -1,0 +1,35 @@
+steppyngstounes.parsimoniousStepper
+===================================
+
+.. automodule:: steppyngstounes.parsimoniousStepper
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   
+   .. autoclass:: ParsimoniousStepper
+      :members:
+      :inherited-members:
+      :show-inheritance:
+
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
