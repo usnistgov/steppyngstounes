@@ -1,0 +1,38 @@
+﻿steppyngstounes
+===============
+
+.. automodule:: steppyngstounes
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   steppyngstounes.checkpointStepper
+   steppyngstounes.fixedStepper
+   steppyngstounes.parsimoniousStepper
+   steppyngstounes.pidStepper
+   steppyngstounes.pseudoRKQSStepper
+   steppyngstounes.scaledStepper
+   steppyngstounes.sequenceStepper
+   steppyngstounes.stepper
+
