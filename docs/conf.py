@@ -89,7 +89,7 @@ html_css_files = [
     'rtd.css',
 ]
 
-html_baseurl = 'https://pages.nist.gov'
+html_baseurl = 'https://pages.nist.gov/steppyngstounes'
 
 # -- Options for LaTeX output ------------------------------------------------
 
