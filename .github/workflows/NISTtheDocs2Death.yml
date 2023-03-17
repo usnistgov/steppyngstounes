@@ -6,30 +6,6 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: usnistgov/sphinx-action@master
-        name: Build HTML
-        with:
-          docs-folder: docs/
-#       - uses: usnistgov/sphinx-action@master
-#         name: Build ePUB
-#         with:
-#           docs-folder: docs/
-#           build-command: make epub
-#       - uses: usnistgov/sphinx-action@latexpdf
-#         name: Build PDF
       - uses: usnistgov/NISTtheDocs2Death@main
         with:
           docs-folder: docs/
-      - uses: actions/upload-artifact@v3
-        name: Upload Documentation Artifacts
-        with:
-          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-${{ github.sha }}
-          path: |
-            docs/_build/html
-#             docs/_build/epub/*.epub
-#             docs/_build/latex/${{ github.event.repository.name }}.pdf
-        # Use always() to always run this step to publish documentation
-        # artifacts even when there are failures
-        if: ${{ always() }}
-
