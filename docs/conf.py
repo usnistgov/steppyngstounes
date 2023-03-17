@@ -32,7 +32,8 @@ extensions = ['sphinx.ext.autosummary',
               'sphinx.ext.doctest',
               'sphinx.ext.napoleon',
               'sphinx.ext.imgconverter',
-              'matplotlib.sphinxext.plot_directive'
+              'matplotlib.sphinxext.plot_directive',
+              'sphinx.ext.githubpages'
               ]
 
 master_doc = 'index'
@@ -87,6 +88,8 @@ html_sidebars = {
 html_css_files = [
     'rtd.css',
 ]
+
+html_baseurl = 'https://pages.nist.gov'
 
 # -- Options for LaTeX output ------------------------------------------------
 
