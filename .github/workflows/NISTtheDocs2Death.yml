@@ -6,6 +6,6 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: usnistgov/NISTtheDocs2Death@main
+      - uses: usnistgov/NISTtheDocs2Death@still_worked
         with:
           docs-folder: docs/
