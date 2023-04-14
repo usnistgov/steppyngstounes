@@ -64,11 +64,6 @@ html_theme_options = {
     },
 }
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 html_show_copyright = False
 
@@ -80,14 +75,9 @@ html_sidebars = {
         'navigation.html',
         'relations.html',
         'searchbox.html',
-        'donate.html',
-        'versions.html'
+        'donate.html'
     ]
 }
-
-html_css_files = [
-    'rtd.css',
-]
 
 # -- Options for LaTeX output ------------------------------------------------
 
