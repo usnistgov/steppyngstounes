@@ -72,6 +72,18 @@ html_static_path = ['_static']
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 html_show_copyright = False
 
+# To set-up Alabaster, add an explicit html_sidebars setting so Alabaster’s
+# customized sidebar templates are loaded.
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html'
+    ]
+}
+
 # -- Options for LaTeX output ------------------------------------------------
 
 # Just for rendering the IPA silliness in the README
