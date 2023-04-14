@@ -21,71 +21,42 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="steppyngstounes.scaledStepper" href="steppyngstounes.scaledStepper.html" />
     <link rel="prev" title="steppyngstounes.pidStepper" href="steppyngstounes.pidStepper.html" />
+  
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
+
+  <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+  <script src="https://code.jquery.com/jquery-3.6.2.min.js" type="text/javascript" defer="defer"></script>
+  <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
+
   </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">steppyngstounes</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../INSTALLATION-proxy.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../SUPPORT.html">Support</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="steppyngstounes.html">steppyngstounes</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.checkpointStepper.html">steppyngstounes.checkpointStepper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.fixedStepper.html">steppyngstounes.fixedStepper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.parsimoniousStepper.html">steppyngstounes.parsimoniousStepper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.pidStepper.html">steppyngstounes.pidStepper</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">steppyngstounes.pseudoRKQSStepper</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.errors"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.errors</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.next"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.next()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.sizes"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.sizes</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.steps"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.steps</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.succeeded"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.succeeded()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.successes"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.successes</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.values"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.values</span></code></a></li>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">steppyngstounes.pseudoRKQSStepper</a><ul>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper</span></code></a><ul>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.errors"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.errors</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.next"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.next()</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.sizes"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.sizes</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.steps"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.steps</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.succeeded"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.succeeded()</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.successes"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.successes</span></code></a></li>
+<li><a class="reference internal" href="#steppyngstounes.pseudoRKQSStepper.PseudoRKQSStepper.values"><code class="docutils literal notranslate"><span class="pre">PseudoRKQSStepper.values</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.scaledStepper.html">steppyngstounes.scaledStepper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.sequenceStepper.html">steppyngstounes.sequenceStepper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="steppyngstounes.stepper.html">steppyngstounes.stepper</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../LICENSE-proxy.html">Terms of Use</a></li>
 </ul>
 
-
-<hr />
-<ul>
-    
-    <li class="toctree-l1"><a href="genindex.html">Index</a></li>
-    
-    <li class="toctree-l1"><a href="py-modindex.html">Module Index</a></li>
-    
-    <li class="toctree-l1"><a href="search.html">Search</a></li>
-    
-</ul>
-<div class="relations">
+  </div><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
@@ -98,6 +69,13 @@
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/steppyngstounes.pseudoRKQSStepper.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -108,14 +86,6 @@
     </div>
 </div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="documentwrapper">
@@ -325,7 +295,7 @@ passed to <a class="reference internal" href="steppyngstounes.stepper.html#stepp
     <div class="clearer"></div>
   </div>
 
-
+  
     <div class="footer">
       
       
@@ -342,7 +312,7 @@ passed to <a class="reference internal" href="steppyngstounes.stepper.html#stepp
 
     
 
-<!-- Taken from https://www.filamentgroup.com/lab/html-includes/#another-demo%3A-including-another-html-file -->
-<iframe src="../_static/ntd2d_menu.html" onload="this.before((this.contentDocument.body||this.contentDocument).children[0]);this.remove()"></iframe>
+  <!-- Taken from https://www.filamentgroup.com/lab/html-includes/#another-demo%3A-including-another-html-file -->
+  <iframe src="../_static/ntd2d_menu.html" onload="this.before((this.contentDocument.body||this.contentDocument).children[0]);this.remove()"></iframe>
   </body>
 </html>
