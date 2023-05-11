@@ -1,0 +1,35 @@
+steppyngstounes.scaledStepper
+=============================
+
+.. automodule:: steppyngstounes.scaledStepper
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   
+   .. autoclass:: ScaledStepper
+      :members:
+      :inherited-members:
+      :show-inheritance:
+
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
