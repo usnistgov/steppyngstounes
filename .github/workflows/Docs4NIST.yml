@@ -6,6 +6,8 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - uses: usnistgov/Docs4NIST@0.5
         with:
           docs-folder: docs/
