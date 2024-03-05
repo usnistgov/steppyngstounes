@@ -9,7 +9,7 @@ jobs:
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         with:
-          limit-access-to-actor: true
+          limit-access-to-actor: false
       - uses: usnistgov/Docs4NIST@0.5
         with:
           docs-folder: docs/
