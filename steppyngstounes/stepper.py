@@ -101,7 +101,7 @@ class Stepper(object):
         self._sizes = [size or (stop - start)]
         self._steps = [start - self._sizes[-1]]
         self._successes = [True]
-        self._values = [np.NaN]
+        self._values = [np.nan]
         self._errors = [1.]
         self._saveStep = None
         self._isDone = False
