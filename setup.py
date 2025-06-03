@@ -6,7 +6,7 @@ with open("README.rst", "r") as fh:
 setuptools.setup(
     name="steppyngstounes",
     install_requires=["numpy", "scipy"],
-    version="0.1",
+    version="0.1.1",
     author="Jonathan E. Guyer",
     author_email="guyer@nist.gov",
     description="A package of iterators for advancing from start to stop",
