@@ -166,10 +166,10 @@ documentation of the individual :mod:`steppyngstounes` classes.
     :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/Docs4NIST.yml
 .. |Linting|       image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml/badge.svg
     :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml
-.. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/442966c7b8a24ca4af23a31fe4ac2df8
-    :target: https://www.codacy.com/gh/guyer/steppyngstounes/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guyer/steppyngstounes&amp;utm_campaign=Badge_Grade
-.. |GitHub|        image:: https://img.shields.io/github/contributors/guyer/steppyngstounes.svg
-    :target: https://github.com/guyer/steppyngstounes
+.. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/d500954988fd495681418c58510b3636
+    :target: https://app.codacy.com/gh/usnistgov/steppyngstounes/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
+.. |GitHub|        image:: https://img.shields.io/github/contributors/usnistgov/steppyngstounes.svg
+    :target: https://github.com/usnistgov/steppyngstounes
 
 .. toctree::
    :hidden:
