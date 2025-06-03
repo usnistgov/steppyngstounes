@@ -48,6 +48,10 @@ Building the Documentation
 
 ::
 
+  $ make -C docs html
+
+or::
+
   $ python setup.py build_sphinx
 
 If the figures do not update
