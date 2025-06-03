@@ -50,10 +50,6 @@ Building the Documentation
 
   $ make -C docs html
 
-or::
-
-  $ python setup.py build_sphinx
-
 If the figures do not update
 
 ::
@@ -61,9 +57,5 @@ If the figures do not update
   $ touch docs/_autosummary/*.rst
 
 and repeat.
-
-If the documentation seems not to build correctly in other respects::
-
-  $ python setup.py build_sphinx --all-files --fresh-env
 
 Documentation can be found in :file:`{STEPPYNGSTOUNES}/docs/_build/html/`.
