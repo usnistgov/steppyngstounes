@@ -66,7 +66,7 @@ A steppyngstounes control loop can be as simple as
 
        _ = step.succeeded()
 
-which replicates the :keyword:`while` construct above, but further ensures
+which replicates the :strong:`while` construct above, but further ensures
 that ``totaltime`` is not overshot if it isn't evenly divisible by ``dt``.
 
 .. attention::
