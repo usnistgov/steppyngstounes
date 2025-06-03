@@ -13,42 +13,19 @@
 
 |Testing| |Documentation| |Linting| |GitHub| |Codacy|
 
-Computations that evolve in time or sweep a variable often boil down to a
-control loop like
+* **Documentation:** https://pages.nist.gov/steppyngstounes/en/latest
+* **Discussion:** https://github.com/usnistgov/steppyngstounes/discussions
+* **Source code:** https://github.com/usnistgov/steppyngstounes
+* **Bug reports:** https://github.com/usnistgov/steppyngstounes/issues
+
+A steppyngstounes control loop replaces an iteration loop like
 
 .. code-block:: python
 
    for step in range(steps):
        do_something(step)
 
-or
-
-.. code-block:: python
-
-   t = 0
-   while t < totaltime:
-       t += dt
-       do_something(dt)
-
-which works well enough, until the size of the steps needs to change.  This
-can be to save or plot results at some fixed points, or because the
-computation becomes either harder or easier to perform.  The control loop
-then starts to dominate the script, obscuring the interesting parts of the
-computation, particularly as different edge cases are accounted for.
-
-Packages like `odeint`_ address many of these issues, but do so through
-callback functions, which effectively turn the computation of interest
-inside out, again obscuring the interesting bits.  Further, because they
-are often tailored for applications like solving ordinary differential
-equations, applying them to other stepping problems, even `solving partial
-differential equations`_, can be rather opaque.
-
-The steppyngstounes package is designed to retain the simplicity of the
-original control loop, while allowing great flexibility in how steps are
-taken and automating all of the aspects of increasing and decreasing the
-step size.
-
-A steppyngstounes control loop can be as simple as
+It can be as simple as
 
 .. code-block:: python
 
@@ -59,51 +36,7 @@ A steppyngstounes control loop can be as simple as
 
        _ = step.succeeded()
 
-which replicates the :keyword:`while` construct above, but further ensures
-that ``totaltime`` is not overshot if it isn't evenly divisible by ``dt``.
-
-.. attention::
-
-   The call to :meth:`~steppyngstounes.stepper.Step.succeeded` informs the
-   :class:`~steppyngstounes.stepper.Stepper` to advance, otherwise it will
-   iterate on the same step indefinitely.
-
-Rather than manually incrementing the control variable (e.g., ``t``), the
-values of the control variable before and after the step are available as
-the :class:`~steppyngstounes.stepper.Step` attributes
-:attr:`~steppyngstounes.stepper.Step.begin` and
-:attr:`~steppyngstounes.stepper.Step.end`.  The attribute
-:attr:`~steppyngstounes.stepper.Step.size` is a shorthand for
-``step.end - step.begin``.
-
-If the size of the steps should be adjusted by some characteristic of the
-calculation, such as the change in the value since the last solution, the
-error (normalized to 1) can be passed to
-:meth:`~steppyngstounes.stepper.Step.succeeded`, causing the
-:class:`~steppyngstounes.stepper.Stepper` to advance (possibly adjusting
-the next step size) or to retry the step with a smaller step size.
-
-.. code-block:: python
-
-   from steppyngstounes import SomeStepper
-
-   old = initial_condition
-   for step in SomeStepper(start=0., stop=totaltime, size=dt):
-       new = do_something_else(step.begin, step.end, step.size)
-
-       err = (new - old) / scale
-
-       if step.succeeded(error=err):
-           old = new
-           # do happy things
-       else:
-           # do sad things
-
-
-A hierarchy of :class:`~steppyngstounes.stepper.Stepper` iterations enables
-saving or plotting results at fixed, possibly irregular, points, while
-allowing an adaptive :class:`~steppyngstounes.stepper.Stepper` to find the
-most efficient path between those checkpoints.
+or a more elaborate combination of checkpoints and adaptive steps
 
 .. code-block:: python
 
@@ -131,8 +64,12 @@ most efficient path between those checkpoints.
 
        _ = checkpoint.succeeded()
 
-A variety of stepping algorithms are described and demonstrated in the
-documentation of the individual :mod:`steppyngstounes` classes.
+Steppyngstounes requires `numpy`, `scipy`, and `pytest`.
+Tests can be run with
+
+.. code-block:: shell
+
+   pytest
 
 ----
 
@@ -150,16 +87,16 @@ documentation of the individual :mod:`steppyngstounes` classes.
     <https://books.google.com/books?id=WtZPAAAAMAAJ&focus=searchwithinvolume&q=steppyngstounes>.
     Accessed 16 December 2020.
 
-.. _odeint: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html
-.. _solving partial differential equations: https://www.ctcms.nist.gov/fipy
-
 .. |Testing|       image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/testing-and-coverage.yml/badge.svg
     :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/testing-and-coverage.yml
-.. |Documentation| image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/build-docs.yml/badge.svg
-    :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/build-docs.yml
+.. |Documentation| image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/Docs4NIST.yml/badge.svg
+    :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/Docs4NIST.yml
 .. |Linting|       image:: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml/badge.svg
     :target: https://github.com/usnistgov/steppyngstounes/actions/workflows/linting-and-spelling.yml
-.. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/442966c7b8a24ca4af23a31fe4ac2df8
-    :target: https://www.codacy.com/gh/guyer/steppyngstounes/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=guyer/steppyngstounes&amp;utm_campaign=Badge_Grade
-.. |GitHub|        image:: https://img.shields.io/github/contributors/guyer/steppyngstounes.svg
-    :target: https://github.com/guyer/steppyngstounes
+.. |Codacy|        image:: https://app.codacy.com/project/badge/Grade/d500954988fd495681418c58510b3636
+    :target: https://app.codacy.com/gh/usnistgov/steppyngstounes/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
+.. |GitHub|        image:: https://img.shields.io/github/contributors/usnistgov/steppyngstounes.svg
+    :target: https://github.com/usnistgov/steppyngstounes
+
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d500954988fd495681418c58510b3636)](https://app.codacy.com/gh/usnistgov/steppyngstounes/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
