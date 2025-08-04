@@ -1,0 +1,35 @@
+steppyngstounes.pseudoRKQSStepper
+=================================
+
+.. automodule:: steppyngstounes.pseudoRKQSStepper
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   
+   .. autoclass:: PseudoRKQSStepper
+      :members:
+      :inherited-members:
+      :show-inheritance:
+
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
