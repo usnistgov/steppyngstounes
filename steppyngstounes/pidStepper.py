@@ -77,8 +77,8 @@ class PIDStepper(Stepper):
     """
 
     __doc__ += Stepper._stepper_test(StepperClass="PIDStepper",
-                                     steps=256,
-                                     attempts=274)
+                                     steps=283,
+                                     attempts=351)
 
     def __init__(self, start, stop, size=None, minStep=None,
                  inclusive=False, record=False, limiting=True,
@@ -137,7 +137,7 @@ class PIDStepper(Stepper):
                      / (errors[-1] * errors[-3]))**self.derivative)
 
         sizes = np.asarray(self._sizes)[self._successes]
-        size = factor * (self.prevStep or sizes[-1])
+        size = factor * sizes[-1]
 
         self.prevStep = size
 
