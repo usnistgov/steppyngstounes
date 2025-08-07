@@ -38,7 +38,7 @@ s = "{} succesful steps in {} attempts"
 print(s.format(stepper.successes.sum(),
                len(stepper.steps)))
 # Expected:
-## 256 succesful steps in 274 attempts
+## 283 succesful steps in 351 attempts
 #
 steps = stepper.steps[stepper.successes]
 ix = steps.argsort()

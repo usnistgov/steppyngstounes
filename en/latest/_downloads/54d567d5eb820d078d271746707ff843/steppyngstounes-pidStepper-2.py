@@ -6,8 +6,8 @@ def plotSteps():
     plt.rcParams['lines.markersize'] = 3
     fig, axes = plt.subplots(2, 2, sharex=True)
 
-    fig.suptitle(r"256 successful $\mathtt{PIDStepper}$ "
-                 r"steps and trajectory of 274 attempts")
+    fig.suptitle(r"283 successful $\mathtt{PIDStepper}$ "
+                 r"steps and trajectory of 351 attempts")
 
     axes[0, 0].plot(stepper.steps, stepper.values, color="gray",
                     linestyle="-", linewidth=0.5, marker="")
