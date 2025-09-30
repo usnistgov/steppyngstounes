@@ -45,6 +45,16 @@ class PIDStepper(Stepper):
            doi =     {10.1002/fld.805},
         }
 
+    .. note::
+
+       For those familiar with PID control in other contexts, the *process
+       variable* here is the normalized error, the *set point* is 1, and the
+       *controller output* is the timestep. When the normalised error falls
+       below 1, the controller increases the timestep. When the normalised
+       error rises above 1, the controller decreases the timestep. You should
+       therefore calculate your normalized error as the ratio of actual error
+       to target error.
+
     Parameters
     ----------
     start : float
