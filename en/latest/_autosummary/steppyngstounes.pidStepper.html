@@ -162,6 +162,16 @@ proportional coefficient, <span class="math notranslate nohighlight">\(k_I\)</sp
 <span class="p">}</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those familiar with PID control in other contexts, the <em>process
+variable</em> here is the normalized error, the <em>set point</em> is 1, and the
+<em>controller output</em> is the timestep. When the normalised error falls
+below 1, the controller increases the timestep. When the normalised
+error rises above 1, the controller decreases the timestep. You should
+therefore calculate your normalized error as the ratio of actual error
+to target error.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

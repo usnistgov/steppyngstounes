@@ -153,6 +153,16 @@ factor, <span class="math notranslate nohighlight">\(P_\text{grow}\)</span> is t
                                f_\text{min} \right] \Delta_n\]</div>
 <p>where <span class="math notranslate nohighlight">\(P_\text{shrink}\)</span> is the shrinkage exponent and
 <span class="math notranslate nohighlight">\(f_\text{min}\)</span> is the minimum factor to shrink the stepsize.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those familiar control systems in other contexts, the <em>process
+variable</em> here is the normalized error, the <em>set point</em> is 1, and the
+<em>controller output</em> is the timestep. When the normalised error falls
+below 1, the controller increases the timestep. When the normalised
+error rises above 1, the controller decreases the timestep. You should
+therefore calculate your normalized error as the ratio of actual error
+to target error.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

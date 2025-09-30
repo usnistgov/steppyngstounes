@@ -106,6 +106,15 @@ the next step size) or to retry the step with a smaller step size.
        else:
            # do sad things
 
+.. note::
+
+    For those familiar with control systems in other contexts, the *process
+    variable* here is the normalized error, the *set point* is 1, and the
+    *controller output* is the timestep. When the normalised error falls
+    below 1, the controller increases the timestep. When the normalised
+    error rises above 1, the controller decreases the timestep. You should
+    therefore calculate your normalized error as the ratio of actual error
+    to target error.
 
 A hierarchy of :class:`~steppyngstounes.stepper.Stepper` iterations enables
 saving or plotting results at fixed, possibly irregular, points, while

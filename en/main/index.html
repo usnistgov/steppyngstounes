@@ -181,6 +181,16 @@ the next step size) or to retry the step with a smaller step size.</p>
         <span class="c1"># do sad things</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those familiar with control systems in other contexts, the <em>process
+variable</em> here is the normalized error, the <em>set point</em> is 1, and the
+<em>controller output</em> is the timestep. When the normalised error falls
+below 1, the controller increases the timestep. When the normalised
+error rises above 1, the controller decreases the timestep. You should
+therefore calculate your normalized error as the ratio of actual error
+to target error.</p>
+</div>
 <p>A hierarchy of <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> iterations enables
 saving or plotting results at fixed, possibly irregular, points, while
 allowing an adaptive <a class="reference internal" href="_autosummary/steppyngstounes.stepper.html#steppyngstounes.stepper.Stepper" title="steppyngstounes.stepper.Stepper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stepper</span></code></a> to find the
