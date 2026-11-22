@@ -27,12 +27,12 @@
    :toctree:
    :recursive:
 
-   steppyngstounes.checkpointStepper
-   steppyngstounes.fixedStepper
-   steppyngstounes.parsimoniousStepper
-   steppyngstounes.pidStepper
-   steppyngstounes.pseudoRKQSStepper
-   steppyngstounes.scaledStepper
-   steppyngstounes.sequenceStepper
-   steppyngstounes.stepper
+   checkpointStepper
+   fixedStepper
+   parsimoniousStepper
+   pidStepper
+   pseudoRKQSStepper
+   scaledStepper
+   sequenceStepper
+   stepper
 
